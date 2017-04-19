@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of Psy Shell
+ * This file is part of Psy Shell.
  *
- * (c) 2012-2014 Justin Hileman
+ * (c) 2012-2017 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -52,7 +52,37 @@ class CommandsMatcher extends AbstractMatcher
     }
 
     /**
-     * {@inheritDoc}
+     * Check whether a command $name is defined.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    protected function isCommand($name)
+    {
+        return in_array($name, $this->commands);
+    }
+
+    /**
+     * Check whether input matches a defined command.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    protected function matchCommand($name)
+    {
+        foreach ($this->commands as $cmd) {
+            if ($this->startsWith($name, $cmd)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getMatches(array $tokens, array $info = array())
     {
@@ -64,17 +94,18 @@ class CommandsMatcher extends AbstractMatcher
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasMatched(array $tokens)
     {
-        $token = array_pop($tokens);
-        $prevToken = array_pop($tokens);
+        /* $openTag */ array_shift($tokens);
+        $command = array_shift($tokens);
 
         switch (true) {
-            case self::tokenIs($prevToken, self::T_NEW):
-                return false;
-            case self::hasToken(array(self::T_OPEN_TAG, self::T_STRING), $token):
+            case self::tokenIs($command, self::T_STRING) &&
+                !$this->isCommand($command[1]) &&
+                $this->matchCommand($command[1]) &&
+                empty($tokens):
                 return true;
         }
 

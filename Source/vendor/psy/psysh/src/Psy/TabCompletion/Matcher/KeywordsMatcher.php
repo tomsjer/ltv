@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of Psy Shell
+ * This file is part of Psy Shell.
  *
- * (c) 2012-2014 Justin Hileman
+ * (c) 2012-2017 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -52,7 +52,7 @@ class KeywordsMatcher extends AbstractMatcher
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMatches(array $tokens, array $info = array())
     {
@@ -64,7 +64,7 @@ class KeywordsMatcher extends AbstractMatcher
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasMatched(array $tokens)
     {
@@ -73,7 +73,9 @@ class KeywordsMatcher extends AbstractMatcher
 
         switch (true) {
             case self::hasToken(array(self::T_OPEN_TAG, self::T_VARIABLE), $token):
-            case is_string($token) && $token === '$':
+//            case is_string($token) && $token === '$':
+            case self::hasToken(array(self::T_OPEN_TAG, self::T_VARIABLE), $prevToken) &&
+                self::tokenIs($token, self::T_STRING):
             case self::isOperator($token):
                 return true;
         }

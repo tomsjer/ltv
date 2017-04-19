@@ -8,21 +8,12 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @package    PHPUnit
- * @subpackage Runner
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
- * @since      Class available since Release 4.0.0
- */
 abstract class PHPUnit_Runner_Filter_GroupFilterIterator extends RecursiveFilterIterator
 {
     /**
      * @var array
      */
-    protected $groupTests = array();
+    protected $groupTests = [];
 
     /**
      * @param RecursiveIterator           $iterator
@@ -36,7 +27,8 @@ abstract class PHPUnit_Runner_Filter_GroupFilterIterator extends RecursiveFilter
         foreach ($suite->getGroupDetails() as $group => $tests) {
             if (in_array($group, $groups)) {
                 $testHashes = array_map(
-                    function ($test) { return spl_object_hash($test);
+                    function ($test) {
+                        return spl_object_hash($test);
                     },
                     $tests
                 );
@@ -47,7 +39,7 @@ abstract class PHPUnit_Runner_Filter_GroupFilterIterator extends RecursiveFilter
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function accept()
     {

@@ -3,57 +3,49 @@
 namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
-use PhpParser\Error;
 
-/**
- * @property int                $type  Modifiers
- * @property PropertyProperty[] $props Properties
- */
 class Property extends Node\Stmt
 {
+    /** @var int Modifiers */
+    public $flags;
+    /** @var PropertyProperty[] Properties */
+    public $props;
+
+    /** @deprecated Use $flags instead */
+    public $type;
+
     /**
      * Constructs a class property list node.
      *
-     * @param int                $type       Modifiers
+     * @param int                $flags      Modifiers
      * @param PropertyProperty[] $props      Properties
      * @param array              $attributes Additional attributes
      */
-    public function __construct($type, array $props, array $attributes = array()) {
-        if (0 === ($type & Class_::VISIBILITY_MODIFER_MASK)) {
-            // If no visibility modifier given, PHP defaults to public
-            $type |= Class_::MODIFIER_PUBLIC;
-        }
+    public function __construct($flags, array $props, array $attributes = array()) {
+        parent::__construct($attributes);
+        $this->flags = $flags;
+        $this->type = $flags;
+        $this->props = $props;
+    }
 
-        if ($type & Class_::MODIFIER_ABSTRACT) {
-            throw new Error('Properties cannot be declared abstract');
-        }
-
-        if ($type & Class_::MODIFIER_FINAL) {
-            throw new Error('Properties cannot be declared final');
-        }
-
-        parent::__construct(
-            array(
-                'type'  => $type,
-                'props' => $props,
-            ),
-            $attributes
-        );
+    public function getSubNodeNames() {
+        return array('flags', 'props');
     }
 
     public function isPublic() {
-        return (bool) ($this->type & Class_::MODIFIER_PUBLIC);
+        return ($this->flags & Class_::MODIFIER_PUBLIC) !== 0
+            || ($this->flags & Class_::VISIBILITY_MODIFER_MASK) === 0;
     }
 
     public function isProtected() {
-        return (bool) ($this->type & Class_::MODIFIER_PROTECTED);
+        return (bool) ($this->flags & Class_::MODIFIER_PROTECTED);
     }
 
     public function isPrivate() {
-        return (bool) ($this->type & Class_::MODIFIER_PRIVATE);
+        return (bool) ($this->flags & Class_::MODIFIER_PRIVATE);
     }
 
     public function isStatic() {
-        return (bool) ($this->type & Class_::MODIFIER_STATIC);
+        return (bool) ($this->flags & Class_::MODIFIER_STATIC);
     }
 }

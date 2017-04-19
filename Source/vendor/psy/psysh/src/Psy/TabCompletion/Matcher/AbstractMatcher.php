@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of Psy Shell
+ * This file is part of Psy Shell.
  *
- * (c) 2012-2014 Justin Hileman
+ * (c) 2012-2017 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -36,10 +36,16 @@ abstract class AbstractMatcher
     const T_BOOLEAN_AND = 'T_BOOLEAN_AND';
     const T_BOOLEAN_OR = 'T_BOOLEAN_OR';
 
+    const T_ENCAPSED_AND_WHITESPACE = 'T_ENCAPSED_AND_WHITESPACE';
+    const T_REQUIRE = 'T_REQUIRE';
+    const T_REQUIRE_ONCE = 'T_REQUIRE_ONCE';
+    const T_INCLUDE = 'T_INCLUDE';
+    const T_INCLUDE_ONCE = 'T_INCLUDE_ONCE';
+
     /**
      * Check whether this matcher can provide completions for $tokens.
      *
-     * @param array $tokens Tokenized readline input.
+     * @param array $tokens Tokenized readline input
      *
      * @return bool
      */
