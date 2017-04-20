@@ -22,8 +22,9 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import { Biblioteca } from './components/Biblioteca.jsx';
+import { MediaModal } from './components/MediaModal.jsx';
 
 ReactDom.render(
-  <Biblioteca />,
+  <Biblioteca modal={ <MediaModal /> } />,
   document.querySelector('#biblioteca')
 );

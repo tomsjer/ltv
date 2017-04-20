@@ -10006,6 +10006,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Biblioteca_jsx__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_MediaModal_jsx__ = __webpack_require__(198);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -10031,7 +10032,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Biblioteca_jsx__["a" /* Biblioteca */], null), document.querySelector('#biblioteca'));
+
+__WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Biblioteca_jsx__["a" /* Biblioteca */], { modal: __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_MediaModal_jsx__["a" /* MediaModal */], null) }), document.querySelector('#biblioteca'));
 
 /***/ }),
 /* 83 */
@@ -10048,6 +10050,7 @@ __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODU
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Encabezado_jsx__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Contenedor_jsx__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Buscador_jsx__ = __webpack_require__(197);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Biblioteca; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -10056,6 +10059,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -10070,6 +10074,7 @@ var Biblioteca = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Biblioteca.__proto__ || Object.getPrototypeOf(Biblioteca)).call(this, props));
 
     _this.state = {
+      layout: 'grid',
       images: [{
         src: 'http://placehold.it/100/100'
       }, {
@@ -10081,20 +10086,36 @@ var Biblioteca = function (_React$Component) {
       }],
       videos: []
     };
+
+    _this.toggleLayout = _this.toggleLayout.bind(_this);
+    _this.triggerMediaModal = _this.triggerMediaModal.bind(_this);
     return _this;
   }
 
   _createClass(Biblioteca, [{
+    key: 'toggleLayout',
+    value: function toggleLayout(e) {
+      this.setState({
+        layout: e.currentTarget.dataset.layout
+      });
+    }
+  }, {
+    key: 'triggerMediaModal',
+    value: function triggerMediaModal() {
+      this.props.modal.open();
+    }
+  }, {
     key: 'render',
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__Encabezado_jsx__["a" /* Encabezado */], null),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Contenedor_jsx__["a" /* Contenedor */], { media: this.state.images }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__Encabezado_jsx__["a" /* Encabezado */], { layout: this.state.layout, handler: this.toggleLayout }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Buscador_jsx__["a" /* Buscador */], null),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Contenedor_jsx__["a" /* Contenedor */], { layout: this.state.layout, media: this.state.images }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'a',
-          { href: '#' },
+          { id: 'agregarMedia', href: '#', onClick: this.triggerMediaModal },
           ' + Agregar media '
         )
       );
@@ -10137,20 +10158,32 @@ var Contenedor = function (_React$Component) {
   }
 
   _createClass(Contenedor, [{
+    key: 'gridLayout',
+    value: function gridLayout(element, i) {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { key: i, src: element.src });
+    }
+  }, {
+    key: 'listLayout',
+    value: function listLayout(element, i) {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'li',
+        { key: i },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: element.src })
+      );
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var media = [];
       this.props.media.forEach(function (element, i) {
-        media.push(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { key: i, src: element.src }));
+        media.push(_this2[_this2.props.layout + 'Layout'](element, i));
       });
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          'ul',
-          null,
-          media
-        )
+        { id: 'contenedor' },
+        media
       );
     }
   }]);
@@ -10159,7 +10192,8 @@ var Contenedor = function (_React$Component) {
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
 Contenedor.propTypes = {
-  media: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array
+  media: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
+  layout: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
 };
 
 
@@ -10171,6 +10205,8 @@ Contenedor.propTypes = {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Encabezado; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -10182,30 +10218,53 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
+
 var Encabezado = function (_React$Component) {
   _inherits(Encabezado, _React$Component);
 
-  function Encabezado() {
+  function Encabezado(props) {
     _classCallCheck(this, Encabezado);
 
-    return _possibleConstructorReturn(this, (Encabezado.__proto__ || Object.getPrototypeOf(Encabezado)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Encabezado.__proto__ || Object.getPrototypeOf(Encabezado)).call(this, props));
+
+    _this.handleLayout = _this.handleLayout.bind(_this);
+    return _this;
   }
 
   _createClass(Encabezado, [{
-    key: "render",
+    key: 'handleLayout',
+    value: function handleLayout(e) {
+      this.props.handler(e);
+    }
+  }, {
+    key: 'render',
     value: function render() {
+      var classes = 'btn  btn-xs btn-dark';
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        "div",
-        null,
-        " Biblioteca",
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", { className: "glyphicon glyphicon-th-large active" }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", { className: "glyphicon glyphicon-th-list" })
+        'div',
+        { id: 'encabezado' },
+        ' Biblioteca',
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'button',
+          { type: 'button', className: this.props.layout === 'list' ? 'active ' + classes : classes, onClick: this.handleLayout, 'data-layout': 'list' },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'glyphicon glyphicon-th-list' })
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'button',
+          { type: 'button', className: this.props.layout === 'grid' ? 'active ' + classes : classes, onClick: this.handleLayout, 'data-layout': 'grid' },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'glyphicon glyphicon-th-large' })
+        )
       );
     }
   }]);
 
   return Encabezado;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+Encabezado.propTypes = {
+  handler: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  layout: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
+};
 
 
 
@@ -22290,6 +22349,113 @@ module.exports = traverseAllChildren;
 
 __webpack_require__(82);
 module.exports = __webpack_require__(83);
+
+
+/***/ }),
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Buscador; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var Buscador = function (_React$Component) {
+  _inherits(Buscador, _React$Component);
+
+  function Buscador() {
+    _classCallCheck(this, Buscador);
+
+    return _possibleConstructorReturn(this, (Buscador.__proto__ || Object.getPrototypeOf(Buscador)).apply(this, arguments));
+  }
+
+  _createClass(Buscador, [{
+    key: "render",
+    value: function render() {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { className: "input-group" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", { type: "text", placeholder: "filtrar..." }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          "button",
+          { type: "btn", className: "btn btn-xs" },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", { className: "glyphicon glyphicon-search" })
+        )
+      );
+    }
+  }]);
+
+  return Buscador;
+}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+
+
+/***/ }),
+/* 198 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MediaModal; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var MediaModal = function (_React$Component) {
+  _inherits(MediaModal, _React$Component);
+
+  function MediaModal(props) {
+    _classCallCheck(this, MediaModal);
+
+    var _this = _possibleConstructorReturn(this, (MediaModal.__proto__ || Object.getPrototypeOf(MediaModal)).call(this, props));
+
+    _this.open = _this.open.bind(_this);
+    return _this;
+  }
+
+  _createClass(MediaModal, [{
+    key: "open",
+    value: function open() {
+      console.log(this);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { className: "hidden" },
+        " MediaModal "
+      );
+    }
+  }]);
+
+  return MediaModal;
+}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
 
 
 /***/ })
