@@ -14,6 +14,9 @@
 // Media / Biblioteca
 @import "biblioteca";
 
+// Media / Modal
+@import "mediaModal";
+
 * {
   box-sizing: border-box;
 }
@@ -28,10 +31,9 @@ body {
   min-height: 100%;
 }
 
-#app {
+#app, #appContainer, #appContainer > div {
   height: 100%;
   min-height: 100%;
-  overflow: hidden;
 }
 
 /*

@@ -24,7 +24,32 @@ import ReactDom from 'react-dom';
 import { Biblioteca } from './components/Biblioteca.jsx';
 import { MediaModal } from './components/MediaModal.jsx';
 
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalVisible: false
+    };
+
+    this.toggleModal = this.toggleModal.bind(this);
+  }
+  toggleModal() {
+    this.setState({
+      modalVisible: !this.state.modalVisible
+    });
+  }
+  render() {
+    return (
+      <div>
+        <Biblioteca toggleModal ={ this.toggleModal} />
+        <MediaModal toggleModal ={ this.toggleModal} isVisible={ this.state.modalVisible}/>
+      </div>
+    );
+  }
+}
+
 ReactDom.render(
-  <Biblioteca modal={ <MediaModal /> } />,
-  document.querySelector('#biblioteca')
+  <App />,
+  document.querySelector('#appContainer')
 );

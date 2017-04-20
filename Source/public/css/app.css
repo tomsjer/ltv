@@ -8313,6 +8313,7 @@ aside#biblioteca #encabezado {
   padding: 8px;
   background: #333;
   color: #ccc;
+  font-weight: bold;
 }
 
 aside#biblioteca #encabezado button {
@@ -8347,6 +8348,53 @@ aside#biblioteca #agregarMedia:hover {
   text-decoration: underline;
 }
 
+#mediaModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#modalDialog {
+  width: 400px;
+  background: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  z-index: 11000;
+  transition: height 0.125s ease-in-out;
+}
+
+#modalDialog #modalHeader {
+  padding: 8px;
+  background: #333;
+  color: #ccc;
+  font-weight: bold;
+}
+
+#modalDialog #modalHeader a {
+  color: #ccc;
+  text-decoration: none;
+  float: right;
+  font-size: 30px;
+  line-height: 18px;
+}
+
+#modalDialog #modalHeader a:hover {
+  color: white;
+}
+
+#modalDialog #modalBody {
+  padding: 8px;
+  overflow: hidden;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -8361,10 +8409,11 @@ body {
   min-height: 100%;
 }
 
-#app {
+#app,
+#appContainer,
+#appContainer > div {
   height: 100%;
   min-height: 100%;
-  overflow: hidden;
 }
 
 /*
