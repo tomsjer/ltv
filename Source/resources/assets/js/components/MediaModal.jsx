@@ -10,6 +10,7 @@ class MediaModal extends React.Component {
     };
     this.onMediaChange = this.onMediaChange.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
   }
   componentDidMount() {
     document.querySelector('#mediaModal').addEventListener('click', this.props.toggleModal);
@@ -45,6 +46,16 @@ class MediaModal extends React.Component {
     };
     reader.readAsDataURL(file);
   }
+  handleDrop(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const dt = e.dataTransfer;
+    const files = dt.files;
+
+    this.handleFiles({target: { files: files}});
+
+  }
   onMediaChange(e) {
     this.setState({
       show: e.target.value
@@ -66,6 +77,15 @@ class MediaModal extends React.Component {
 
             <div id="mediaImagen" className={ (this.state.show === 'imagen') ? '' : 'hidden' }>
               <form onSubmit={ this.handleImageSubmit }>
+
+                <div className={ (!this.state.imgPreviewSrc) ? '' : 'hidden'}>
+                  <div id="modalDropZone" onDrop={ this.handleDrop }
+                  onDragEnter={ (e)=>{ e.stopPropagation(); e.preventDefault(); }}
+                  onDragOver={ (e)=>{ e.stopPropagation(); e.preventDefault(); }}>
+                    <p> Arrastra las fotos aqui...</p>
+                  </div>
+                  <p> O buscar en carpeta...</p>
+                </div>
                 <div className={ (this.state.imgPreviewSrc) ? '' : 'hidden'}>
                   <img src={this.state.imgPreviewSrc} className="img-responsive"/>
                 </div>

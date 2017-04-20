@@ -39,5 +39,18 @@
   #modalBody {
     padding: 8px;
     overflow: hidden;
+
+    #modalDropZone {
+      width: 100%;
+      height: 100px;
+      border: dashed 2px #ccc;
+      margin: 8px 0;
+
+      P {
+        text-align: center;
+        margin: 0;
+        line-height: 100px;
+      }
+    }
   }
 }

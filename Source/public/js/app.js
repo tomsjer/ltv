@@ -10441,6 +10441,7 @@ var MediaModal = function (_React$Component) {
     };
     _this.onMediaChange = _this.onMediaChange.bind(_this);
     _this.handleFiles = _this.handleFiles.bind(_this);
+    _this.handleDrop = _this.handleDrop.bind(_this);
     return _this;
   }
 
@@ -10487,6 +10488,17 @@ var MediaModal = function (_React$Component) {
         self.setState({ imgPreviewSrc: e.target.result });
       };
       reader.readAsDataURL(file);
+    }
+  }, {
+    key: 'handleDrop',
+    value: function handleDrop(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      var dt = e.dataTransfer;
+      var files = dt.files;
+
+      this.handleFiles({ target: { files: files } });
     }
   }, {
     key: 'onMediaChange',
@@ -10543,6 +10555,30 @@ var MediaModal = function (_React$Component) {
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'form',
                 { onSubmit: this.handleImageSubmit },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'div',
+                  { className: !this.state.imgPreviewSrc ? '' : 'hidden' },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { id: 'modalDropZone', onDrop: this.handleDrop,
+                      onDragEnter: function onDragEnter(e) {
+                        e.stopPropagation();e.preventDefault();
+                      },
+                      onDragOver: function onDragOver(e) {
+                        e.stopPropagation();e.preventDefault();
+                      } },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'p',
+                      null,
+                      ' Arrastra las fotos aqui...'
+                    )
+                  ),
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'p',
+                    null,
+                    ' O buscar en carpeta...'
+                  )
+                ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
                   { className: this.state.imgPreviewSrc ? '' : 'hidden' },
