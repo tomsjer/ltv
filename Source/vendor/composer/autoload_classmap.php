@@ -11,6 +11,7 @@ return array(
     'CreateMediaTypesTable' => $baseDir . '/database/migrations/2017_04_20_044200_create_media_types_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateSessionsTable' => $baseDir . '/database/migrations/2017_04_20_043017_create_sessions_table.php',
+    'CreateSlidersTable' => $baseDir . '/database/migrations/2017_04_20_053100_create_sliders_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'EmployeesTableSeeder' => $baseDir . '/database/seeds/EmployeesTableSeeder.php',

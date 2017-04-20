@@ -277,6 +277,7 @@ class ComposerStaticInit285c39851a802515b61aecd9d4d8a431
         'CreateMediaTypesTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_20_044200_create_media_types_table.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreateSessionsTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_20_043017_create_sessions_table.php',
+        'CreateSlidersTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_20_053100_create_sliders_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'EmployeesTableSeeder' => __DIR__ . '/../..' . '/database/seeds/EmployeesTableSeeder.php',
