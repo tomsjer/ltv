@@ -1,0 +1,49 @@
+aside#biblioteca {
+  width: 224px;
+  height: calc(100% - 51px);
+  position: relative;
+  float: left;
+  background: #ddd;
+
+  #encabezado {
+    padding: 8px;
+    background: #333;
+    color: #ccc;
+    font-weight: bold;
+    button {
+      float: right;
+      margin-left: 8px;
+
+      &.active {
+        color: white;
+        background: #222;
+      }
+    }
+  }
+
+  #contenedor {
+    img {
+      margin: 8px 0 0 8px;
+      // position: relative;
+      // float: left;
+    }
+  }
+  
+  #agregarMedia {
+    position: absolute;
+    bottom: 0;
+    height: 48px;
+    width: 100%;
+    background: black;
+    line-height: 48px;
+    text-align: center;
+    text-decoration: none;
+    color: #ccc;
+    display: block;
+
+    &:hover {
+      color: white;
+      text-decoration: underline;
+    }
+  }
+}
