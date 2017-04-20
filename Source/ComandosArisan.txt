@@ -1,0 +1,31 @@
+Comandos Arisan 
+
+Crear la clase employee 
+
+php artisan make:model Employee --migration
+
+Genera la clase Employee, despues armar el migrations, agregar los campos faltantes de la tabla.
+
+
+Una vez generada tabla en migrations ejecitar el comando :
+
+php artisan migrate:refresh
+
+Crear los seeders de la tabla employee
+
+php artisan make:seeder EmployeesTableSeeder
+
+Utilizando la clase Factories insertamos los Datos,
+Se creo un metodo en la Clase ModeloFactories de Migrations
+
+
+
+php artisan make:model MediaType --migration
+
+php artisan make:seeder MediaTypeTableSeeder
+
+php artisan migrate:refresh
+
+
+
+
