@@ -1,4 +1,7 @@
 const { mix } = require('laravel-mix');
+const fs = require('fs');
+const env = fs.readFileSync('.env', { encoding: 'utf-8' });
+const url = env.match(/(APP_URL=)([\w|://|.]*)/)[2];
 
 /*
  |--------------------------------------------------------------------------
@@ -17,4 +20,7 @@ mix
     devtool: 'source-map'
   })
   .sass('resources/assets/sass/app.scss', 'public/css')
-  .react('resources/assets/js/app.jsx', 'public/js');
+  .react('resources/assets/js/app.jsx', 'public/js')
+  .browserSync({
+    proxy: url
+});

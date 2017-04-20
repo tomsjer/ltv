@@ -8301,5 +8301,14 @@ button.close {
   }
 }
 
+aside#biblioteca {
+  width: 220px;
+  height: 100%;
+  display: relative;
+  top: 0;
+  left: 0;
+  border: solid 1px red;
+}
+
 
 /*# sourceMappingURL=app.css.map*/
