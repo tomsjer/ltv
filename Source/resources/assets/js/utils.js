@@ -22,7 +22,7 @@ export function submit(method, url, options) {
     xhr.overriveMimeTpye(options.overriveMimeTpye);
   }
   if (options.onreadyStateChange) {
-    xhr.onreadystatechange(options.onreadyStateChange);
+    xhr.onreadystatechange = options.onreadyStateChange;
   }
   xhr.open(method, url);
   return xhr;
