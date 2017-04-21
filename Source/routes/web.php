@@ -37,8 +37,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth']], function () {
 
 
 });
-
-Route::group(['prefix' => 'api'], function () {
+Route::group(['prefix' => 'api', 'middleware' => ['auth']], function () {
+//Route::group(['prefix' => 'api'], function () {
     //
     //Employee
     //Route::get('/gets', 'EmployeeController@index');
