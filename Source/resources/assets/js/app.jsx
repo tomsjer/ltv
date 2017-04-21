@@ -19,6 +19,7 @@
 //     el: '#app'
 // });
 
+import BootstrapSass from 'bootstrap-sass';
 import React from 'react';
 import ReactDom from 'react-dom';
 import { Biblioteca } from './components/Biblioteca.jsx';
