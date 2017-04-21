@@ -46,7 +46,6 @@ class MediaController extends Controller
             // Ejecutamos el validador y en caso de que falle devolvemos la respuesta
             // con los errores
             $validator = Validator::make($request->all(), $rules);
-            //Preguntar por dni existe DNI
 
             if ($validator->fails()) {
                 return response()->json([
@@ -54,7 +53,13 @@ class MediaController extends Controller
                     'errors'  => $validator->errors()->all()
                 ]);
             }
-            // Si el validador pasa, almacenamos el usuario
+            
+            if ($request->hasFile('image')) {
+                //
+                $path = $request->image->storeAs('images', 'prueba.jpg');
+            }
+            // Si el validador pasa, almacenamos el media
+
             Media::create($request->all());
             return response()->json(['created' => true]);
         } catch (Exception $e) {
@@ -79,7 +84,7 @@ class MediaController extends Controller
         if (!$media) {
             return response()->json([
                 'message' => 'Record not found',
-            ], 404);
+            ]);
         }
         // Return a single Media
         return response()->json($media);
@@ -95,6 +100,47 @@ class MediaController extends Controller
     public function update(Request $request, Media $media)
     {
         //
+        //Get the Media
+        $media = Media::find($request->id);
+        
+        var_dump($request->id);exit();
+
+        if (!$media) {
+            return response()->json([
+                'message' => 'Record not found',
+            ]);
+        }
+
+        if (!is_array($request->all())) {
+            return response()->json(['error' => 'request must be an array']);
+        }
+        // Creamos las reglas de validación
+        $rules = [
+            'media_types_id' => 'required',
+            'options'      => 'required',
+            ];
+
+        try {
+            // Ejecutamos el validador y en caso de que falle devolvemos la respuesta
+            // con los errores
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'created' => false,
+                    'errors'  => $validator->errors()->all()
+                ]);
+            }
+            // Si el validador pasa, almacenamos la media
+            Media::create($request->all());
+            return response()->json(['created' => true]);
+        } catch (Exception $e) {
+            // Si algo sale mal devolvemos un error.
+            \Log::info('Error creating user: '.$e);
+            return response()->json(['created' => false], 500);
+        }
+
+
     }
 
     /**

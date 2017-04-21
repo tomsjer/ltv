@@ -48,7 +48,7 @@ Route::group(['prefix' => 'api'], function () {
 	// delete a task
 	Route::delete('employee/destroy/{id}','EmployeeController@destroy');
 	// update existing task
-	//Route::put('employee/put','EmployeeController@store'); //Falta Programar
+	//Route::put('employee/put','EmployeeController@update'); //Falta Programar
 	// create new task
 	//{"dni":1234562,"name":"Jerrold Bogisich","lastname":"Bogisich","email":"chelsea20@example.net","birth_date":"2013-07-10"}
 	Route::post('employee/store','EmployeeController@store');
@@ -59,6 +59,8 @@ Route::group(['prefix' => 'api'], function () {
 	Route::get('media/get/{id}','MediaController@show');
 	//{"media_types_id" : "1", "options": "{'name':'Imagen3', 'src':'media/image/imagen3.png'}"}
 	Route::post('media/store','MediaController@store');	
+
+	Route::put('media/put','MediaController@update'); //Falta Programar
 
 	Route::delete('media/destroy/{id}','MediaController@destroy');
 

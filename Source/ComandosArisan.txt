@@ -28,4 +28,32 @@ php artisan migrate:refresh
 
 
 
+Web: 
+
+Para Consultar Todas Media:
+Metodo: GET
+URL: http://lorealtv.jesus/api/media/get
+Retorna : Json con todos los registros
+
+Para Consultar Una Media:
+Metodo: GET
+URL: http://lorealtv.jesus/api/media/get/{id}
+Data: N/A
+Retorna: Json con registro en caso de no exitir retorna not found 
+
+Para guardar 
+Metodo: POST
+URL: http://lorealtv.jesus/api/media/store 
+Data: {"media_types_id" : "1", "options": "{'name':'Imagen3', 'src':'media/image/imagen3.png'}"}
+Retorna: Json Create true o Create false (detalle de errores) 
+
+Para Eliminar una Media:
+Metodo: DELETE
+URL: http://lorealtv.jesus/api/media/destroy/{id}
+Data: N/A
+Retorna: Json, Mensaje del estado de la petición 
+
+
+
+
 
