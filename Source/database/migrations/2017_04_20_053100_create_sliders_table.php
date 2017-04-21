@@ -17,6 +17,9 @@ class CreateSlidersTable extends Migration
             $table->increments('id');
             $table->integer('media_id')->unsigned();
             $table->string('description',50);
+            $table->integer('time_interval');
+            $table->date('date_from');
+            $table->date('date_until');
             $table->foreign('media_id')->references('id')->on('media');
             $table->timestamps();
         });
