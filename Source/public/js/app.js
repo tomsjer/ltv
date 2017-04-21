@@ -10044,6 +10044,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Biblioteca_jsx__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_MediaModal_jsx__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_js__ = __webpack_require__(199);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -10077,6 +10078,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
+
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
@@ -10089,16 +10091,61 @@ var App = function (_React$Component) {
       modalVisible: false
     };
 
-    _this.toggleModal = _this.toggleModal.bind(_this);
+    _this.openModal = _this.openModal.bind(_this);
+    _this.closeModal = _this.closeModal.bind(_this);
     return _this;
   }
 
   _createClass(App, [{
-    key: 'toggleModal',
-    value: function toggleModal() {
+    key: 'openModal',
+    value: function openModal() {
       this.setState({
-        modalVisible: !this.state.modalVisible
+        modalVisible: true
       });
+    }
+  }, {
+    key: 'closeModal',
+    value: function closeModal() {
+      this.setState({
+        modalVisible: false
+      });
+    }
+  }, {
+    key: 'submitMedia',
+    value: function submitMedia(data) {
+      var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* submit */])('POST', 'http://localhost:3000/api/media/store', {
+        overrideMimeType: 'text/plain; charset=x-user-defined-binary',
+        progressHandler: this.uploadPercentage,
+        loadHandler: this.uploadCompleted,
+        onreadyStateChange: this.onreadyStateChange
+      });
+
+      var fd = new FormData();
+      for (var i in data) {
+        fd.append(i, data[i]);
+      }
+      request.send(fd);
+    }
+  }, {
+    key: 'onreadyStateChange',
+    value: function onreadyStateChange(e) {
+      console.log(e, this.responseText);
+    }
+  }, {
+    key: 'uploadCompleted',
+    value: function uploadCompleted(e) {
+      console.log(e);
+    }
+  }, {
+    key: 'uploadPercentage',
+    value: function uploadPercentage(e) {
+      if (e.lengthComputable) {
+        var percentage = Math.round(e.loaded * 100 / e.total);
+        console.log(percentage);
+        // this.setState({
+        //   uploadPercentage: percentage
+        // });
+      }
     }
   }, {
     key: 'render',
@@ -10106,8 +10153,8 @@ var App = function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Biblioteca_jsx__["a" /* Biblioteca */], { toggleModal: this.toggleModal }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_MediaModal_jsx__["a" /* MediaModal */], { toggleModal: this.toggleModal, isVisible: this.state.modalVisible })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Biblioteca_jsx__["a" /* Biblioteca */], { openModal: this.openModal }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_MediaModal_jsx__["a" /* MediaModal */], { submitMedia: this.submitMedia, closeModal: this.closeModal, isVisible: this.state.modalVisible })
       );
     }
   }]);
@@ -10173,7 +10220,6 @@ var Biblioteca = function (_React$Component) {
     };
 
     _this.toggleLayout = _this.toggleLayout.bind(_this);
-    _this.triggerMediaModal = _this.triggerMediaModal.bind(_this);
     return _this;
   }
 
@@ -10183,11 +10229,6 @@ var Biblioteca = function (_React$Component) {
       this.setState({
         layout: e.currentTarget.dataset.layout
       });
-    }
-  }, {
-    key: 'triggerMediaModal',
-    value: function triggerMediaModal() {
-      this.props.modalVisible = true;
     }
   }, {
     key: 'render',
@@ -10200,7 +10241,7 @@ var Biblioteca = function (_React$Component) {
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Contenedor_jsx__["a" /* Contenedor */], { layout: this.state.layout, media: this.state.images }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'a',
-          { id: 'agregarMedia', href: '#', onClick: this.props.toggleModal },
+          { id: 'agregarMedia', href: '#', onClick: this.props.openModal },
           ' + Agregar media '
         )
       );
@@ -10212,7 +10253,7 @@ var Biblioteca = function (_React$Component) {
 
 Biblioteca.propTypes = {
   modalVisible: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
-  toggleModal: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+  openModal: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 
@@ -10442,21 +10483,24 @@ var MediaModal = function (_React$Component) {
     _this.onMediaChange = _this.onMediaChange.bind(_this);
     _this.handleFiles = _this.handleFiles.bind(_this);
     _this.handleDrop = _this.handleDrop.bind(_this);
+    _this.closeModal = _this.closeModal.bind(_this);
+    _this.handleVideoUrl = _this.handleVideoUrl.bind(_this);
+    _this.handleImageSubmit = _this.handleImageSubmit.bind(_this);
     return _this;
   }
 
   _createClass(MediaModal, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      document.querySelector('#mediaModal').addEventListener('click', this.props.toggleModal);
+      document.querySelector('#mediaModal').addEventListener('click', this.closeModal);
       document.querySelector('#fileMentira').addEventListener('click', function () {
-        document.querySelector('input[name="videoUrl"]').click();
+        document.querySelector('input[name="imageFile"]').click();
       });
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      document.querySelector('#mediaModal').removeEventListener('click', this.props.toggleModal);
+      document.querySelector('#mediaModal').removeEventListener('click', this.closeModal);
     }
   }, {
     key: 'handleVideoSubmit',
@@ -10466,11 +10510,21 @@ var MediaModal = function (_React$Component) {
       return false;
     }
   }, {
+    key: 'submitImage',
+    value: function submitImage(file) {}
+  }, {
     key: 'handleImageSubmit',
     value: function handleImageSubmit(e) {
       e.preventDefault();
-      console.log(e);
-      return false;
+      var file = e.target.querySelector('input[name="imageFile"]').files[0];
+      var name = 'test'; // e.target.querySelectir('input[name="name"]').value;
+      this.props.submitMedia({
+        media_type_id: '1',
+        options: {
+          name: name,
+          src: file.name
+        }
+      });
     }
   }, {
     key: 'handleFiles',
@@ -10484,8 +10538,8 @@ var MediaModal = function (_React$Component) {
 
       var self = this;
       var reader = new FileReader();
-      reader.onload = function (e) {
-        self.setState({ imgPreviewSrc: e.target.result });
+      reader.onload = function readerOnload(evt) {
+        self.setState({ imgPreviewSrc: evt.target.result });
       };
       reader.readAsDataURL(file);
     }
@@ -10501,10 +10555,24 @@ var MediaModal = function (_React$Component) {
       this.handleFiles({ target: { files: files } });
     }
   }, {
+    key: 'handleVideoUrl',
+    value: function handleVideoUrl(e) {
+      console.log(e.target);
+    }
+  }, {
     key: 'onMediaChange',
     value: function onMediaChange(e) {
       this.setState({
         show: e.target.value
+      });
+    }
+  }, {
+    key: 'closeModal',
+    value: function closeModal() {
+      this.props.closeModal();
+
+      this.setState({
+        imgPreviewSrc: false
       });
     }
   }, {
@@ -10523,7 +10591,7 @@ var MediaModal = function (_React$Component) {
             ' Subir Media ',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'a',
-              { href: '#', onClick: this.props.toggleModal },
+              { href: '#', onClick: this.closeModal },
               '\xD7'
             )
           ),
@@ -10557,34 +10625,32 @@ var MediaModal = function (_React$Component) {
                 { onSubmit: this.handleImageSubmit },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
-                  { className: !this.state.imgPreviewSrc ? '' : 'hidden' },
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { id: 'modalDropZone', onDrop: this.handleDrop,
-                      onDragEnter: function onDragEnter(e) {
-                        e.stopPropagation();e.preventDefault();
-                      },
-                      onDragOver: function onDragOver(e) {
-                        e.stopPropagation();e.preventDefault();
-                      } },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                      'p',
-                      null,
-                      ' Arrastra las fotos aqui...'
-                    )
-                  ),
+                  { id: 'modalDropZone', className: !this.state.imgPreviewSrc ? '' : 'active',
+                    onDrop: this.handleDrop,
+                    onDragEnter: function onDragEnter(e) {
+                      e.stopPropagation();e.preventDefault();
+                    },
+                    onDragOver: function onDragOver(e) {
+                      e.stopPropagation();e.preventDefault();
+                    }
+                  },
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'p',
-                    null,
-                    ' O buscar en carpeta...'
+                    { className: !this.state.imgPreviewSrc ? '' : 'hidden' },
+                    ' Arrastra las fotos aqui...'
+                  ),
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: this.state.imgPreviewSrc ? '' : 'hidden' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: this.state.imgPreviewSrc, className: 'img-responsive' })
                   )
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  'div',
-                  { className: this.state.imgPreviewSrc ? '' : 'hidden' },
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: this.state.imgPreviewSrc, className: 'img-responsive' })
+                  'p',
+                  null,
+                  ' O buscar en carpeta...'
                 ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'videoUrl', type: 'file', style: { display: 'none' }, onChange: this.handleFiles }),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'imageFile', type: 'file', style: { display: 'none' }, onChange: this.handleFiles }),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'button',
                   { id: 'fileMentira', type: 'button', className: 'btn' },
@@ -10614,7 +10680,8 @@ var MediaModal = function (_React$Component) {
                     ' Copia el enlace de YouTube aqui abajo.'
                   )
                 ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'videoUrl', type: 'text', placeholder: 'Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA' }),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'videoUrl', type: 'text', placeholder: 'Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA',
+                  onChange: this.handleVideoUrl }),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'button',
@@ -10633,8 +10700,9 @@ var MediaModal = function (_React$Component) {
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
 MediaModal.propTypes = {
-  toggleModal: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-  isVisible: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
+  closeModal: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  isVisible: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  submitMedia: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 
@@ -22684,6 +22752,49 @@ module.exports = traverseAllChildren;
 __webpack_require__(83);
 module.exports = __webpack_require__(84);
 
+
+/***/ }),
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export fetch */
+/* harmony export (immutable) */ __webpack_exports__["a"] = submit;
+function fetch(url, options) {
+  var promise = new Promise(function (resolve, reject) {
+    fetch(url, options).then(function (response) {
+      resolve(response);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+  return promise;
+}
+function submit(method, url, options) {
+  var xhr = new XMLHttpRequest();
+  if (options.progressHandler) {
+    xhr.upload.addEventListener('progress', options.progressHandler, false);
+  }
+  if (options.loadHandler) {
+    xhr.upload.addEventListener('load', options.loadHandler, false);
+  }
+  if (options.overriveMimeTpye) {
+    xhr.overriveMimeTpye(options.overriveMimeTpye);
+  }
+  if (options.onreadyStateChange) {
+    xhr.onreadystatechange(options.onreadyStateChange);
+  }
+  xhr.open(method, url);
+  return xhr;
+}
 
 /***/ })
 /******/ ]);

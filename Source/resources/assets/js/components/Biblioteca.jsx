@@ -28,15 +28,11 @@ class Biblioteca extends React.Component {
     };
 
     this.toggleLayout = this.toggleLayout.bind(this);
-    this.triggerMediaModal = this.triggerMediaModal.bind(this);
   }
   toggleLayout(e) {
     this.setState({
       layout: e.currentTarget.dataset.layout
     });
-  }
-  triggerMediaModal() {
-    this.props.modalVisible = true;
   }
   render() {
     return (
@@ -44,7 +40,7 @@ class Biblioteca extends React.Component {
           <Encabezado layout={ this.state.layout } handler={ this.toggleLayout }/>
           <Buscador />
           <Contenedor layout={ this.state.layout } media = { this.state.images } />
-          <a id="agregarMedia" href="#" onClick={ this.props.toggleModal }> + Agregar media </a>
+          <a id="agregarMedia" href="#" onClick={ this.props.openModal }> + Agregar media </a>
       </aside>
     );
   }
@@ -52,7 +48,7 @@ class Biblioteca extends React.Component {
 
 Biblioteca.propTypes = {
   modalVisible: PropTypes.bool,
-  toggleModal: PropTypes.func
+  openModal: PropTypes.func
 };
 
 export { Biblioteca };

@@ -23,6 +23,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { Biblioteca } from './components/Biblioteca.jsx';
 import { MediaModal } from './components/MediaModal.jsx';
+import { submit } from './utils.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -32,18 +33,53 @@ class App extends React.Component {
       modalVisible: false
     };
 
-    this.toggleModal = this.toggleModal.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
-  toggleModal() {
+  openModal() {
     this.setState({
-      modalVisible: !this.state.modalVisible
+      modalVisible: true
     });
+  }
+  closeModal() {
+    this.setState({
+      modalVisible: false
+    });
+  }
+  submitMedia(data) {
+    const request = submit('POST', 'http://localhost:3000/api/media/store', {
+      overrideMimeType: 'text/plain; charset=x-user-defined-binary',
+      progressHandler: this.uploadPercentage,
+      loadHandler: this.uploadCompleted,
+      onreadyStateChange: this.onreadyStateChange
+    });
+
+    const fd = new FormData();
+    for (const i in data) {
+      fd.append(i, data[i]);
+    }
+    request.send(fd);
+  }
+  onreadyStateChange(e) {
+    console.log(e, this.responseText);
+  }
+  uploadCompleted(e) {
+    console.log(e);
+  }
+  uploadPercentage(e) {
+    if (e.lengthComputable) {
+      const percentage = Math.round((e.loaded * 100) / e.total);
+      console.log(percentage);
+      // this.setState({
+      //   uploadPercentage: percentage
+      // });
+    }
   }
   render() {
     return (
       <div>
-        <Biblioteca toggleModal ={ this.toggleModal} />
-        <MediaModal toggleModal ={ this.toggleModal} isVisible={ this.state.modalVisible}/>
+        <Biblioteca openModal ={ this.openModal} />
+        <MediaModal submitMedia= { this.submitMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible}/>
       </div>
     );
   }

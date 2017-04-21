@@ -3510,3 +3510,18 @@ Stack trace:
 #18 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\vendor\laravel\framework\src\Illuminate\Foundation\Console\Kernel.php(123): Symfony\Component\Console\Application->run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
 #19 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\artisan(36): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
 #20 {main}  
+[2017-04-21 18:30:17] local.ERROR: exception 'Symfony\Component\Console\Exception\CommandNotFoundException' with message 'Command "migrate:refrehs" is not defined.
+
+Did you mean one of these?
+    migrate:refresh
+    migrate:reset
+    migrate:status
+    migrate:rollback
+    migrate:install
+    migrate' in C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\vendor\symfony\console\Application.php:546
+Stack trace:
+#0 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\vendor\symfony\console\Application.php(187): Symfony\Component\Console\Application->find('migrate:refrehs')
+#1 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\vendor\symfony\console\Application.php(121): Symfony\Component\Console\Application->doRun(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#2 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\vendor\laravel\framework\src\Illuminate\Foundation\Console\Kernel.php(123): Symfony\Component\Console\Application->run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#3 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\artisan(36): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#4 {main}  

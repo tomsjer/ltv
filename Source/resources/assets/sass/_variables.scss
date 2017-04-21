@@ -36,3 +36,13 @@ $input-color-placeholder: lighten($text-color, 30%);
 
 // Panels
 $panel-default-heading-bg: #fff;
+
+//== Navs
+
+$navbar-default-color:             #ccc;
+$navbar-default-bg:                #333;
+$navbar-default-border:            darken($navbar-default-bg, 6.5%);
+$navbar-default-link-color: #fff;
+
+// Grid
+$grid-gutter-width: 16px;

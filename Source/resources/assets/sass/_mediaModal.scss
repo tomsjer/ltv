@@ -51,6 +51,11 @@
         margin: 0;
         line-height: 100px;
       }
+
+      &.active {
+        border: 0;
+        height: auto;
+      }
     }
   }
 }
