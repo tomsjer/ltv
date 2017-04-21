@@ -10,7 +10,7 @@
 
 #modalDialog {
   width: 400px;
-  // height: 400px;
+  max-height: 600px;
   background: white;
   position: absolute;
   left: 50%;
@@ -40,16 +40,43 @@
     padding: 8px;
     overflow: hidden;
 
+    .img-container {
+      max-height: 600px;
+      overflow: hidden;
+    }
+
     #modalDropZone {
       width: 100%;
       height: 100px;
       border: dashed 2px #ccc;
       margin: 8px 0;
+      position: relative;
 
-      P {
+      p.placeholder {
         text-align: center;
         margin: 0;
         line-height: 100px;
+      }
+
+      .percentage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: rgba(255,255,255,0.5);
+        text-align: center;
+        display: block;
+        
+        p {
+          width: 100%;
+          font-size: 30px;
+          font-weight: 900;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+        }
       }
 
       &.active {

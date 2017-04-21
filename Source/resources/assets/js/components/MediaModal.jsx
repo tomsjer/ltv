@@ -6,7 +6,9 @@ class MediaModal extends React.Component {
     super(props);
     this.state = {
       show: 'select',
-      imgPreviewSrc: false
+      imgPreviewSrc: false,
+      disableSubmit: true,
+      disableUpload: false
     };
     this.onMediaChange = this.onMediaChange.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
@@ -36,6 +38,11 @@ class MediaModal extends React.Component {
     e.preventDefault();
     const file = e.target.querySelector('input[name="imageFile"]').files[0];
     const name = 'test'; // e.target.querySelectir('input[name="name"]').value;
+    const self = this;
+    self.setState({
+      disableSubmit: true,
+      disableUpload: true
+    });
     this.props.submitMedia({
       media_types_id: '1',
       image: file,
@@ -43,6 +50,14 @@ class MediaModal extends React.Component {
         name: name,
         src: file.name,
       })
+    })
+    .then(()=>{
+      setTimeout(()=>{
+        self.closeModal();
+      }, 2000);
+    })
+    .catch(()=>{
+
     });
   }
   handleFiles(e) {
@@ -56,7 +71,10 @@ class MediaModal extends React.Component {
     const self = this;
     const reader = new FileReader();
     reader.onload = function readerOnload(evt) {
-      self.setState({ imgPreviewSrc: evt.target.result });
+      self.setState({
+        imgPreviewSrc: evt.target.result,
+        disableSubmit: false,
+      });
     };
     reader.readAsDataURL(file);
   }
@@ -82,7 +100,9 @@ class MediaModal extends React.Component {
 
     this.setState({
       imgPreviewSrc: false,
-    });
+        disableSubmit: true,
+        disableUpload: false
+      });
   }
   render() {
     return (
@@ -106,17 +126,20 @@ class MediaModal extends React.Component {
                   onDragEnter={ (e)=>{ e.stopPropagation(); e.preventDefault(); }}
                   onDragOver={ (e)=>{ e.stopPropagation(); e.preventDefault(); }}
                 >
-                  <p className={ (!this.state.imgPreviewSrc) ? '' : 'hidden'}> Arrastra las fotos aqui...</p>
-                  <div className={ (this.state.imgPreviewSrc) ? '' : 'hidden'}>
+                  <p className={ (!this.state.imgPreviewSrc) ? 'placeholder' : 'hidden'}> Arrastra las fotos aqui...</p>
+                  <div className={ (this.props.uploadPercentage === -1) ? 'hidden percentage' : 'percentage'} >
+                    <p>{this.props.uploadPercentage} %</p>
+                  </div>
+                  <div className={ (this.state.imgPreviewSrc) ? 'img-container' : 'img-container hidden'}>
                     <img src={this.state.imgPreviewSrc} className="img-responsive"/>
                   </div>
                 </div>
                 <p> O buscar en carpeta...</p>
-                <p>{this.props.uploadPercentage} %</p>
+                
                 <input required className="form-control" name="imageFile" type="file" style={{display: 'none'}} onChange={ this.handleFiles } />
-                <button id="fileMentira" type="button" className="btn"> Buscar... </button>
+                <button id="fileMentira" type="button" className="btn" disabled={ this.state.disableUpload }> Buscar... </button>
                 <br />
-                <button type="submit" className="btn pull-right"> Listo </button>
+                <button type="submit" className="btn pull-right" disabled={this.state.disableSubmit}> Listo </button>
               </form>
             </div>
 

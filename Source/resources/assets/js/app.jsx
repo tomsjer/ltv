@@ -1,24 +1,3 @@
-
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-// require('./bootstrap');
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-// Vue.component('example', require('./components/Example.vue'));
-
-// const app = new Vue({
-//     el: '#app'
-// });
-
 import BootstrapSass from 'bootstrap-sass';
 import React from 'react';
 import ReactDom from 'react-dom';
@@ -32,13 +11,14 @@ class App extends React.Component {
 
     this.state = {
       modalVisible: false,
-      uploadPercentage: 0
+      uploadPercentage: -1
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.submitMedia = this.submitMedia.bind(this);
     this.uploadPercentage = this.uploadPercentage.bind(this);
+    this.uploadCompleted = this.uploadCompleted.bind(this);
   }
   openModal() {
     this.setState({
@@ -47,28 +27,43 @@ class App extends React.Component {
   }
   closeModal() {
     this.setState({
-      modalVisible: false
+      modalVisible: false,
+      uploadPercentage: -1
     });
   }
   submitMedia(data) {
-    const request = submit('POST', 'http://localhost:3000/api/media/store', {
-      overrideMimeType: 'text/plain; charset=x-user-defined-binary',
-      progressHandler: this.uploadPercentage,
-      loadHandler: this.uploadCompleted,
-      onreadyStateChange: this.onreadyStateChange
+    const promise = new Promise((resolve, reject)=> {
+      
+      const request = submit('POST', 'http://localhost:3000/api/media/store', {
+        overrideMimeType: 'text/plain; charset=x-user-defined-binary',
+        progressHandler: this.uploadPercentage,
+        loadHandler: (e)=> {
+          this.uploadCompleted(e);
+          resolve();
+        },
+        onreadyStateChange: this.onreadyStateChange
+      });
+
+      const fd = new FormData();
+      for (const i in data) {
+        fd.append(i, data[i]);
+      }
+      request.send(fd);
     });
 
-    const fd = new FormData();
-    for (const i in data) {
-      fd.append(i, data[i]);
-    }
-    request.send(fd);
+    return promise;
   }
   onreadyStateChange(e) {
-    console.log(e, this.responseText);
+    if (e.readyState === 4 && e.status === 200) {
+      console.log('completed');
+    } else {
+      console.log(`Error: ${e}`);
+    }
   }
-  uploadCompleted(e) {
-    console.log(e);
+  uploadCompleted() {
+    this.setState({
+      uploadCompleted: true
+    });
   }
   uploadPercentage(e) {
     if (e.lengthComputable) {

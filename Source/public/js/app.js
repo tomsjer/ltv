@@ -10055,26 +10055,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-// require('./bootstrap');
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-// Vue.component('example', require('./components/Example.vue'));
-
-// const app = new Vue({
-//     el: '#app'
-// });
-
 
 
 
@@ -10092,13 +10072,14 @@ var App = function (_React$Component) {
 
     _this.state = {
       modalVisible: false,
-      uploadPercentage: 0
+      uploadPercentage: -1
     };
 
     _this.openModal = _this.openModal.bind(_this);
     _this.closeModal = _this.closeModal.bind(_this);
     _this.submitMedia = _this.submitMedia.bind(_this);
     _this.uploadPercentage = _this.uploadPercentage.bind(_this);
+    _this.uploadCompleted = _this.uploadCompleted.bind(_this);
     return _this;
   }
 
@@ -10113,34 +10094,51 @@ var App = function (_React$Component) {
     key: 'closeModal',
     value: function closeModal() {
       this.setState({
-        modalVisible: false
+        modalVisible: false,
+        uploadPercentage: -1
       });
     }
   }, {
     key: 'submitMedia',
     value: function submitMedia(data) {
-      var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils_js__["a" /* submit */])('POST', 'http://localhost:3000/api/media/store', {
-        overrideMimeType: 'text/plain; charset=x-user-defined-binary',
-        progressHandler: this.uploadPercentage,
-        loadHandler: this.uploadCompleted,
-        onreadyStateChange: this.onreadyStateChange
+      var _this2 = this;
+
+      var promise = new Promise(function (resolve, reject) {
+
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils_js__["a" /* submit */])('POST', 'http://localhost:3000/api/media/store', {
+          overrideMimeType: 'text/plain; charset=x-user-defined-binary',
+          progressHandler: _this2.uploadPercentage,
+          loadHandler: function loadHandler(e) {
+            _this2.uploadCompleted(e);
+            resolve();
+          },
+          onreadyStateChange: _this2.onreadyStateChange
+        });
+
+        var fd = new FormData();
+        for (var i in data) {
+          fd.append(i, data[i]);
+        }
+        request.send(fd);
       });
 
-      var fd = new FormData();
-      for (var i in data) {
-        fd.append(i, data[i]);
-      }
-      request.send(fd);
+      return promise;
     }
   }, {
     key: 'onreadyStateChange',
     value: function onreadyStateChange(e) {
-      console.log(e, this.responseText);
+      if (e.readyState === 4 && e.status === 200) {
+        console.log('completed');
+      } else {
+        console.log('Error: ' + e);
+      }
     }
   }, {
     key: 'uploadCompleted',
-    value: function uploadCompleted(e) {
-      console.log(e);
+    value: function uploadCompleted() {
+      this.setState({
+        uploadCompleted: true
+      });
     }
   }, {
     key: 'uploadPercentage',
@@ -10483,7 +10481,9 @@ var MediaModal = function (_React$Component) {
 
     _this.state = {
       show: 'select',
-      imgPreviewSrc: false
+      imgPreviewSrc: false,
+      disableSubmit: true,
+      disableUpload: false
     };
     _this.onMediaChange = _this.onMediaChange.bind(_this);
     _this.handleFiles = _this.handleFiles.bind(_this);
@@ -10523,6 +10523,11 @@ var MediaModal = function (_React$Component) {
       e.preventDefault();
       var file = e.target.querySelector('input[name="imageFile"]').files[0];
       var name = 'test'; // e.target.querySelectir('input[name="name"]').value;
+      var self = this;
+      self.setState({
+        disableSubmit: true,
+        disableUpload: true
+      });
       this.props.submitMedia({
         media_types_id: '1',
         image: file,
@@ -10530,7 +10535,11 @@ var MediaModal = function (_React$Component) {
           name: name,
           src: file.name
         })
-      });
+      }).then(function () {
+        setTimeout(function () {
+          self.closeModal();
+        }, 2000);
+      }).catch(function () {});
     }
   }, {
     key: 'handleFiles',
@@ -10545,7 +10554,10 @@ var MediaModal = function (_React$Component) {
       var self = this;
       var reader = new FileReader();
       reader.onload = function readerOnload(evt) {
-        self.setState({ imgPreviewSrc: evt.target.result });
+        self.setState({
+          imgPreviewSrc: evt.target.result,
+          disableSubmit: false
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -10578,7 +10590,9 @@ var MediaModal = function (_React$Component) {
       this.props.closeModal();
 
       this.setState({
-        imgPreviewSrc: false
+        imgPreviewSrc: false,
+        disableSubmit: true,
+        disableUpload: false
       });
     }
   }, {
@@ -10642,12 +10656,22 @@ var MediaModal = function (_React$Component) {
                   },
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'p',
-                    { className: !this.state.imgPreviewSrc ? '' : 'hidden' },
+                    { className: !this.state.imgPreviewSrc ? 'placeholder' : 'hidden' },
                     ' Arrastra las fotos aqui...'
                   ),
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: this.state.imgPreviewSrc ? '' : 'hidden' },
+                    { className: this.props.uploadPercentage === -1 ? 'hidden percentage' : 'percentage' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'p',
+                      null,
+                      this.props.uploadPercentage,
+                      ' %'
+                    )
+                  ),
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: this.state.imgPreviewSrc ? 'img-container' : 'img-container hidden' },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: this.state.imgPreviewSrc, className: 'img-responsive' })
                   )
                 ),
@@ -10656,22 +10680,16 @@ var MediaModal = function (_React$Component) {
                   null,
                   ' O buscar en carpeta...'
                 ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  'p',
-                  null,
-                  this.props.uploadPercentage,
-                  ' %'
-                ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'imageFile', type: 'file', style: { display: 'none' }, onChange: this.handleFiles }),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'button',
-                  { id: 'fileMentira', type: 'button', className: 'btn' },
+                  { id: 'fileMentira', type: 'button', className: 'btn', disabled: this.state.disableUpload },
                   ' Buscar... '
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'button',
-                  { type: 'submit', className: 'btn pull-right' },
+                  { type: 'submit', className: 'btn pull-right', disabled: this.state.disableSubmit },
                   ' Listo '
                 )
               )
