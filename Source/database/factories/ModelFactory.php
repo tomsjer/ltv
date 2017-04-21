@@ -26,6 +26,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->defineAs(App\Employee::class,'Employees', function (Faker\Generator $faker) {
 
     return [
+        'dni' => $faker->unique()->randomNumber(8),
         'name' => $faker->name,
         'lastname' => $faker->lastname,
         'email' => $faker->unique()->safeEmail,
