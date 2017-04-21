@@ -3525,3 +3525,9 @@ Stack trace:
 #2 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\vendor\laravel\framework\src\Illuminate\Foundation\Console\Kernel.php(123): Symfony\Component\Console\Application->run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
 #3 C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\artisan(36): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
 #4 {main}  
+[2017-04-21 19:47:34] local.ERROR: exception 'Symfony\Component\Debug\Exception\FatalErrorException' with message 'Class 'App\Http\Controllers\Input' not found' in C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\app\Http\Controllers\MediaController.php:66
+Stack trace:
+#0 {main}  
+[2017-04-21 19:51:00] local.ERROR: exception 'Symfony\Component\Debug\Exception\FatalErrorException' with message 'Call to a member function path() on null' in C:\Users\tomas.jerman\Sitios\lorealtv\LORA254-Loreal-TV\Source\app\Http\Controllers\MediaController.php:66
+Stack trace:
+#0 {main}  

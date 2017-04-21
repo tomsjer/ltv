@@ -30,11 +30,14 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      modalVisible: false
+      modalVisible: false,
+      uploadPercentage: 0
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.submitMedia = this.submitMedia.bind(this);
+    this.uploadPercentage = this.uploadPercentage.bind(this);
   }
   openModal() {
     this.setState({
@@ -69,17 +72,16 @@ class App extends React.Component {
   uploadPercentage(e) {
     if (e.lengthComputable) {
       const percentage = Math.round((e.loaded * 100) / e.total);
-      console.log(percentage);
-      // this.setState({
-      //   uploadPercentage: percentage
-      // });
+      this.setState({
+        uploadPercentage: percentage
+      });
     }
   }
   render() {
     return (
       <div>
         <Biblioteca openModal ={ this.openModal} />
-        <MediaModal submitMedia= { this.submitMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible}/>
+        <MediaModal submitMedia= { this.submitMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} uploadPercentage={ this.state.uploadPercentage}/>
       </div>
     );
   }

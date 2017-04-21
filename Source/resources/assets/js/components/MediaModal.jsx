@@ -37,11 +37,12 @@ class MediaModal extends React.Component {
     const file = e.target.querySelector('input[name="imageFile"]').files[0];
     const name = 'test'; // e.target.querySelectir('input[name="name"]').value;
     this.props.submitMedia({
-      media_type_id: '1',
-      options: {
+      media_types_id: '1',
+      image: file,
+      options: JSON.stringify({
         name: name,
-        src: file.name
-      }
+        src: file.name,
+      })
     });
   }
   handleFiles(e) {
@@ -111,6 +112,7 @@ class MediaModal extends React.Component {
                   </div>
                 </div>
                 <p> O buscar en carpeta...</p>
+                <p>{this.props.uploadPercentage} %</p>
                 <input required className="form-control" name="imageFile" type="file" style={{display: 'none'}} onChange={ this.handleFiles } />
                 <button id="fileMentira" type="button" className="btn"> Buscar... </button>
                 <br />
@@ -138,7 +140,8 @@ class MediaModal extends React.Component {
 MediaModal.propTypes = {
   closeModal: PropTypes.func,
   isVisible: PropTypes.bool,
-  submitMedia: PropTypes.func
+  submitMedia: PropTypes.func,
+  uploadPercentage: PropTypes.number
 };
 
 export { MediaModal };
