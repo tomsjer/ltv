@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Media;
 use Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class MediaController extends Controller
 {
@@ -15,7 +16,6 @@ class MediaController extends Controller
      */
     public function index()
     {
-        //
         //
         return response()->json(
  
@@ -53,19 +53,25 @@ class MediaController extends Controller
                     'errors'  => $validator->errors()->all()
                 ]);
             }
-            
-            if ($request->hasFile('image')) {
-                //
-                $path = $request->image->storeAs('images', 'prueba.jpg');
-            }
-            // Si el validador pasa, almacenamos el media
+            $media = Media::create($request->all());
 
-            Media::create($request->all());
+            // Si el validador pasa, almacenamos el media
+            if ($request->hasFile('image')) {
+                $media_options = json_decode($request->options);
+                $name = $media_options->name;
+                $extension = $request->image->extension();
+                $path = $request->image->storeAs('public/images', $media->id."_".$name.".".$extension);
+                $media_options->src = "storage/images/".$media->id."_".$media_options->name.".".$request->image->extension();
+                $media->options = json_encode($media_options);
+                $media->save();
+
+            }
             return response()->json(['created' => true]);
+            
         } catch (Exception $e) {
             // Si algo sale mal devolvemos un error.
-            \Log::info('Error creating user: '.$e);
-            return response()->json(['created' => false], 500);
+            \Log::info('Error creating Media: '.$e);
+            return response()->json(['created' => false]);
         }
     }
 
@@ -103,8 +109,6 @@ class MediaController extends Controller
         //Get the Media
         $media = Media::find($request->id);
         
-        var_dump($request->id);exit();
-
         if (!$media) {
             return response()->json([
                 'message' => 'Record not found',
@@ -116,6 +120,7 @@ class MediaController extends Controller
         }
         // Creamos las reglas de validación
         $rules = [
+            'id' => 'required',
             'media_types_id' => 'required',
             'options'      => 'required',
             ];
@@ -131,13 +136,15 @@ class MediaController extends Controller
                     'errors'  => $validator->errors()->all()
                 ]);
             }
-            // Si el validador pasa, almacenamos la media
-            Media::create($request->all());
-            return response()->json(['created' => true]);
+            // Si el validador pasa, actualizamos la media
+            $media->media_types_id = $request->media_types_id;
+            $media->options = $request->options;
+            $media->save();
+            return response()->json(['update' => true]);
         } catch (Exception $e) {
             // Si algo sale mal devolvemos un error.
-            \Log::info('Error creating user: '.$e);
-            return response()->json(['created' => false], 500);
+            \Log::info('Error update Media: '.$e);
+            return response()->json(['created' => false]);
         }
 
 
@@ -157,7 +164,7 @@ class MediaController extends Controller
         if (!$media) {
             return response()->json([
                 'message' => 'Record not found',
-            ], 404);
+            ]);
         }
  
         if($media->delete()) {
@@ -167,7 +174,8 @@ class MediaController extends Controller
         } else {
             return response()->json([
                 'message' => 'Could not delete a media',
-            ], 404);
+            ]);
         }
     }
+
 }

@@ -17,29 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index');
-
-Route::group(['prefix' => 'api', 'middleware' => ['auth']], function () {
-    //
-    //Route::get('/gets', 'EmployeeController@index');
-
-    
-
-
-
-
-});
 //Route::group(['prefix' => 'api', 'middleware' => ['auth']], function () {
-Route::group(['prefix' => 'api'], function () {
-    //
+Route::group(['prefix' => 'api'], function () { 
+	//
     //Employee
     //Route::get('/gets', 'EmployeeController@index');
 	Route::get('employee/get','EmployeeController@index');
@@ -53,15 +33,26 @@ Route::group(['prefix' => 'api'], function () {
 	//{"dni":1234562,"name":"Jerrold Bogisich","lastname":"Bogisich","email":"chelsea20@example.net","birth_date":"2013-07-10"}
 	Route::post('employee/store','EmployeeController@store');
 
+	//MediType
+	Route::get('mediatype/get','MediaTypeController@index');
+
 	//Media
 	Route::get('media/get','MediaController@index');
 
 	Route::get('media/get/{id}','MediaController@show');
-	//{"media_types_id" : "1", "options": "{'name':'Imagen3', 'src':'media/image/imagen3.png'}"}
+	//{ "media_types_id" : "1", "options": "{\"name\" : \"Imagen3\", \"src\" : \"storage/images/imagen.png\"}"}
 	Route::post('media/store','MediaController@store');	
-
-	Route::put('media/put','MediaController@update'); //Falta Programar
+	//{"id" : "6", "media_types_id" : "1", "options": "{\"name\":\"Imagen6\", \"src\" : \"storage/images/imagen.png\"}"}
+	Route::put('media/put','MediaController@update'); 
 
 	Route::delete('media/destroy/{id}','MediaController@destroy');
 
 });
+
+Route::group(['middleware' => ['auth']], function () {
+
+	Route::get('/home', 'HomeController@index');
+
+});
+
+
