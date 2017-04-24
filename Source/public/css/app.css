@@ -8326,8 +8326,77 @@ aside#biblioteca #encabezado button.active {
   background: #222;
 }
 
-aside#biblioteca #contenedor img {
+aside#biblioteca #buscador {
+  padding: 8px;
+}
+
+aside#biblioteca #contenedor .item {
   margin: 8px 0 0 8px;
+  overflow: hidden;
+  position: relative;
+  float: left;
+  background: #f3f3f3;
+}
+
+aside#biblioteca #contenedor .item .img-container {
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  position: relative;
+}
+
+aside#biblioteca #contenedor .item .img-container img {
+  max-width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+aside#biblioteca #contenedor .item ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+aside#biblioteca #contenedor.grid .item {
+  width: 100px;
+  height: 100px;
+}
+
+aside#biblioteca #contenedor.grid .item .img-container {
+  width: 100px;
+  height: 100px;
+}
+
+aside#biblioteca #contenedor.grid .item .img-container img {
+  max-height: 100px;
+}
+
+aside#biblioteca #contenedor.list .item {
+  width: calc(100% - 16px);
+  height: 80px;
+}
+
+aside#biblioteca #contenedor.list .item .img-container {
+  width: 80px;
+  height: 80px;
+  float: left;
+}
+
+aside#biblioteca #contenedor.list .item .img-container img {
+  max-height: 80px;
+}
+
+aside#biblioteca #contenedor.list .item ul {
+  position: relative;
+  float: left;
+  width: calc(100% - 80px);
+  padding: 4px;
+  font-size: 14px;
+  text-align: right;
 }
 
 aside#biblioteca #agregarMedia {

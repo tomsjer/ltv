@@ -9,22 +9,7 @@ class Biblioteca extends React.Component {
     super(props);
 
     this.state = {
-      layout: 'grid',
-      images: [
-        {
-          src: 'http://placehold.it/100/100',
-        },
-        {
-          src: 'http://placehold.it/100/100',
-        },
-        {
-          src: 'http://placehold.it/100/100',
-        },
-        {
-          src: 'http://placehold.it/100/100',
-        },
-      ],
-      videos: [],
+      layout: 'grid'
     };
 
     this.toggleLayout = this.toggleLayout.bind(this);
@@ -34,12 +19,15 @@ class Biblioteca extends React.Component {
       layout: e.currentTarget.dataset.layout
     });
   }
+  filterContent(e) {
+    
+  }
   render() {
     return (
       <aside id="biblioteca">
           <Encabezado layout={ this.state.layout } handler={ this.toggleLayout }/>
           <Buscador />
-          <Contenedor layout={ this.state.layout } media = { this.state.images } />
+          <Contenedor layout={ this.state.layout } media = { this.props.media } />
           <a id="agregarMedia" href="#" onClick={ this.props.openModal }> + Agregar media </a>
       </aside>
     );
@@ -48,7 +36,8 @@ class Biblioteca extends React.Component {
 
 Biblioteca.propTypes = {
   modalVisible: PropTypes.bool,
-  openModal: PropTypes.func
+  openModal: PropTypes.func,
+  media: PropTypes.array
 };
 
 export { Biblioteca };

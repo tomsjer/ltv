@@ -15,8 +15,8 @@ export function submit(method, url, options) {
   if (options.progressHandler) {
     xhr.upload.addEventListener('progress', options.progressHandler, false);
   }
-  if (options.loadHandler) {
-    xhr.upload.addEventListener('load', options.loadHandler, false);
+  if (options.uploadHandler) {
+    xhr.upload.addEventListener('load', options.uploadHandler, false);
   }
   if (options.overriveMimeTpye) {
     xhr.overriveMimeTpye(options.overriveMimeTpye);

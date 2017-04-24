@@ -9,9 +9,12 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    const self = this;
+
     this.state = {
       modalVisible: false,
-      uploadPercentage: -1
+      uploadPercentage: -1,
+      media: []
     };
 
     this.openModal = this.openModal.bind(this);
@@ -19,6 +22,12 @@ class App extends React.Component {
     this.submitMedia = this.submitMedia.bind(this);
     this.uploadPercentage = this.uploadPercentage.bind(this);
     this.uploadCompleted = this.uploadCompleted.bind(this);
+    this.errorHandler = this.errorHandler.bind(this);
+    this.mediaDownload = this.mediaDownload.bind(this);
+
+    window.addEventListener('load', function onLoad(){
+      self.getMedia();
+    });
   }
   openModal() {
     this.setState({
@@ -33,15 +42,16 @@ class App extends React.Component {
   }
   submitMedia(data) {
     const promise = new Promise((resolve, reject)=> {
-      
+
       const request = submit('POST', 'http://localhost:3000/api/media/store', {
         overrideMimeType: 'text/plain; charset=x-user-defined-binary',
         progressHandler: this.uploadPercentage,
-        loadHandler: (e)=> {
+        uploadHandler: (e)=> {
           this.uploadCompleted(e);
           resolve();
         },
-        onreadyStateChange: this.onreadyStateChange
+        onreadyStateChange: this.onreadyStateChange,
+        errorHandler: this.errorHandler
       });
 
       const fd = new FormData();
@@ -52,6 +62,38 @@ class App extends React.Component {
     });
 
     return promise;
+  }
+  getMedia() {
+    const promise = new Promise((resolve, reject)=> {
+
+      const request = submit('GET', 'http://localhost:3000/api/media/get', {
+
+        progressHandler: (e) => {
+          console.log(e);
+        },
+        onreadyStateChange: (e)=> {
+          if (e.target.readyState === 4 && e.target.status === 200) {
+            this.mediaDownload(e);
+            resolve(e);
+          } else {
+            console.log(`Error: ${e}`);
+          }
+        },
+        errorHandler: this.errorHandler
+      });
+      request.send();
+    });
+
+    return promise;
+  }
+  mediaDownload(e) {
+    const media = JSON.parse(e.target.response);
+    media.map((element)=>{
+      element.options = JSON.parse(element.options);
+    });
+    this.setState({
+      media: media
+    });
   }
   onreadyStateChange(e) {
     if (e.readyState === 4 && e.status === 200) {
@@ -73,10 +115,14 @@ class App extends React.Component {
       });
     }
   }
+  errorHandler(e) {
+    // TODO: Handle error in AJAX requests
+    console.log(e);
+  }
   render() {
     return (
       <div>
-        <Biblioteca openModal ={ this.openModal} />
+        <Biblioteca media={this.state.media} openModal ={ this.openModal} />
         <MediaModal submitMedia= { this.submitMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} uploadPercentage={ this.state.uploadPercentage}/>
       </div>
     );

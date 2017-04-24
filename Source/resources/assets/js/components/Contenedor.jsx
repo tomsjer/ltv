@@ -2,19 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class Contenedor extends React.Component {
-  gridLayout(element, i) {
-    return <img key={i} src= { element.src } />;
-  }
-  listLayout(element, i) {
-    return <li key={i}><img src={element.src} /></li>;
+  renderMedia(element, i) {
+    return (
+      <div className="item" key={i}>
+        <div className="img-container">
+          <img src= { element.options.src } />
+        </div>
+        <ul>
+          <li>{element.created_at.slice(0, 10)}</li>
+        </ul>
+      </div>
+    );
   }
   render() {
     const media = [];
     this.props.media.forEach((element, i)=> {
-      media.push(this[this.props.layout + 'Layout'](element, i));
+      media.push(this.renderMedia(element, i));
     });
     return (
-      <div id="contenedor">
+      <div id="contenedor" className={ this.props.layout}>
         { media }
       </div>
     );
