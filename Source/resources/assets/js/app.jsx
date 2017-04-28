@@ -3,12 +3,13 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { Biblioteca } from './components/Biblioteca.jsx';
 import { MediaModal } from './components/MediaModal.jsx';
+import { Slideshow } from './components/Slideshow.jsx';
 import { submit } from './utils.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
+ 
     const self = this;
 
     this.state = {
@@ -24,8 +25,9 @@ class App extends React.Component {
     this.uploadCompleted = this.uploadCompleted.bind(this);
     this.errorHandler = this.errorHandler.bind(this);
     this.mediaDownload = this.mediaDownload.bind(this);
+    this.handleFilterText = this.handleFilterText.bind(this);
 
-    window.addEventListener('load', function onLoad(){
+    window.addEventListener('load', function onLoad() {
       self.getMedia();
     });
   }
@@ -43,7 +45,7 @@ class App extends React.Component {
   submitMedia(data) {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = submit('POST', 'http://localhost:3000/api/media/store', {
+      const request = submit('POST', `${window.location.origin}/api/media/store`, {
         overrideMimeType: 'text/plain; charset=x-user-defined-binary',
         progressHandler: this.uploadPercentage,
         uploadHandler: (e)=> {
@@ -66,7 +68,7 @@ class App extends React.Component {
   getMedia() {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = submit('GET', 'http://localhost:3000/api/media/get', {
+      const request = submit('GET', `${window.location.origin}/api/media/get`, {
 
         progressHandler: (e) => {
           console.log(e);
@@ -92,11 +94,17 @@ class App extends React.Component {
       element.options = JSON.parse(element.options);
     });
     this.setState({
-      media: media
+      media: media,
+      filterText: ''
+    });
+  }
+  handleFilterText(e) {
+    this.setState({
+      filterText: e.target.value
     });
   }
   onreadyStateChange(e) {
-    if (e.readyState === 4 && e.status === 200) {
+    if (e.target.readyState === 4 && e.target.status === 200) {
       console.log('completed');
     } else {
       console.log(`Error: ${e}`);
@@ -106,6 +114,7 @@ class App extends React.Component {
     this.setState({
       uploadCompleted: true
     });
+    this.getMedia();
   }
   uploadPercentage(e) {
     if (e.lengthComputable) {
@@ -122,7 +131,8 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Biblioteca media={this.state.media} openModal ={ this.openModal} />
+        <Biblioteca media={this.state.media} openModal ={ this.openModal} filter={this.handleFilterText} filterText={ this.state.filterText }/>
+        <Slideshow />
         <MediaModal submitMedia= { this.submitMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} uploadPercentage={ this.state.uploadPercentage}/>
       </div>
     );

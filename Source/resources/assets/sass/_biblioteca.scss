@@ -23,10 +23,26 @@ aside#biblioteca {
 
   #buscador {
     padding: 8px;
-  }
+    border-bottom: solid 1px #d6d6d6;
 
+    span.btn,
+    span.btn:hover,
+    span.btn:active {
+      cursor: default;
+      box-shadow: none;
+    }
+  }
+  #contenedor-wrapper {
+    position: relative;
+    height: calc(100% - 138px);
+    overflow: hidden;
+  }
   #contenedor {
-    
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-bottom: 8px;
     .item {
       margin: 8px 0 0 8px;
       overflow: hidden;
@@ -118,6 +134,7 @@ aside#biblioteca {
     &:hover {
       color: white;
       text-decoration: underline;
+      background: cadetblue;
     }
   }
 }

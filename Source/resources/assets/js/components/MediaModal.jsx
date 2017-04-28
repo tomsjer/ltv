@@ -7,6 +7,7 @@ class MediaModal extends React.Component {
     this.state = {
       show: 'select',
       imgPreviewSrc: false,
+      imgName: '',
       disableSubmit: true,
       disableUpload: false
     };
@@ -37,9 +38,9 @@ class MediaModal extends React.Component {
   handleImageSubmit(e) {
     e.preventDefault();
     const file = e.target.querySelector('input[name="imageFile"]').files[0];
-    const name = 'test'; // e.target.querySelectir('input[name="name"]').value;
+    const name = e.target.querySelector('input[name="name"]').value;
     const self = this;
-    self.setState({
+    this.setState({
       disableSubmit: true,
       disableUpload: true
     });
@@ -54,6 +55,7 @@ class MediaModal extends React.Component {
     .then(()=>{
       setTimeout(()=>{
         self.closeModal();
+
       }, 2000);
     })
     .catch(()=>{
@@ -64,7 +66,7 @@ class MediaModal extends React.Component {
     const file = e.target.files[0];
     const imageType = /^image\//;
 
-    if (!imageType.test(file.type)) {
+    if (!file || !imageType.test(file.type)) {
       return;
     }
 
@@ -101,7 +103,8 @@ class MediaModal extends React.Component {
     this.setState({
       imgPreviewSrc: false,
         disableSubmit: true,
-        disableUpload: false
+        disableUpload: false,
+        imgName: '',
       });
   }
   render() {
@@ -121,6 +124,7 @@ class MediaModal extends React.Component {
             <div id="mediaImagen" className={ (this.state.show === 'imagen') ? '' : 'hidden' }>
               <form onSubmit={ this.handleImageSubmit }>
 
+                <label htmlFor="name"> Nombre: <input type="text" placeholder="" name="name" className="form-control"/></label>
                 <div id="modalDropZone" className={ (!this.state.imgPreviewSrc) ? '' : 'active'}
                   onDrop={ this.handleDrop }
                   onDragEnter={ (e)=>{ e.stopPropagation(); e.preventDefault(); }}

@@ -10046,7 +10046,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_dom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Biblioteca_jsx__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_MediaModal_jsx__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_js__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Slideshow_jsx__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_js__ = __webpack_require__(90);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -10054,6 +10055,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -10085,6 +10087,7 @@ var App = function (_React$Component) {
     _this.uploadCompleted = _this.uploadCompleted.bind(_this);
     _this.errorHandler = _this.errorHandler.bind(_this);
     _this.mediaDownload = _this.mediaDownload.bind(_this);
+    _this.handleFilterText = _this.handleFilterText.bind(_this);
 
     window.addEventListener('load', function onLoad() {
       self.getMedia();
@@ -10114,7 +10117,7 @@ var App = function (_React$Component) {
 
       var promise = new Promise(function (resolve, reject) {
 
-        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils_js__["a" /* submit */])('POST', 'http://localhost:3000/api/media/store', {
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__utils_js__["a" /* submit */])('POST', window.location.origin + '/api/media/store', {
           overrideMimeType: 'text/plain; charset=x-user-defined-binary',
           progressHandler: _this2.uploadPercentage,
           uploadHandler: function uploadHandler(e) {
@@ -10141,7 +10144,7 @@ var App = function (_React$Component) {
 
       var promise = new Promise(function (resolve, reject) {
 
-        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils_js__["a" /* submit */])('GET', 'http://localhost:3000/api/media/get', {
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__utils_js__["a" /* submit */])('GET', window.location.origin + '/api/media/get', {
 
           progressHandler: function progressHandler(e) {
             console.log(e);
@@ -10169,13 +10172,21 @@ var App = function (_React$Component) {
         element.options = JSON.parse(element.options);
       });
       this.setState({
-        media: media
+        media: media,
+        filterText: ''
+      });
+    }
+  }, {
+    key: 'handleFilterText',
+    value: function handleFilterText(e) {
+      this.setState({
+        filterText: e.target.value
       });
     }
   }, {
     key: 'onreadyStateChange',
     value: function onreadyStateChange(e) {
-      if (e.readyState === 4 && e.status === 200) {
+      if (e.target.readyState === 4 && e.target.status === 200) {
         console.log('completed');
       } else {
         console.log('Error: ' + e);
@@ -10187,6 +10198,7 @@ var App = function (_React$Component) {
       this.setState({
         uploadCompleted: true
       });
+      this.getMedia();
     }
   }, {
     key: 'uploadPercentage',
@@ -10210,7 +10222,8 @@ var App = function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         'div',
         null,
-        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_Biblioteca_jsx__["a" /* Biblioteca */], { media: this.state.media, openModal: this.openModal }),
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_Biblioteca_jsx__["a" /* Biblioteca */], { media: this.state.media, openModal: this.openModal, filter: this.handleFilterText, filterText: this.state.filterText }),
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__components_Slideshow_jsx__["a" /* Slideshow */], null),
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_MediaModal_jsx__["a" /* MediaModal */], { submitMedia: this.submitMedia, closeModal: this.closeModal, isVisible: this.state.modalVisible, uploadPercentage: this.state.uploadPercentage })
       );
     }
@@ -10278,17 +10291,14 @@ var Biblioteca = function (_React$Component) {
       });
     }
   }, {
-    key: 'filterContent',
-    value: function filterContent(e) {}
-  }, {
     key: 'render',
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'aside',
         { id: 'biblioteca' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Encabezado_jsx__["a" /* Encabezado */], { layout: this.state.layout, handler: this.toggleLayout }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Buscador_jsx__["a" /* Buscador */], null),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Contenedor_jsx__["a" /* Contenedor */], { layout: this.state.layout, media: this.props.media }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Buscador_jsx__["a" /* Buscador */], { filter: this.props.filter }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Contenedor_jsx__["a" /* Contenedor */], { layout: this.state.layout, media: this.props.media, filterText: this.props.filterText }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'a',
           { id: 'agregarMedia', href: '#', onClick: this.props.openModal },
@@ -10304,7 +10314,9 @@ var Biblioteca = function (_React$Component) {
 Biblioteca.propTypes = {
   modalVisible: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
   openModal: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-  media: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array
+  media: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
+  filter: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  filterText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
 };
 
 
@@ -10316,6 +10328,8 @@ Biblioteca.propTypes = {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Buscador; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -10324,6 +10338,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -10337,23 +10352,19 @@ var Buscador = function (_React$Component) {
   }
 
   _createClass(Buscador, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        "div",
-        { id: "buscador" },
+        'div',
+        { id: 'buscador' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          "div",
-          { className: "input-group" },
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", { type: "text", className: "form-control", placeholder: "filtrar..." }),
+          'div',
+          { className: 'input-group' },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'form-control', placeholder: 'filtrar...', onChange: this.props.filter }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "span",
-            { className: "input-group-btn" },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              "button",
-              { type: "btn", className: "btn btn-sm" },
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", { className: "glyphicon glyphicon-search" })
-            )
+            'span',
+            { className: 'input-group-btn' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'btn glyphicon glyphicon-search' })
           )
         )
       );
@@ -10362,6 +10373,10 @@ var Buscador = function (_React$Component) {
 
   return Buscador;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+Buscador.propTypes = {
+  filter: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+};
 
 
 
@@ -10412,6 +10427,11 @@ var Contenedor = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'li',
             null,
+            element.options.name
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'li',
+            null,
             element.created_at.slice(0, 10)
           )
         )
@@ -10423,13 +10443,22 @@ var Contenedor = function (_React$Component) {
       var _this2 = this;
 
       var media = [];
-      this.props.media.forEach(function (element, i) {
+      this.props.media.sort(function (a, b) {
+        return a.updated_at > b.updated_at ? -1 : 1;
+      }).forEach(function (element, i) {
+        if (_this2.props.filterText !== '' && element.options.name.indexOf(_this2.props.filterText) === -1) {
+          return;
+        }
         media.push(_this2.renderMedia(element, i));
       });
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { id: 'contenedor', className: this.props.layout },
-        media
+        { id: 'contenedor-wrapper' },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          { id: 'contenedor', className: this.props.layout },
+          media
+        )
       );
     }
   }]);
@@ -10439,7 +10468,8 @@ var Contenedor = function (_React$Component) {
 
 Contenedor.propTypes = {
   media: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
-  layout: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
+  layout: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+  filterText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
 };
 
 
@@ -10546,6 +10576,7 @@ var MediaModal = function (_React$Component) {
     _this.state = {
       show: 'select',
       imgPreviewSrc: false,
+      imgName: '',
       disableSubmit: true,
       disableUpload: false
     };
@@ -10586,9 +10617,9 @@ var MediaModal = function (_React$Component) {
     value: function handleImageSubmit(e) {
       e.preventDefault();
       var file = e.target.querySelector('input[name="imageFile"]').files[0];
-      var name = 'test'; // e.target.querySelectir('input[name="name"]').value;
+      var name = e.target.querySelector('input[name="name"]').value;
       var self = this;
-      self.setState({
+      this.setState({
         disableSubmit: true,
         disableUpload: true
       });
@@ -10611,7 +10642,7 @@ var MediaModal = function (_React$Component) {
       var file = e.target.files[0];
       var imageType = /^image\//;
 
-      if (!imageType.test(file.type)) {
+      if (!file || !imageType.test(file.type)) {
         return;
       }
 
@@ -10656,7 +10687,8 @@ var MediaModal = function (_React$Component) {
       this.setState({
         imgPreviewSrc: false,
         disableSubmit: true,
-        disableUpload: false
+        disableUpload: false,
+        imgName: ''
       });
     }
   }, {
@@ -10707,6 +10739,12 @@ var MediaModal = function (_React$Component) {
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'form',
                 { onSubmit: this.handleImageSubmit },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'label',
+                  { htmlFor: 'name' },
+                  ' Nombre: ',
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', placeholder: '', name: 'name', className: 'form-control' })
+                ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
                   { id: 'modalDropZone', className: !this.state.imgPreviewSrc ? '' : 'active',
@@ -35525,6 +35563,61 @@ module.exports = traverseAllChildren;
 
 __webpack_require__(83);
 module.exports = __webpack_require__(84);
+
+
+/***/ }),
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Slideshow; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var Slideshow = function (_React$Component) {
+  _inherits(Slideshow, _React$Component);
+
+  function Slideshow() {
+    _classCallCheck(this, Slideshow);
+
+    return _possibleConstructorReturn(this, (Slideshow.__proto__ || Object.getPrototypeOf(Slideshow)).apply(this, arguments));
+  }
+
+  _createClass(Slideshow, [{
+    key: "render",
+    value: function render() {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { className: "container" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          "h1",
+          null,
+          "Slideshow"
+        )
+      );
+    }
+  }]);
+
+  return Slideshow;
+}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
 
 
 /***/ })

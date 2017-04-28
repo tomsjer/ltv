@@ -19,15 +19,12 @@ class Biblioteca extends React.Component {
       layout: e.currentTarget.dataset.layout
     });
   }
-  filterContent(e) {
-    
-  }
   render() {
     return (
       <aside id="biblioteca">
           <Encabezado layout={ this.state.layout } handler={ this.toggleLayout }/>
-          <Buscador />
-          <Contenedor layout={ this.state.layout } media = { this.props.media } />
+          <Buscador filter={ this.props.filter } />
+          <Contenedor layout={ this.state.layout } media = { this.props.media } filterText={ this.props.filterText }/>
           <a id="agregarMedia" href="#" onClick={ this.props.openModal }> + Agregar media </a>
       </aside>
     );
@@ -37,7 +34,9 @@ class Biblioteca extends React.Component {
 Biblioteca.propTypes = {
   modalVisible: PropTypes.bool,
   openModal: PropTypes.func,
-  media: PropTypes.array
+  media: PropTypes.array,
+  filter: PropTypes.func,
+  filterText: PropTypes.string
 };
 
 export { Biblioteca };

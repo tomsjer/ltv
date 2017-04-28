@@ -9,6 +9,7 @@ class Contenedor extends React.Component {
           <img src= { element.options.src } />
         </div>
         <ul>
+          <li>{element.options.name}</li>
           <li>{element.created_at.slice(0, 10)}</li>
         </ul>
       </div>
@@ -16,12 +17,20 @@ class Contenedor extends React.Component {
   }
   render() {
     const media = [];
-    this.props.media.forEach((element, i)=> {
+    this.props.media.sort((a, b)=>{
+      return (a.updated_at > b.updated_at) ? -1 : 1;
+    })
+    .forEach((element, i)=> {
+      if (this.props.filterText !== '' && element.options.name.indexOf(this.props.filterText) === -1) {
+        return;
+      }
       media.push(this.renderMedia(element, i));
     });
     return (
-      <div id="contenedor" className={ this.props.layout}>
-        { media }
+      <div id="contenedor-wrapper">
+        <div id="contenedor" className={ this.props.layout}>
+          { media }
+        </div>
       </div>
     );
   }
@@ -29,7 +38,8 @@ class Contenedor extends React.Component {
 
 Contenedor.propTypes = {
   media: PropTypes.array,
-  layout: PropTypes.string
+  layout: PropTypes.string,
+  filterText: PropTypes.string
 };
 
 export { Contenedor };
