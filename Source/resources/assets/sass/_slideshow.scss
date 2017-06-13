@@ -1,0 +1,56 @@
+.slideShow-container {
+  position: relative;
+  width: calc(100% - #{$biblioteca-width});
+  float: left;
+  height: 100%;
+
+  .slide {
+    border: solid 1px red;
+    // width: 600px;
+    min-height: 400px;
+    // position: relative;
+    // float: left;
+  }
+
+  #slideScroller {
+    position: relative;
+    .arrow {
+      width: 48px;
+      height: 48px;
+      position: absolute;
+      border: solid 1px red;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &.left {
+        left: 0;
+      }
+
+      &.right {
+        right: 0;
+      }
+    }
+
+    .slidesThumbnails {
+      padding: 0 24px;
+      margin: 0;
+      li {
+        list-style-type: none;
+        position: relative;
+        float: left;
+      }
+    }
+  }
+
+  .slide-form {
+    border: solid 1px red;
+    // position: relative;
+    // float: left;
+    // overflow: hidden;
+    // display: block;
+    // height: 100%;
+  }
+
+  @media screen and (min-width: 992px) {
+  }
+}
