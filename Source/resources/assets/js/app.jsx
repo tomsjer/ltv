@@ -1,10 +1,12 @@
-import BootstrapSass from 'bootstrap-sass';
+import 'bootstrap-sass';
 import React from 'react';
 import ReactDom from 'react-dom';
 import { Biblioteca } from './components/Biblioteca.jsx';
 import { MediaModal } from './components/MediaModal.jsx';
 import { Slideshow } from './components/Slideshow.jsx';
 import { submit } from './utils.js';
+// import gapi from 'gapi';
+// import { initYoutubeAPI } from './initYoutube.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +17,14 @@ class App extends React.Component {
     this.state = {
       modalVisible: false,
       uploadPercentage: -1,
-      media: []
+      media: [],
+      slides: [
+        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'}
+      ]
     };
 
     let host = window.location.origin;
@@ -37,6 +46,9 @@ class App extends React.Component {
 
     window.addEventListener('load', function onLoad() {
       self.getMedia();
+
+      // 1. Load the JavaScript client library.
+      // gapi.load('client:auth2:youtube', initYoutubeAPI );
     });
   }
   openModal() {
@@ -140,7 +152,7 @@ class App extends React.Component {
     return (
       <div>
         <Biblioteca media={this.state.media} openModal ={ this.openModal} filter={this.handleFilterText} filterText={ this.state.filterText }/>
-        <Slideshow />
+        <Slideshow slides={this.state.slides}/>
         <MediaModal submitMedia= { this.submitMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} uploadPercentage={ this.state.uploadPercentage}/>
       </div>
     );

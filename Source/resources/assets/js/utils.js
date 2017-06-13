@@ -27,3 +27,14 @@ export function submit(method, url, options) {
   xhr.open(method, url);
   return xhr;
 }
+
+export function youtubeUrlParser( url ) {
+  const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  let match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    match = match[2];
+  } else {
+    match = null;
+  }
+  return match;
+}

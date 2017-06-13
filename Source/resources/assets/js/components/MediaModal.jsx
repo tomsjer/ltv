@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { youtubeUrlParser } from '../utils.js';
 
 class MediaModal extends React.Component {
   constructor(props) {
@@ -90,7 +91,9 @@ class MediaModal extends React.Component {
     this.handleFiles({target: { files: files}});
   }
   handleVideoUrl(e) {
-    console.log(e.target);
+    const videoId = youtubeUrlParser(e.target.value);
+    // Youtube thumbnail url format:
+    console.log(`https://i.ytimg.com/vi/${ videoId }/hqdefault.jpg?custom=true&w=168&h=94&stc=true&jpg444=true&jpgq=90&sp=67&sigh=T7H3vfTlprXrbS5klpovg4qY2pg`);
   }
   onMediaChange(e) {
     this.setState({
@@ -121,6 +124,7 @@ class MediaModal extends React.Component {
               <option value="video"> Video </option>
             </select>
 
+            {/* TODO: Componentizar */}
             <div id="mediaImagen" className={ (this.state.show === 'imagen') ? '' : 'hidden' }>
               <form onSubmit={ this.handleImageSubmit }>
 
@@ -139,7 +143,7 @@ class MediaModal extends React.Component {
                   </div>
                 </div>
                 <p> O buscar en carpeta...</p>
-                
+
                 <input required className="form-control" name="imageFile" type="file" style={{display: 'none'}} onChange={ this.handleFiles } />
                 <button id="fileMentira" type="button" className="btn" disabled={ this.state.disableUpload }> Buscar... </button>
                 <br />
@@ -147,6 +151,7 @@ class MediaModal extends React.Component {
               </form>
             </div>
 
+            {/* TODO: Componentizar */}
             <div id="mediaVideo"  className={ (this.state.show === 'video') ? '' : 'hidden' }>
               <form onSubmit={ this.handleVideoSubmit }>
                 <p><br/><small> Copia el enlace de YouTube aqui abajo.</small></p>

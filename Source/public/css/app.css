@@ -8534,6 +8534,55 @@ aside#biblioteca #agregarMedia:hover {
   height: auto;
 }
 
+.slideShow-container {
+  position: relative;
+  width: calc(100% - 224px);
+  float: left;
+  height: 100%;
+}
+
+.slideShow-container .slide {
+  border: solid 1px red;
+  min-height: 400px;
+}
+
+.slideShow-container #slideScroller {
+  position: relative;
+}
+
+.slideShow-container #slideScroller .arrow {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  border: solid 1px red;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.slideShow-container #slideScroller .arrow.left {
+  left: 0;
+}
+
+.slideShow-container #slideScroller .arrow.right {
+  right: 0;
+}
+
+.slideShow-container #slideScroller .slidesThumbnails {
+  padding: 0 24px;
+  margin: 0;
+}
+
+.slideShow-container #slideScroller .slidesThumbnails li {
+  list-style-type: none;
+  position: relative;
+  float: left;
+}
+
+.slideShow-container .slide-form {
+  border: solid 1px red;
+}
+
 * {
   box-sizing: border-box;
 }

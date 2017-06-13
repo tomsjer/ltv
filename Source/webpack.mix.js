@@ -17,10 +17,13 @@ const url = env.match(/(APP_URL=)([\w|://|.]*)/)[2];
 // mix.js('resources/assets/js/app.js', 'public/js')
 mix
   .webpackConfig({
-    devtool: 'source-map'
+    devtool: 'source-map',
+    externals: {
+      gapi: 'gapi'
+    }
   })
   .sass('resources/assets/sass/app.scss', 'public/css')
   .react('resources/assets/js/app.jsx', 'public/js')
   .browserSync({
-    proxy: url
-});
+    // proxy: url
+  });
