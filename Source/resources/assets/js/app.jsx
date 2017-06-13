@@ -9,7 +9,7 @@ import { submit } from './utils.js';
 class App extends React.Component {
   constructor(props) {
     super(props);
- 
+
     const self = this;
 
     this.state = {
@@ -17,6 +17,14 @@ class App extends React.Component {
       uploadPercentage: -1,
       media: []
     };
+
+    let host = window.location.origin;
+    let path = window.location.pathname;
+
+    path = path.split('/');
+    path = path.slice(0,-1);
+    path = path.join('/');
+    this.fullUrl = host + path;
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -45,7 +53,7 @@ class App extends React.Component {
   submitMedia(data) {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = submit('POST', `${window.location.origin}/api/media/store`, {
+      const request = submit('POST', `${this.fullUrl}/api/media/store`, {
         overrideMimeType: 'text/plain; charset=x-user-defined-binary',
         progressHandler: this.uploadPercentage,
         uploadHandler: (e)=> {
@@ -68,7 +76,7 @@ class App extends React.Component {
   getMedia() {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = submit('GET', `${window.location.origin}/api/media/get`, {
+      const request = submit('GET', `${this.fullUrl}/api/media/get`, {
 
         progressHandler: (e) => {
           console.log(e);
