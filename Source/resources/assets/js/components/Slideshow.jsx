@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { SlideForm } from './SlideForm.jsx';
 import { Slider } from './Slider.jsx';
+import { Dropzone } from  './Dropzone';
 
 class Slideshow extends React.Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class Slideshow extends React.Component {
                 <div id="activeSlide" className="row">
                   <div className="col-md-8">
                     <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } addSlide={ this.addSlide }/>
-                    <button type="button" onClick={ this.addBlankSlide } >Agregar slide</button>
+                    <Dropzone addNewSlide={this.addBlankSlide} addSlide={ this.addSlide }/>
                   </div>
                   <SlideForm index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange }/>
                 </div>

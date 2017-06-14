@@ -51,7 +51,6 @@ class Slider extends React.Component {
         <Slick ref="slider" {...this.settings}>
           { slides }
         </Slick>
-        <div className="dropzone" onDrop={ this.dropHandler } onDragOver={ this.dragoverHandler}/>
       </div>
     );
   }

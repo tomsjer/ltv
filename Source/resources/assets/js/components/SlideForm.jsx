@@ -17,16 +17,17 @@ class SlideForm extends React.Component {
           <input onChange={ this.handleChange } className="form-control" placeholder="Titulo" type="text" value={this.props.slide.titulo} name="titulo" />
           <input  onChange={ this.handleChange } className="form-control" placeholder="Subtitulo" type="text" value={ this.props.slide.subtitulo} name="subtitulo"/>
           <textarea  onChange={ this.handleChange } className="form-control" placeholder="Descripcion" type="textarea" value={ this.props.slide.descripcion} rows="10" cols="20" name="descripcion"/>
-          <label htmlFor="intervalo"> Intervalo
-            <input  onChange={ this.handleChange } name="intervalo" className="form-control" type="number" placeholder="Segundos" min="0"/>
-          </label>
+          <label htmlFor="intervalo"> Intervalo</label>
+            <input onChange={ this.handleChange } name="intervalo" className="form-control" type="number" placeholder="Segundos" min="0"/>
           <div className="row">
-            <label htmlFor="desde"> Desde
-              <input  onChange={ this.handleChange } name="desde" className="form-control" type="date" />
-            </label>
-            <label htmlFor="hasta"> Hasta
-              <input   onChange={ this.handleChange } name="hasta" className="form-control" type="date" />
-            </label>
+            <div className="col-md-6">
+              <label htmlFor="desde"> Desde </label>
+                <input onChange={ this.handleChange } name="desde" className="form-control" type="date" />
+            </div>
+            <div className="col-md-6">
+              <label htmlFor="hasta"> Hasta </label>
+                <input onChange={ this.handleChange } name="hasta" className="form-control" type="date" />
+            </div>
           </div>
         </form>
         <p>Metadata</p>
