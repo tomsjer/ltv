@@ -7,18 +7,46 @@
 
   .slide-form {
     border: solid 1px #ccc;
-    // position: relative;
-    // float: left;
-    // overflow: hidden;
-    // display: block;
-    // height: 100%;
+    padding: 15px;
+    .row{
+      padding: 0 15px;
+      margin-left: -23px;
+      margin-right: -23px;
+    }
+    textarea{
+      resize: none;
+    }
   }
-  
-  .dropzone {
+  .dropzone-container{
+    display: table;
     width: 100%;
-    height: 100px;
-    border: dashed 4px #ccc;
+    .dropzone {
+      width: 100%;
+      height: 100px;
+      border: dashed 4px #ccc;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 24px;
+      color: #ccc;
+      cursor: pointer;
+    }
   }
+  .slick-slider{
+    .slick-slide{
+      .img-responsive{
+        margin: 0 auto;
+      }
+    }
+    .slick-dots{
+      img{
+        width: 100px;
+        height: 80px;
+        object-fit: cover;
+      }
+    }
+  }
+
 
   @media screen and (min-width: 992px) {
   }
