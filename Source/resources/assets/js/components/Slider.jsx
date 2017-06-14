@@ -15,26 +15,14 @@ class Slider extends React.Component {
       centerMode: true,
       centerPadding: '0px',
       customPaging: (i)=>{
-        return <a><img src={this.props.slides[i].srcThumbnail}/><span>{i}</span></a>;
+        return <a><img src={this.props.slides[i].srcThumbnail}/><span>{i+1}</span></a>;
       },
       beforeChange: (currentSlide, nextSlide)=>{
         props.afterChangeHook(nextSlide);
       }
     };
+  }
 
-    this.dropHandler = this.dropHandler.bind(this);
-    this.dragoverHandler = this.dragoverHandler.bind(this);
-  }
-  dragoverHandler(ev) {
-    ev.preventDefault();
-    ev.dataTransfer.dropEffect = 'move';
-  }
-  dropHandler(ev) {
-    ev.preventDefault();
-    const slide = JSON.parse(ev.dataTransfer.getData('text'));
-    slide.srcThumbnail = 'http://placehold.it/100x80';
-    this.props.addSlide(slide);
-  }
   render() {
     const slides = this.props.slides.map((slide, i)=>{
       return (
@@ -43,6 +31,7 @@ class Slider extends React.Component {
           { slide.titulo && <h3> {slide.titulo} </h3> }
           { slide.subtitulo && <h4> {slide.subtitulo} </h4> }
           { slide.descripcion && <p> {slide.descripcion} </p> }
+          <i className="glyphicon glyphicon-remove-circle remove-slide" onClick={() => { this.props.removeSlide(i) }} />
         </div>);
     });
 

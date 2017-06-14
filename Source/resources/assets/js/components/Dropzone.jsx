@@ -13,8 +13,14 @@ class Dropzone extends React.Component {
     }
     dropHandler(ev) {
         ev.preventDefault();
-        const slide = JSON.parse(ev.dataTransfer.getData('text'));
-        slide.srcThumbnail = slide.src;
+        const image = JSON.parse(ev.dataTransfer.getData('text'));
+        const slide = {
+            titulo: image.name || '',
+            subtitulo: '',
+            descripcion: '',
+            src: image.src,
+            srcThumbnail: image.src
+        };
         this.props.addSlide(slide);
     }
     render() {

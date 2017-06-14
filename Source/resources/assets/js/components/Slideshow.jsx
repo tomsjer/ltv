@@ -8,10 +8,11 @@ class Slideshow extends React.Component {
   constructor(props) {
     super(props);
     this.blankSlide = {
+        order: 1,
         titulo: '',
         subtitulo: '',
         descripcion: '',
-        src: 'http://placehold.it/600x400',
+        src: 'http://placehold.it/1200x400',
         srcThumbnail: 'http://placehold.it/100x80'
     };
     this.state = {
@@ -22,6 +23,7 @@ class Slideshow extends React.Component {
     };
 
     this.addSlide = this.addSlide.bind(this);
+    this.removeSlide = this.removeSlide.bind(this);
     this.addBlankSlide = this.addBlankSlide.bind(this);
     this.setActiveSlide = this.setActiveSlide.bind(this);
     this.handleSlideFormChange = this.handleSlideFormChange.bind(this);
@@ -40,11 +42,32 @@ class Slideshow extends React.Component {
   }
   addSlide(slide) {
     const slides = this.state.slides.slice(0);
-    console.log(slides);
+    slide.order = slides.length + 1;
     slides.push(slide);
     this.setState({
       slides: slides
     });
+  }
+
+  removeSlide(index){
+    let slides = this.state.slides;
+    if(slides.length === 0){
+        this.setState({
+            slides: [
+                Object.assign({}, this.blankSlide)
+            ]
+        });
+    }else{
+      let newSlides = [];
+      slides.map(function(slide,slideIndex){
+        if(slideIndex !== index){
+          newSlides.push(slide);
+        }
+      });
+        this.setState({
+            slides: newSlides
+        });
+    }
   }
   addBlankSlide() {
     this.addSlide(Object.assign({}, this.blankSlide));
@@ -72,10 +95,10 @@ class Slideshow extends React.Component {
               <div id="slideContainer">
                 <div id="activeSlide" className="row">
                   <div className="col-md-8">
-                    <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } addSlide={ this.addSlide }/>
+                    <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} />
                     <Dropzone addNewSlide={this.addBlankSlide} addSlide={ this.addSlide }/>
                   </div>
-                  <SlideForm index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange }/>
+                  <SlideForm index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
                 </div>
               </div>
             </div>
