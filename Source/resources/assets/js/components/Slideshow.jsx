@@ -1,21 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slide } from './Slide.jsx';
 import { SlideForm } from './SlideForm.jsx';
+import { Slider } from './Slider.jsx';
 
 class Slideshow extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeSlide: 0
+      activeSlide: 0,
+      slides: [
+        { titulo: 'Slide hardcodeada 1', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada 2', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada 3', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada 4', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
+        { titulo: 'Slide hardcodeada 5', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'}
+      ]
     };
+    this.setActiveSlide = this.setActiveSlide.bind(this);
+    this.handleSlideFormChange = this.handleSlideFormChange.bind(this);
   }
-
-  render() {
-    const slidesThumbnails = this.props.slides.map((slide, i)=>{
-      return ( <li key={i} className={ (i === this.state.activeSlide) ? 'active' : '' }><img src={slide.srcThumbnail}/></li> );
+  handleSlideFormChange(slide, prop, value) {
+    const slides = this.state.slides.slice(0);
+    slides[slide][prop] = value;
+    this.setState({
+      slides: slides
     });
+  }
+  setActiveSlide(index) {
+    this.setState({
+      activeSlide: index
+    });
+  }
+  render() {
+    // const slidesThumbnails = this.state.slides.map((slide, i)=>{
+    //   return ( <li key={i} onClick={ this.setActiveSlide } data-index={i} className={ (i === this.state.activeSlide) ? 'active' : '' }><img src={slide.srcThumbnail}/></li> );
+    // });
 
     return (
       <div className="slideShow-container col-xs-12">
@@ -35,18 +55,9 @@ class Slideshow extends React.Component {
               <div id="slideContainer">
                 <div id="activeSlide" className="row">
                   <div className="col-md-8">
-                    <div className="row">
-                      <Slide slide={ this.props.slides[this.state.activeSlide] } />
-                    </div>
-                    <div id="slideScroller"  className="row">
-                      <div className="arrow left"><p>&lt;</p></div>
-                      <ul className="slidesThumbnails">
-                          { slidesThumbnails }
-                      </ul>
-                      <div className="arrow right"><p>&gt;</p></div>
-                    </div>
+                    <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide }/>
                   </div>
-                  <SlideForm slide={ this.props.slides[this.state.activeSlide] } />
+                  <SlideForm index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange }/>
                 </div>
               </div>
             </div>
@@ -60,8 +71,23 @@ class Slideshow extends React.Component {
   }
 }
 
+/*
+<div className="row">
+  <Slide slide={ this.state.slides[this.state.activeSlide] } />
+</div>
+<div id="slideScroller"  className="row">
+  <div className="arrow left"><p>&lt;</p></div>
+  <ul className="slidesThumbnails">
+      { slidesThumbnails }
+      <li className="dorpzone" />
+  </ul>
+  <div className="arrow right"><p>&gt;</p></div>
+</div>
+ */
+
 Slideshow.propTypes = {
-  slides: PropTypes.array
+  slides: PropTypes.array,
+  handleChange: PropTypes.func
 };
 
 export { Slideshow };

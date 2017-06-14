@@ -21,7 +21,7 @@ class Contenedor extends React.Component {
       return (a.updated_at > b.updated_at) ? -1 : 1;
     })
     .forEach((element, i)=> {
-      if (this.props.filterText !== '' && element.options.name.indexOf(this.props.filterText) === -1) {
+      if (this.props.filterText !== '' && element.options.name && element.options.name.indexOf(this.props.filterText) === -1) {
         return;
       }
       media.push(this.renderMedia(element, i));

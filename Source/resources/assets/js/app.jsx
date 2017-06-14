@@ -17,14 +17,6 @@ class App extends React.Component {
     this.state = {
       modalVisible: false,
       uploadPercentage: -1,
-      media: [],
-      slides: [
-        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada', srcThumbnail: 'http://placehold.it/100x80'}
-      ]
     };
 
     let host = window.location.origin;
@@ -34,22 +26,13 @@ class App extends React.Component {
     path = path.slice(0,-1);
     path = path.join('/');
     this.fullUrl = host + path;
-
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    
     this.submitMedia = this.submitMedia.bind(this);
     this.uploadPercentage = this.uploadPercentage.bind(this);
     this.uploadCompleted = this.uploadCompleted.bind(this);
-    this.errorHandler = this.errorHandler.bind(this);
-    this.mediaDownload = this.mediaDownload.bind(this);
-    this.handleFilterText = this.handleFilterText.bind(this);
 
-    window.addEventListener('load', function onLoad() {
-      self.getMedia();
-
-      // 1. Load the JavaScript client library.
-      // gapi.load('client:auth2:youtube', initYoutubeAPI );
-    });
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
   openModal() {
     this.setState({
@@ -85,43 +68,9 @@ class App extends React.Component {
 
     return promise;
   }
-  getMedia() {
-    const promise = new Promise((resolve, reject)=> {
-
-      const request = submit('GET', `${this.fullUrl}/api/media/get`, {
-
-        progressHandler: (e) => {
-          console.log(e);
-        },
-        onreadyStateChange: (e)=> {
-          if (e.target.readyState === 4 && e.target.status === 200) {
-            this.mediaDownload(e);
-            resolve(e);
-          } else {
-            console.log(`Error: ${e}`);
-          }
-        },
-        errorHandler: this.errorHandler
-      });
-      request.send();
-    });
-
-    return promise;
-  }
-  mediaDownload(e) {
-    const media = JSON.parse(e.target.response);
-    media.map((element)=>{
-      element.options = JSON.parse(element.options);
-    });
-    this.setState({
-      media: media,
-      filterText: ''
-    });
-  }
-  handleFilterText(e) {
-    this.setState({
-      filterText: e.target.value
-    });
+  errorHandler(e) {
+    // TODO: Handle error in AJAX requests
+    console.log(e);
   }
   onreadyStateChange(e) {
     if (e.target.readyState === 4 && e.target.status === 200) {
@@ -134,7 +83,6 @@ class App extends React.Component {
     this.setState({
       uploadCompleted: true
     });
-    this.getMedia();
   }
   uploadPercentage(e) {
     if (e.lengthComputable) {
@@ -144,15 +92,11 @@ class App extends React.Component {
       });
     }
   }
-  errorHandler(e) {
-    // TODO: Handle error in AJAX requests
-    console.log(e);
-  }
   render() {
     return (
       <div>
-        <Biblioteca media={this.state.media} openModal ={ this.openModal} filter={this.handleFilterText} filterText={ this.state.filterText }/>
-        <Slideshow slides={this.state.slides}/>
+        <Biblioteca fullUrl={ this.fullUrl } openModal ={ this.openModal }/>
+        <Slideshow />
         <MediaModal submitMedia= { this.submitMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} uploadPercentage={ this.state.uploadPercentage}/>
       </div>
     );

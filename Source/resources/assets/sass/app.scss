@@ -1,6 +1,6 @@
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+// @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
 
 // Variables
 @import "variables";
@@ -11,15 +11,21 @@
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
+@import "node_modules/slick-carousel/slick/slick.scss";
+@import "node_modules/slick-carousel/slick/slick-theme.scss";
+
 // Media / Biblioteca
 @import "biblioteca";
 
 // Media / Modal
 @import "mediaModal";
 
-
 // Slideshow / Contenedor
 @import "slideshow";
+
+// Slick styles 
+@import "slick-loreal-theme";
+
 
 * {
   box-sizing: border-box;
