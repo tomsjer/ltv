@@ -6,14 +6,17 @@ import { Slider } from './Slider.jsx';
 class Slideshow extends React.Component {
   constructor(props) {
     super(props);
-    this.blankSlide = { titulo: 'Titulo', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'};
+    this.blankSlide = {
+        titulo: '',
+        subtitulo: '',
+        descripcion: '',
+        src: 'http://placehold.it/600x400',
+        srcThumbnail: 'http://placehold.it/100x80'
+    };
     this.state = {
       activeSlide: 0,
       slides: [
-        // Object.assign({}, this.blankSlide)
-        { titulo: 'Titulo 1', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
-        // { titulo: 'Titulo 2', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
-        // { titulo: 'Titulo 3', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'}
+        Object.assign({}, this.blankSlide)
       ]
     };
 
@@ -36,6 +39,7 @@ class Slideshow extends React.Component {
   }
   addSlide(slide) {
     const slides = this.state.slides.slice(0);
+    console.log(slides);
     slides.push(slide);
     this.setState({
       slides: slides
