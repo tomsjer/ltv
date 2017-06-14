@@ -51,7 +51,7 @@ class Slideshow extends React.Component {
 
   removeSlide(index){
     let slides = this.state.slides;
-    if(slides.length === 0){
+    if(slides.length === 1){
         this.setState({
             slides: [
                 Object.assign({}, this.blankSlide)
