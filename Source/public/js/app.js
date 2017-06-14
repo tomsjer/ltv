@@ -11187,18 +11187,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Contenedor = function (_React$Component) {
   _inherits(Contenedor, _React$Component);
 
-  function Contenedor() {
+  function Contenedor(props) {
     _classCallCheck(this, Contenedor);
 
-    return _possibleConstructorReturn(this, (Contenedor.__proto__ || Object.getPrototypeOf(Contenedor)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Contenedor.__proto__ || Object.getPrototypeOf(Contenedor)).call(this, props));
+
+    _this.dragStartHandler = _this.dragStartHandler.bind(_this);
+    return _this;
   }
 
   _createClass(Contenedor, [{
+    key: 'dragStartHandler',
+    value: function dragStartHandler(e) {
+      console.log("dragStart");
+      // Add the target element's id to the data transfer object
+      e.dataTransfer.setData("text/plain", e.currentTarget.dataset.draginfo);
+      // e.dataTransfer.dropEffect = "copy";
+    }
+  }, {
     key: 'renderMedia',
     value: function renderMedia(element, i) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { className: 'item', key: i },
+        { className: 'item', key: i, 'data-dragInfo': JSON.stringify(element.options), draggable: 'true', onDragStart: this.dragStartHandler },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'img-container' },
@@ -11674,9 +11685,9 @@ var SlideForm = function (_React$Component) {
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'form',
           { action: 'return false;', method: 'POST' },
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Titulo', type: 'text', value: this.props.slide.titulo, name: 'titulo' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Subtitulo', type: 'text', value: this.props.subtitulo, name: 'subtitulo' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { onChange: this.handleChange, className: 'form-control', placeholder: 'Descripcion', type: 'textarea', value: this.props.descripcion, rows: '10', cols: '20', name: 'descripcion' }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Titulo', type: 'text', value: this.props.slide.titulo !== '' ? this.props.slide.titulo : '', name: 'titulo' }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Subtitulo', type: 'text', value: this.props.slide.subtitulo !== '' ? this.props.slide.subtitulo : '', name: 'subtitulo' }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { onChange: this.handleChange, className: 'form-control', placeholder: 'Descripcion', type: 'textarea', value: this.props.slide.descripcion !== '' ? this.props.slide.descripcion : '', rows: '10', cols: '20', name: 'descripcion' }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'label',
             { htmlFor: 'intervalo' },
@@ -11723,9 +11734,6 @@ var SlideForm = function (_React$Component) {
 
 SlideForm.propTypes = {
   slide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
-  titulo: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-  subtitulo: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-  descripcion: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
   handleChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
   index: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number
 };
@@ -11786,21 +11794,38 @@ var Slider = function (_React$Component) {
           )
         );
       },
-      afterChange: props.afterChangeHook
+      beforeChange: function beforeChange(currentSlide, nextSlide) {
+        props.afterChangeHook(nextSlide);
+      }
     };
 
+    _this.dropHandler = _this.dropHandler.bind(_this);
+    _this.dragoverHandler = _this.dragoverHandler.bind(_this);
     return _this;
   }
 
   _createClass(Slider, [{
+    key: 'dragoverHandler',
+    value: function dragoverHandler(ev) {
+      ev.preventDefault();
+      ev.dataTransfer.dropEffect = 'move';
+    }
+  }, {
+    key: 'dropHandler',
+    value: function dropHandler(ev) {
+      ev.preventDefault();
+      var slide = JSON.parse(ev.dataTransfer.getData('text'));
+      slide.srcThumbnail = 'http://placehold.it/100x80';
+      this.props.addSlide(slide);
+    }
+  }, {
     key: 'render',
     value: function render() {
-
       var slides = this.props.slides.map(function (slide, i) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { key: i },
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: slide.src }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { className: 'img-responsive', src: slide.src }),
           slide.titulo && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'h3',
             null,
@@ -11826,9 +11851,14 @@ var Slider = function (_React$Component) {
       });
 
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2_react_slick___default.a,
-        _extends({ ref: 'slider' }, this.settings),
-        slides
+        'div',
+        null,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          __WEBPACK_IMPORTED_MODULE_2_react_slick___default.a,
+          _extends({ ref: 'slider' }, this.settings),
+          slides
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'dropzone', onDrop: this.dropHandler, onDragOver: this.dragoverHandler })
       );
     }
   }]);
@@ -11871,10 +11901,16 @@ var Slideshow = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Slideshow.__proto__ || Object.getPrototypeOf(Slideshow)).call(this, props));
 
+    _this.blankSlide = { titulo: 'Titulo', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80' };
     _this.state = {
       activeSlide: 0,
-      slides: [{ titulo: 'Slide hardcodeada 1', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80' }, { titulo: 'Slide hardcodeada 2', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80' }, { titulo: 'Slide hardcodeada 3', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80' }, { titulo: 'Slide hardcodeada 4', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80' }, { titulo: 'Slide hardcodeada 5', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80' }]
+      slides: [
+      // Object.assign({}, this.blankSlide)
+      { titulo: 'Titulo 1', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80' }]
     };
+
+    _this.addSlide = _this.addSlide.bind(_this);
+    _this.addBlankSlide = _this.addBlankSlide.bind(_this);
     _this.setActiveSlide = _this.setActiveSlide.bind(_this);
     _this.handleSlideFormChange = _this.handleSlideFormChange.bind(_this);
     return _this;
@@ -11895,6 +11931,20 @@ var Slideshow = function (_React$Component) {
       this.setState({
         activeSlide: index
       });
+    }
+  }, {
+    key: 'addSlide',
+    value: function addSlide(slide) {
+      var slides = this.state.slides.slice(0);
+      slides.push(slide);
+      this.setState({
+        slides: slides
+      });
+    }
+  }, {
+    key: 'addBlankSlide',
+    value: function addBlankSlide() {
+      this.addSlide(Object.assign({}, this.blankSlide));
     }
   }, {
     key: 'render',
@@ -11946,7 +11996,12 @@ var Slideshow = function (_React$Component) {
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
                     { className: 'col-md-8' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide })
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, addSlide: this.addSlide }),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'button',
+                      { type: 'button', onClick: this.addBlankSlide },
+                      'Agregar slide'
+                    )
                   ),
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange })
                 )

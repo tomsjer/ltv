@@ -6,17 +6,19 @@ import { Slider } from './Slider.jsx';
 class Slideshow extends React.Component {
   constructor(props) {
     super(props);
-
+    this.blankSlide = { titulo: 'Titulo', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'};
     this.state = {
       activeSlide: 0,
       slides: [
-        { titulo: 'Slide hardcodeada 1', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada 2', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada 3', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada 4', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
-        { titulo: 'Slide hardcodeada 5', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'}
+        // Object.assign({}, this.blankSlide)
+        { titulo: 'Titulo 1', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
+        // { titulo: 'Titulo 2', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'},
+        // { titulo: 'Titulo 3', src: 'http://placehold.it/600x400', srcThumbnail: 'http://placehold.it/100x80'}
       ]
     };
+
+    this.addSlide = this.addSlide.bind(this);
+    this.addBlankSlide = this.addBlankSlide.bind(this);
     this.setActiveSlide = this.setActiveSlide.bind(this);
     this.handleSlideFormChange = this.handleSlideFormChange.bind(this);
   }
@@ -31,6 +33,16 @@ class Slideshow extends React.Component {
     this.setState({
       activeSlide: index
     });
+  }
+  addSlide(slide) {
+    const slides = this.state.slides.slice(0);
+    slides.push(slide);
+    this.setState({
+      slides: slides
+    });
+  }
+  addBlankSlide() {
+    this.addSlide(Object.assign({}, this.blankSlide));
   }
   render() {
     // const slidesThumbnails = this.state.slides.map((slide, i)=>{
@@ -55,7 +67,8 @@ class Slideshow extends React.Component {
               <div id="slideContainer">
                 <div id="activeSlide" className="row">
                   <div className="col-md-8">
-                    <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide }/>
+                    <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } addSlide={ this.addSlide }/>
+                    <button type="button" onClick={ this.addBlankSlide } >Agregar slide</button>
                   </div>
                   <SlideForm index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange }/>
                 </div>

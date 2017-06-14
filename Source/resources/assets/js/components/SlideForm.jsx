@@ -14,9 +14,9 @@ class SlideForm extends React.Component {
     return (
       <div className="col-md-4 slide-form">
         <form action="return false;" method="POST">
-          <input onChange={ this.handleChange } className="form-control" placeholder="Titulo" type="text" value={ this.props.slide.titulo } name="titulo" />
-          <input  onChange={ this.handleChange }className="form-control" placeholder="Subtitulo" type="text" value={ this.props.subtitulo } name="subtitulo"/>
-          <textarea  onChange={ this.handleChange } className="form-control" placeholder="Descripcion" type="textarea" value={ this.props.descripcion } rows="10" cols="20" name="descripcion"/>
+          <input onChange={ this.handleChange } className="form-control" placeholder="Titulo" type="text" value={this.props.slide.titulo !== '' ? this.props.slide.titulo : ''} name="titulo" />
+          <input  onChange={ this.handleChange }className="form-control" placeholder="Subtitulo" type="text" value={ this.props.slide.subtitulo !== '' ? this.props.slide.subtitulo : '' } name="subtitulo"/>
+          <textarea  onChange={ this.handleChange } className="form-control" placeholder="Descripcion" type="textarea" value={ this.props.slide.descripcion !== '' ? this.props.slide.descripcion : '' } rows="10" cols="20" name="descripcion"/>
           <label htmlFor="intervalo"> Intervalo
             <input  onChange={ this.handleChange } name="intervalo" className="form-control" type="number" placeholder="Segundos" min="0"/>
           </label>
@@ -40,9 +40,6 @@ class SlideForm extends React.Component {
 
 SlideForm.propTypes =  {
   slide: PropTypes.object,
-  titulo: PropTypes.string,
-  subtitulo: PropTypes.string,
-  descripcion: PropTypes.string,
   handleChange: PropTypes.func,
   index: PropTypes.number
 };

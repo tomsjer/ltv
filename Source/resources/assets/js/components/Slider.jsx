@@ -17,16 +17,29 @@ class Slider extends React.Component {
       customPaging: (i)=>{
         return <a><img src={this.props.slides[i].srcThumbnail}/><span>{i}</span></a>;
       },
-      afterChange: props.afterChangeHook
+      beforeChange: (currentSlide, nextSlide)=>{
+        props.afterChangeHook(nextSlide);
+      }
     };
 
+    this.dropHandler = this.dropHandler.bind(this);
+    this.dragoverHandler = this.dragoverHandler.bind(this);
+  }
+  dragoverHandler(ev) {
+    ev.preventDefault();
+    ev.dataTransfer.dropEffect = 'move';
+  }
+  dropHandler(ev) {
+    ev.preventDefault();
+    const slide = JSON.parse(ev.dataTransfer.getData('text'));
+    slide.srcThumbnail = 'http://placehold.it/100x80';
+    this.props.addSlide(slide);
   }
   render() {
-    
     const slides = this.props.slides.map((slide, i)=>{
       return (
         <div key={i}>
-          <img src={slide.src} />
+          <img className="img-responsive" src={slide.src} />
           { slide.titulo && <h3> {slide.titulo} </h3> }
           { slide.subtitulo && <h4> {slide.subtitulo} </h4> }
           { slide.descripcion && <p> {slide.descripcion} </p> }
@@ -34,9 +47,12 @@ class Slider extends React.Component {
     });
 
     return (
-      <Slick ref="slider" {...this.settings}>
-        { slides }
-      </Slick>
+      <div>
+        <Slick ref="slider" {...this.settings}>
+          { slides }
+        </Slick>
+        <div className="dropzone" onDrop={ this.dropHandler } onDragOver={ this.dragoverHandler}/>
+      </div>
     );
   }
 }

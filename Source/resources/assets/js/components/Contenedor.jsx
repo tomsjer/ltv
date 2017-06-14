@@ -2,9 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class Contenedor extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.dragStartHandler = this.dragStartHandler.bind(this);
+  }
+  dragStartHandler(e) {
+    console.log("dragStart");
+    // Add the target element's id to the data transfer object
+    e.dataTransfer.setData("text/plain", e.currentTarget.dataset.draginfo);
+    // e.dataTransfer.dropEffect = "copy";
+  }
   renderMedia(element, i) {
     return (
-      <div className="item" key={i}>
+      <div className="item" key={i} data-dragInfo={JSON.stringify(element.options)} draggable="true" onDragStart={ this.dragStartHandler }>
         <div className="img-container">
           <img src= { element.options.src } />
         </div>

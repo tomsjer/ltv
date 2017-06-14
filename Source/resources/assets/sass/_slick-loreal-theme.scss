@@ -96,13 +96,15 @@
     cursor: pointer;
     background: transparent;
     color: transparent;
-    top: 50%;
-    -webkit-transform: translate(0, -50%);
-    -ms-transform: translate(0, -50%);
-    transform: translate(0, -50%);
+    top: auto;
+    bottom: 50px;
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
     padding: 0;
     border: none;
     outline: none;
+    z-index: 1000;
     &:hover, &:focus {
         outline: none;
         background: transparent;
@@ -115,40 +117,43 @@
         opacity: $slick-opacity-not-active;
     }
     &:before {
-        font-family: $slick-font-family;
-        font-size: 20px;
-        line-height: 1;
-        color: $slick-arrow-color;
-        opacity: $slick-opacity-default;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #333;
     }
 }
 
 .slick-prev {
-    left: -25px;
+    left: 0;
     [dir="rtl"] & {
         left: auto;
-        right: -25px;
+        right: 0px;
     }
     &:before {
-        content: $slick-prev-character;
+        content: "\e079";
         [dir="rtl"] & {
-            content: $slick-next-character;
+            content: "\e080";
         }
     }
 }
 
 .slick-next {
-    right: -25px;
+    right: 0;
     [dir="rtl"] & {
-        left: -25px;
+        left: 0;
         right: auto;
     }
     &:before {
-        content: $slick-next-character;
+        content: "\e080";
         [dir="rtl"] & {
-            content: $slick-prev-character;
+            content: "\e079";
         }
     }
 }
@@ -163,11 +168,12 @@
     position: relative;
     bottom: 0;
     list-style: none;
-    display: block;
+    display: inline-block !important;
     text-align: center;
-    padding: 0;
+    padding: 0 32px;
     margin: 0;
     width: 100%;
+
     li {
         float: left;
         opacity: 0.7;
