@@ -17,11 +17,7 @@ class MediaController extends Controller
     public function index()
     {
         //
-        return response()->json(
- 
-           Media::all()
- 
-       );
+        return response()->json(Media::all());
     }
 
     /**
@@ -36,15 +32,12 @@ class MediaController extends Controller
         if (!is_array($request->all())) {
             return response()->json(['error' => 'request must be an array']);
         }
-        // Creamos las reglas de validación
         $rules = [
             'media_types_id' => 'required',
             'options'      => 'required',
             ];
  
         try {
-            // Ejecutamos el validador y en caso de que falle devolvemos la respuesta
-            // con los errores
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
@@ -53,23 +46,23 @@ class MediaController extends Controller
                     'errors'  => $validator->errors()->all()
                 ]);
             }
+
             $media = Media::create($request->all());
 
-            // Si el validador pasa, almacenamos el media
             if ($request->hasFile('image')) {
                 $media_options = json_decode($request->options);
                 $name = $media_options->name;
                 $extension = $request->image->extension();
-                $path = $request->image->storeAs('public/images', $media->id."_".$name.".".$extension);
-                $media_options->src = "storage/images/".$media->id."_".$media_options->name.".".$request->image->extension();
+                
+                $path = $request->image->storeAs('public/images/full/', $media->id."_".$name.".".$extension);
                 $media->options = json_encode($media_options);
+                
                 $media->save();
-
             }
+
             return response()->json(['created' => true]);
-            
+
         } catch (Exception $e) {
-            // Si algo sale mal devolvemos un error.
             \Log::info('Error creating Media: '.$e);
             return response()->json(['created' => false]);
         }
@@ -106,7 +99,6 @@ class MediaController extends Controller
     public function update(Request $request, Media $media)
     {
         //
-        //Get the Media
         $media = Media::find($request->id);
         
         if (!$media) {
@@ -118,7 +110,6 @@ class MediaController extends Controller
         if (!is_array($request->all())) {
             return response()->json(['error' => 'request must be an array']);
         }
-        // Creamos las reglas de validación
         $rules = [
             'id' => 'required',
             'media_types_id' => 'required',
@@ -126,8 +117,6 @@ class MediaController extends Controller
             ];
 
         try {
-            // Ejecutamos el validador y en caso de que falle devolvemos la respuesta
-            // con los errores
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
@@ -135,14 +124,29 @@ class MediaController extends Controller
                     'created' => false,
                     'errors'  => $validator->errors()->all()
                 ]);
+            }   
+
+            if ($request->hasFile('image')) {
+                //Delete img
+                $BDmedia_options = json_decode($media->options);
+                $src = explode("/", $BDmedia_options->src);
+                \Storage::delete("public/images/".$src[count($src) - 1]);            
+
+                
+                $media_options = json_decode($request->options);
+                $name = $media_options->name;
+                $extension = $request->image->extension();
+                $path = $request->image->storeAs('public/images', $media->id."_".$name.".".$extension);
+                $media_options->src = "storage/images/".$media->id."_".$media_options->name.".".$request->image->extension();
+                $media->options = json_encode($media_options);
             }
-            // Si el validador pasa, actualizamos la media
+
             $media->media_types_id = $request->media_types_id;
-            $media->options = $request->options;
+            $media->options = $media->options;
             $media->save();
+
             return response()->json(['update' => true]);
         } catch (Exception $e) {
-            // Si algo sale mal devolvemos un error.
             \Log::info('Error update Media: '.$e);
             return response()->json(['created' => false]);
         }
