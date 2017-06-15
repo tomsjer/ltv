@@ -17,7 +17,7 @@ class Contenedor extends React.Component {
     return (
       <div className="item" key={i} data-dragInfo={JSON.stringify(element.options)} draggable="true" onDragStart={ this.dragStartHandler }>
         <div className="img-container">
-          <img src= { element.options.src } />
+          <img src= { element.options.srcThumbnail } />
         </div>
         <ul>
           <li>{element.options.name}</li>

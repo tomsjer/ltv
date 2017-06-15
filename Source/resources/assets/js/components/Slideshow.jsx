@@ -80,16 +80,6 @@ class Slideshow extends React.Component {
     return (
       <div className="slideShow-container col-xs-12">
         <div>
-          <ul className="nav nav-tabs" role="tablist">
-            <li role="presentation" className="active">
-              <a href="#slide" aria-controls="slide" role="tab" data-toggle="tab">
-                Slideshow
-              </a>
-            </li>
-            <li role="presentation">
-              <a href="#birthday" aria-controls="birthday" role="tab" data-toggle="tab">Cumpleaños</a>
-            </li>
-          </ul>
           <div className="tab-content">
             <div role="tabpanel" className="tab-pane active" id="slide">
               <div id="slideContainer">
@@ -113,17 +103,18 @@ class Slideshow extends React.Component {
 }
 
 /*
-<div className="row">
-  <Slide slide={ this.state.slides[this.state.activeSlide] } />
-</div>
-<div id="slideScroller"  className="row">
-  <div className="arrow left"><p>&lt;</p></div>
-  <ul className="slidesThumbnails">
-      { slidesThumbnails }
-      <li className="dorpzone" />
-  </ul>
-  <div className="arrow right"><p>&gt;</p></div>
-</div>
+Porahor no vamos a utilizar los cumpleaños...
+
+<ul className="nav nav-tabs" role="tablist">
+  <li role="presentation" className="active">
+    <a href="#slide" aria-controls="slide" role="tab" data-toggle="tab">
+      Slideshow
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#birthday" aria-controls="birthday" role="tab" data-toggle="tab">Cumpleaños</a>
+  </li>
+</ul>
  */
 
 Slideshow.propTypes = {

@@ -5,8 +5,6 @@ import { Biblioteca } from './components/Biblioteca.jsx';
 import { MediaModal } from './components/MediaModal.jsx';
 import { Slideshow } from './components/Slideshow.jsx';
 import { submit } from './utils.js';
-// import gapi from 'gapi';
-// import { initYoutubeAPI } from './initYoutube.js';
 
 class App extends React.Component {
   constructor(props) {

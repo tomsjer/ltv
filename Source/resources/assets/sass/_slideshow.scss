@@ -2,8 +2,9 @@
   position: relative;
   width: calc(100% - #{$biblioteca-width});
   float: left;
-  height: 100%;
+  height: calc( 100% - 81px);
   padding: 15px;
+  overflow-y: scroll;
 
   .slide-form {
     border: solid 1px #ccc;
