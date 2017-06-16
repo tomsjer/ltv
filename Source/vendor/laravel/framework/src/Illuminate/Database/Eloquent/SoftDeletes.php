@@ -63,7 +63,13 @@ trait SoftDeletes
         $time = $this->freshTimestamp();
 
         $columns = [$this->getDeletedAtColumn() => $this->fromDateTime($time)];
+<<<<<<< .mine        $this->{$this->getUpdatedAtColumn()} = $time;
 
+        $query->update([
+            $this->getDeletedAtColumn() => $this->fromDateTime($time),
+            $this->getUpdatedAtColumn() => $this->fromDateTime($time),
+        ]);
+=======
         $this->{$this->getDeletedAtColumn()} = $time;
 
         if ($this->timestamps) {
@@ -73,7 +79,7 @@ trait SoftDeletes
         }
 
         $query->update($columns);
-    }
+>>>>>>> .theirs    }
 
     /**
      * Restore a soft-deleted model instance.

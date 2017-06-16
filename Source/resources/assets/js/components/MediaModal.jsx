@@ -10,13 +10,14 @@ class MediaModal extends React.Component {
       imgPreviewSrc: false,
       imgName: '',
       disableSubmit: true,
-      disableUpload: false
+      disableUpload: false,
+      showVideoURLError: false,
     };
     this.onMediaChange = this.onMediaChange.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.handleVideoUrl = this.handleVideoUrl.bind(this);
+    // this.handleVideoUrl = this.handleVideoUrl.bind(this);
     this.handleImageSubmit = this.handleImageSubmit.bind(this);
   }
   componentDidMount() {
@@ -27,11 +28,6 @@ class MediaModal extends React.Component {
   }
   componentWillUnmount() {
     document.querySelector('#mediaModal').removeEventListener('click', this.closeModal);
-  }
-  handleVideoSubmit(e) {
-    e.preventDefault();
-    console.log(e);
-    return false;
   }
   submitImage(file) {
 
@@ -53,10 +49,10 @@ class MediaModal extends React.Component {
         src: file.name,
       })
     })
-    .then(()=>{
+    .then((response)=>{
       setTimeout(()=>{
+        console.log(response);
         self.closeModal();
-
       }, 2000);
     })
     .catch(()=>{
@@ -90,10 +86,37 @@ class MediaModal extends React.Component {
 
     this.handleFiles({target: { files: files}});
   }
-  handleVideoUrl(e) {
+  handleVideoSubmit(e) {
+    e.preventDefault();
     const videoId = youtubeUrlParser(e.target.value);
-    // Youtube thumbnail url format:
-    console.log(`https://i.ytimg.com/vi/${ videoId }/hqdefault.jpg?custom=true&w=168&h=94&stc=true&jpg444=true&jpgq=90&sp=67&sigh=T7H3vfTlprXrbS5klpovg4qY2pg`);
+    if (videoId) {
+      this.setState({
+        showVideoURLError: false,
+        disableSubmit: true,
+      });
+      this.props.submitMedia({
+        media_types_id: '2',
+        options: JSON.stringify({
+          name: name,
+          id_youtube: videoId,
+        })
+      })
+      .then(()=>{
+        setTimeout(()=>{
+          self.closeModal();
+
+        }, 2000);
+      })
+      .catch(()=>{
+
+      });
+    } else {
+      this.setState({
+        showVideoURLError: true,
+        disableSubmit: false,
+      });
+    }
+    return false;
   }
   onMediaChange(e) {
     this.setState({
@@ -155,8 +178,8 @@ class MediaModal extends React.Component {
             <div id="mediaVideo"  className={ (this.state.show === 'video') ? '' : 'hidden' }>
               <form onSubmit={ this.handleVideoSubmit }>
                 <p><br/><small> Copia el enlace de YouTube aqui abajo.</small></p>
-                <input required className="form-control" name="videoUrl" type="text" placeholder="Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA"
-                  onChange={ this.handleVideoUrl }/>
+                <input required className="form-control" name="videoUrl" type="text" placeholder="Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA"/>
+                { this.state.showVideoURLError && <p className="error">Introduzca el enlace completo, ej.: https://www.youtube.com/watch?v=6vpOHq8bkzA</p> }
                 <br />
                 <button type="submit" className="btn pull-right"> Listo </button>
               </form>

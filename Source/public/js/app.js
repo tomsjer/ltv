@@ -11057,29 +11057,35 @@ var Biblioteca = function (_React$Component) {
         return el.media_types_id === 2 ? ac + ',' + el.options.id_youtube : ac;
       }, '');
 
-      __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__initYoutube_js__["a" /* initYoutubeAPI */])().then(function () {
-        var promise = new Promise(function (resolve, reject) {
-          gapi.client.youtube.videos.list({
-            part: 'snippet',
-            id: videosIds
-          }).execute(resolve);
-        });
-        return promise;
-      }).then(function (response) {
-        if (!response.items.length) return;
-
-        response.items.forEach(function (video) {
-          var el = media.find(function (el) {
-            return el.options.id_youtube === video.id;
+      if (videosIds.length) {
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__initYoutube_js__["a" /* initYoutubeAPI */])().then(function () {
+          var promise = new Promise(function (resolve, reject) {
+            gapi.client.youtube.videos.list({
+              part: 'snippet',
+              id: videosIds
+            }).execute(resolve);
           });
-          el.options.srcThumbnail = video.snippet.thumbnails.default.url;
-          el.options.src = video.snippet.thumbnails.standard ? video.snippet.thumbnails.standard.url : video.snippet.thumbnails.high.url;
-        });
+          return promise;
+        }).then(function (response) {
+          if (!response.items.length) return;
 
-        _this3.setState({
+          response.items.forEach(function (video) {
+            var el = media.find(function (el) {
+              return el.options.id_youtube === video.id;
+            });
+            el.options.srcThumbnail = video.snippet.thumbnails.default.url;
+            el.options.src = video.snippet.thumbnails.standard ? video.snippet.thumbnails.standard.url : video.snippet.thumbnails.high.url;
+          });
+
+          _this3.setState({
+            media: media
+          });
+        });
+      } else {
+        this.setState({
           media: media
         });
-      });
+      }
     }
   }, {
     key: 'toggleLayout',
@@ -11341,8 +11347,14 @@ var Dropzone = function (_React$Component) {
         key: 'dropHandler',
         value: function dropHandler(ev) {
             ev.preventDefault();
-            var slide = JSON.parse(ev.dataTransfer.getData('text'));
-            slide.srcThumbnail = slide.src;
+            var image = JSON.parse(ev.dataTransfer.getData('text'));
+            var slide = {
+                titulo: image.name || '',
+                subtitulo: '',
+                descripcion: '',
+                src: image.src,
+                srcThumbnail: image.src
+            };
             this.props.addSlide(slide);
         }
     }, {
@@ -11475,13 +11487,14 @@ var MediaModal = function (_React$Component) {
       imgPreviewSrc: false,
       imgName: '',
       disableSubmit: true,
-      disableUpload: false
+      disableUpload: false,
+      showVideoURLError: false
     };
     _this.onMediaChange = _this.onMediaChange.bind(_this);
     _this.handleFiles = _this.handleFiles.bind(_this);
     _this.handleDrop = _this.handleDrop.bind(_this);
     _this.closeModal = _this.closeModal.bind(_this);
-    _this.handleVideoUrl = _this.handleVideoUrl.bind(_this);
+    // this.handleVideoUrl = this.handleVideoUrl.bind(this);
     _this.handleImageSubmit = _this.handleImageSubmit.bind(_this);
     return _this;
   }
@@ -11498,13 +11511,6 @@ var MediaModal = function (_React$Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       document.querySelector('#mediaModal').removeEventListener('click', this.closeModal);
-    }
-  }, {
-    key: 'handleVideoSubmit',
-    value: function handleVideoSubmit(e) {
-      e.preventDefault();
-      console.log(e);
-      return false;
     }
   }, {
     key: 'submitImage',
@@ -11527,8 +11533,9 @@ var MediaModal = function (_React$Component) {
           name: name,
           src: file.name
         })
-      }).then(function () {
+      }).then(function (response) {
         setTimeout(function () {
+          console.log(response);
           self.closeModal();
         }, 2000);
       }).catch(function () {});
@@ -11565,11 +11572,33 @@ var MediaModal = function (_React$Component) {
       this.handleFiles({ target: { files: files } });
     }
   }, {
-    key: 'handleVideoUrl',
-    value: function handleVideoUrl(e) {
+    key: 'handleVideoSubmit',
+    value: function handleVideoSubmit(e) {
+      e.preventDefault();
       var videoId = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_js__["b" /* youtubeUrlParser */])(e.target.value);
-      // Youtube thumbnail url format:
-      console.log('https://i.ytimg.com/vi/' + videoId + '/hqdefault.jpg?custom=true&w=168&h=94&stc=true&jpg444=true&jpgq=90&sp=67&sigh=T7H3vfTlprXrbS5klpovg4qY2pg');
+      if (videoId) {
+        this.setState({
+          showVideoURLError: false,
+          disableSubmit: true
+        });
+        this.props.submitMedia({
+          media_types_id: '2',
+          options: JSON.stringify({
+            name: name,
+            id_youtube: videoId
+          })
+        }).then(function () {
+          setTimeout(function () {
+            self.closeModal();
+          }, 2000);
+        }).catch(function () {});
+      } else {
+        this.setState({
+          showVideoURLError: true,
+          disableSubmit: false
+        });
+      }
+      return false;
     }
   }, {
     key: 'onMediaChange',
@@ -11711,8 +11740,12 @@ var MediaModal = function (_React$Component) {
                     ' Copia el enlace de YouTube aqui abajo.'
                   )
                 ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'videoUrl', type: 'text', placeholder: 'Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA',
-                  onChange: this.handleVideoUrl }),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'videoUrl', type: 'text', placeholder: 'Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA' }),
+                this.state.showVideoURLError && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'p',
+                  { className: 'error' },
+                  'Introduzca el enlace completo, ej.: https://www.youtube.com/watch?v=6vpOHq8bkzA'
+                ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'button',
@@ -11899,7 +11932,7 @@ var Slider = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'span',
             null,
-            i
+            i + 1
           )
         );
       },
@@ -11907,29 +11940,14 @@ var Slider = function (_React$Component) {
         props.afterChangeHook(nextSlide);
       }
     };
-
-    _this.dropHandler = _this.dropHandler.bind(_this);
-    _this.dragoverHandler = _this.dragoverHandler.bind(_this);
     return _this;
   }
 
   _createClass(Slider, [{
-    key: 'dragoverHandler',
-    value: function dragoverHandler(ev) {
-      ev.preventDefault();
-      ev.dataTransfer.dropEffect = 'move';
-    }
-  }, {
-    key: 'dropHandler',
-    value: function dropHandler(ev) {
-      ev.preventDefault();
-      var slide = JSON.parse(ev.dataTransfer.getData('text'));
-      slide.srcThumbnail = 'http://placehold.it/100x80';
-      this.props.addSlide(slide);
-    }
-  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var slides = this.props.slides.map(function (slide, i) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
@@ -11955,7 +11973,10 @@ var Slider = function (_React$Component) {
             ' ',
             slide.descripcion,
             ' '
-          )
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'glyphicon glyphicon-remove-circle remove-slide', onClick: function onClick() {
+              _this2.props.removeSlide(i);
+            } })
         );
       });
 
@@ -12012,10 +12033,11 @@ var Slideshow = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Slideshow.__proto__ || Object.getPrototypeOf(Slideshow)).call(this, props));
 
     _this.blankSlide = {
+      order: 1,
       titulo: '',
       subtitulo: '',
       descripcion: '',
-      src: 'http://placehold.it/600x400',
+      src: 'http://placehold.it/1200x400',
       srcThumbnail: 'http://placehold.it/100x80'
     };
     _this.state = {
@@ -12024,6 +12046,7 @@ var Slideshow = function (_React$Component) {
     };
 
     _this.addSlide = _this.addSlide.bind(_this);
+    _this.removeSlide = _this.removeSlide.bind(_this);
     _this.addBlankSlide = _this.addBlankSlide.bind(_this);
     _this.setActiveSlide = _this.setActiveSlide.bind(_this);
     _this.handleSlideFormChange = _this.handleSlideFormChange.bind(_this);
@@ -12050,11 +12073,31 @@ var Slideshow = function (_React$Component) {
     key: 'addSlide',
     value: function addSlide(slide) {
       var slides = this.state.slides.slice(0);
-      console.log(slides);
+      slide.order = slides.length + 1;
       slides.push(slide);
       this.setState({
         slides: slides
       });
+    }
+  }, {
+    key: 'removeSlide',
+    value: function removeSlide(index) {
+      var slides = this.state.slides;
+      if (slides.length === 1) {
+        this.setState({
+          slides: [Object.assign({}, this.blankSlide)]
+        });
+      } else {
+        var newSlides = [];
+        slides.map(function (slide, slideIndex) {
+          if (slideIndex !== index) {
+            newSlides.push(slide);
+          }
+        });
+        this.setState({
+          slides: newSlides
+        });
+      }
     }
   }, {
     key: 'addBlankSlide',
@@ -12089,10 +12132,10 @@ var Slideshow = function (_React$Component) {
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
                     { className: 'col-md-8' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, addSlide: this.addSlide }),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Dropzone__["a" /* Dropzone */], { addNewSlide: this.addBlankSlide, addSlide: this.addSlide })
                   ),
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange })
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
                 )
               )
             ),

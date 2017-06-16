@@ -58,29 +58,36 @@ class Biblioteca extends React.Component {
       return (el.media_types_id === 2) ? `${ac},${el.options.id_youtube}` : ac;
     }, '');
 
-    initYoutubeAPI()
-    .then(()=>{
-      const promise = new Promise((resolve, reject)=> {
-        gapi.client.youtube.videos.list({
-          part: 'snippet',
-          id: videosIds
-        }).execute(resolve);
-      });
-      return promise;
-    })
-    .then((response)=>{
-      if (!response.items.length) return;
+    if(videosIds.length){
+      initYoutubeAPI()
+      .then(()=>{
+        const promise = new Promise((resolve, reject)=> {
+          gapi.client.youtube.videos.list({
+            part: 'snippet',
+            id: videosIds
+          }).execute(resolve);
+        });
+        return promise;
+      })
+      .then((response)=>{
+        if (!response.items.length) return;
 
-      response.items.forEach((video)=>{
-        const el = media.find((el)=>{ return el.options.id_youtube === video.id});
-        el.options.srcThumbnail = video.snippet.thumbnails.default.url;
-        el.options.src = (video.snippet.thumbnails.standard) ? video.snippet.thumbnails.standard.url : video.snippet.thumbnails.high.url;
-      });
+        response.items.forEach((video)=>{
+          const el = media.find((el)=>{ return el.options.id_youtube === video.id});
+          el.options.srcThumbnail = video.snippet.thumbnails.default.url;
+          el.options.src = (video.snippet.thumbnails.standard) ? video.snippet.thumbnails.standard.url : video.snippet.thumbnails.high.url;
+        });
 
+        this.setState({
+          media: media
+        });
+      });
+    }
+    else {
       this.setState({
         media: media
       });
-    });
+    }
   }
   toggleLayout(e) {
     this.setState({

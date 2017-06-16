@@ -8863,6 +8863,15 @@ aside#biblioteca #agregarMedia:hover {
      object-fit: cover;
 }
 
+.slideShow-container .slick-slider .remove-slide {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 20px;
+  color: #ff0000;
+  cursor: pointer;
+}
+
 /* Slider */
 
 .slick-list .slick-track .slick-slide {
