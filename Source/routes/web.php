@@ -47,6 +47,10 @@ Route::group(['prefix' => 'api'], function () {
 
 	Route::delete('media/destroy/{id}','MediaController@destroy');
 
+	Route::post('sliders','MediaController@storeSliders');
+
+	Route::get('sliders/{all}','MediaController@getSliders');
+
 });
 
 Route::group(['middleware' => ['auth']], function () {

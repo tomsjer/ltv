@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Media;
+use App\Slider;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -183,6 +184,116 @@ class MediaController extends Controller
                 'message' => 'Could not delete a media',
             ]);
         }
+    }
+
+    public function storeSliders(Request $request){
+        $data = $request->json()->all();
+
+        if($data['sliders']) {
+            foreach($data['sliders'] as $slide){
+                switch ($slide['tipo']){
+                    case 1: //Imagenes
+                        $this->slideImage($slide);
+                    break;
+                    case 2: //video
+                        $this->slideVideo($slide);
+                    break;
+                    default:
+                    break;
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => 'saved',
+        ]);
+    }
+
+    public function getSliders($all){
+        $slidesRaw = Slider::all();
+        $slides = [];
+
+        if($all === 'all'){
+            $slides = $slidesRaw;
+        }else{
+            foreach($slidesRaw as $slide){
+                if(
+                    strtotime(date('Y-m-d')) > strtotime($slide->date_from) &&
+                    strtotime(date('Y-m-d')) < strtotime($slide->date_until)
+                ){
+                    $slides[] = $slide;
+                }
+            }
+        }
+        return response()->json($slides);
+    }
+
+    private function slideImage($data){
+        $rules_Image = [
+            'src' => 'required',
+            'srcThumbnail' => 'required',
+            'intervalo'      => 'required',
+            'desde'      => 'required',
+            'hasta'      => 'required',
+        ];
+
+        $validator = \Validator::make($data, $rules_Image);
+        if ($validator->fails()) {
+            return false;
+        }
+        try{
+            $newSlide = new Slider();
+
+            $newSlide->media_type_id    = $data['tipo'];
+            $newSlide->media_id         = $data['media_id'];
+            $newSlide->title            = $data['titulo'];
+            $newSlide->subtitle         = $data['subtitulo'];
+            $newSlide->description      = $data['descripcion'];
+            $newSlide->img_src          = $data['src'];
+            $newSlide->thumbnail_src    = $data['srcThumbnail'];
+            $newSlide->time_interval    = $data['intervalo'];
+            $newSlide->date_from        = $data['desde'];
+            $newSlide->date_until       = $data['hasta'];
+
+            $newSlide->save();
+        }catch (Exception $e) {
+            \Log::info('Error update Media: '.$e);
+            return false;
+        }
+        return true;
+
+    }
+    private function slideVideo($data){
+        $rules_video = [
+            'id_youtube' => 'required',
+            'loop' => 'required',
+            'desde'      => 'required',
+            'hasta'      => 'required',
+        ];
+
+        $validator = \Validator::make($data, $rules_video);
+        if ($validator->fails()) {
+            return false;
+        }
+        try{
+            $newSlide = new Slider();
+
+            $newSlide->media_type_id= $data['tipo'];
+            $newSlide->media_id     = $data['media_id'];
+            $newSlide->title        = $data['titulo'];
+            $newSlide->subtitle     = $data['subtitulo'];
+            $newSlide->description  = $data['descripcion'];
+            $newSlide->video_id     = $data['id_youtube'];
+            $newSlide->video_loop   = $data['loop'];
+            $newSlide->date_from    = $data['desde'];
+            $newSlide->date_until   = $data['hasta'];
+
+            $newSlide->save();
+        }catch (Exception $e) {
+            \Log::info('Error update Media: '.$e);
+            return false;
+        }
+        return true;
     }
 
 }
