@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Encabezado } from './Encabezado.jsx';
 import { Contenedor } from './Contenedor.jsx';
 import { Buscador } from './Buscador.jsx';
+import { MediaModal } from './MediaModal.jsx';
 import { submit } from '../utils.js';
 import { initYoutubeAPI } from '../initYoutube.js';
 
@@ -15,10 +16,12 @@ class Biblioteca extends React.Component {
     this.state = {
       layout: 'grid',
       media: [],
-      filterText: ''
+      filterText: '',
+      modalVisible: false,
     };
 
-    // this.errorHandler = this.errorHandler.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this.mediaDownload = this.mediaDownload.bind(this);
     this.toggleLayout = this.toggleLayout.bind(this);
     this.handleFilterText = this.handleFilterText.bind(this);
@@ -58,7 +61,7 @@ class Biblioteca extends React.Component {
       return (el.media_types_id === 2) ? `${ac},${el.options.id_youtube}` : ac;
     }, '');
 
-    if(videosIds.length){
+    if (videosIds.length) {
       initYoutubeAPI()
       .then(()=>{
         const promise = new Promise((resolve, reject)=> {
@@ -89,6 +92,13 @@ class Biblioteca extends React.Component {
       });
     }
   }
+  addNewMedia(mediaElement) {
+    const media =  this.state.media.slice(0);
+    media.push(mediaElement);
+    this.setState({
+      media: media
+    });
+  }
   toggleLayout(e) {
     this.setState({
       layout: e.currentTarget.dataset.layout
@@ -99,21 +109,25 @@ class Biblioteca extends React.Component {
       filterText: e.target.value
     });
   }
-
-
-  // handleFilterText(e) {
-  //   this.setState({
-  //     filterText: e.target.value
-  //   });
-  // }
-
+  openModal() {
+    this.setState({
+      modalVisible: true
+    });
+  }
+  closeModal() {
+    this.setState({
+      modalVisible: false,
+      uploadPercentage: -1
+    });
+  }
   render() {
     return (
       <aside id="biblioteca">
           <Encabezado layout={ this.state.layout } handler={ this.toggleLayout }/>
           <Buscador filter={ this.handleFilterText } />
           <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText }/>
-          <a id="agregarMedia" href="#" onClick={ this.props.openModal }> + Agregar media </a>
+          <a id="agregarMedia" href="#" onClick={ this.openModal }> + Agregar media </a>
+          <MediaModal closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} fullUrl={ this.props.fullUrl }/>
       </aside>
     );
   }
@@ -124,7 +138,8 @@ Biblioteca.propTypes = {
   openModal: PropTypes.func,
   media: PropTypes.array,
   filter: PropTypes.func,
-  filterText: PropTypes.string
+  filterText: PropTypes.string,
+  fullUrl: PropTypes.string
 };
 
 export { Biblioteca };
