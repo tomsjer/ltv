@@ -10917,6 +10917,7 @@ var Biblioteca = function (_React$Component) {
       modalVisible: false
     };
 
+    _this.addNewMedia = _this.addNewMedia.bind(_this);
     _this.openModal = _this.openModal.bind(_this);
     _this.closeModal = _this.closeModal.bind(_this);
     _this.mediaDownload = _this.mediaDownload.bind(_this);
@@ -11050,7 +11051,7 @@ var Biblioteca = function (_React$Component) {
           { id: 'agregarMedia', href: '#', onClick: this.openModal },
           ' + Agregar media '
         ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__MediaModal_jsx__["a" /* MediaModal */], { closeModal: this.closeModal, isVisible: this.state.modalVisible, fullUrl: this.props.fullUrl })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__MediaModal_jsx__["a" /* MediaModal */], { submitSuccess: this.addNewMedia, closeModal: this.closeModal, isVisible: this.state.modalVisible, fullUrl: this.props.fullUrl })
       );
     }
   }]);
@@ -11412,12 +11413,15 @@ var MediaImagen = function (_React$Component) {
 
     _this.state = {
       imgPreviewSrc: false,
-      imgName: ''
+      imgName: '',
+      disableSubmit: true,
+      disableUpload: false
     };
 
     _this.imgNameChange = _this.imgNameChange.bind(_this);
     _this.handleFiles = _this.handleFiles.bind(_this);
     _this.handleDrop = _this.handleDrop.bind(_this);
+    _this.handleImageSubmit = _this.handleImageSubmit.bind(_this);
     return _this;
   }
 
@@ -11460,9 +11464,9 @@ var MediaImagen = function (_React$Component) {
       var reader = new FileReader();
       reader.onload = function readerOnload(evt) {
         self.setState({
-          imgPreviewSrc: evt.target.result
+          imgPreviewSrc: evt.target.result,
+          disableSubmit: false
         });
-        self.props.disableSubmit(false);
       };
       reader.readAsDataURL(file);
     }
@@ -11476,6 +11480,29 @@ var MediaImagen = function (_React$Component) {
       var files = dt.files;
 
       this.handleFiles({ target: { files: files } });
+    }
+  }, {
+    key: 'handleImageSubmit',
+    value: function handleImageSubmit(e) {
+      e.preventDefault();
+      var file = e.target.querySelector('input[name="imageFile"]').files[0];
+      var name = e.target.querySelector('input[name="name"]').value;
+
+      this.setState({
+        disableSubmit: true,
+        disableUpload: true
+      });
+
+      var submit = this.props.submitMedia({
+        media_types_id: '1',
+        image: file,
+        options: JSON.stringify({
+          name: name,
+          src: file.name
+        })
+      });
+
+      return submit;
     }
   }, {
     key: 'imgNameChange',
@@ -11492,7 +11519,7 @@ var MediaImagen = function (_React$Component) {
         { id: 'mediaImagen' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'form',
-          { onSubmit: this.props.handleImageSubmit },
+          { onSubmit: this.handleImageSubmit },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'label',
             { htmlFor: 'name' },
@@ -11536,10 +11563,10 @@ var MediaImagen = function (_React$Component) {
             null,
             ' O buscar en carpeta...'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'imageFile', type: 'file', style: { display: 'none' }, onChange: this.handleFiles }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'imageFile', type: 'file', style: { display: 'none' }, onChange: this.handleFiles, disabled: this.state.disableUpload }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'button',
-            { id: 'fileMentira', type: 'button', className: 'btn', disabled: this.state.disableUpload },
+            { id: 'fileMentira', type: 'button', className: 'btn' },
             ' Buscar... '
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
@@ -11559,7 +11586,9 @@ var MediaImagen = function (_React$Component) {
 MediaImagen.propTypes = {
   isVisible: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
   handleImageSubmit: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-  uploadPercentage: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number
+  uploadPercentage: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
+  disableSubmit: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  disabled: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
 };
 
 
@@ -11592,7 +11621,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-
 var MediaModal = function (_React$Component) {
   _inherits(MediaModal, _React$Component);
 
@@ -11611,8 +11639,6 @@ var MediaModal = function (_React$Component) {
     _this.onMediaChange = _this.onMediaChange.bind(_this);
     _this.disableSubmit = _this.disableSubmit.bind(_this);
     _this.closeModal = _this.closeModal.bind(_this);
-    _this.handleVideoSubmit = _this.handleVideoSubmit.bind(_this);
-    _this.handleImageSubmit = _this.handleImageSubmit.bind(_this);
     _this.submitMedia = _this.submitMedia.bind(_this);
     _this.uploadPercentage = _this.uploadPercentage.bind(_this);
     _this.uploadCompleted = _this.uploadCompleted.bind(_this);
@@ -11630,67 +11656,11 @@ var MediaModal = function (_React$Component) {
       document.querySelector('#mediaModal').removeEventListener('click', this.closeModal);
     }
   }, {
-    key: 'handleImageSubmit',
-    value: function handleImageSubmit(e) {
-      e.preventDefault();
-      var file = e.target.querySelector('input[name="imageFile"]').files[0];
-      var name = e.target.querySelector('input[name="name"]').value;
-      var self = this;
-
-      this.setState({
-        disableSubmit: true,
-        disableUpload: true
-      });
-
-      var submit = this.submitMedia({
-        media_types_id: '1',
-        image: file,
-        options: JSON.stringify({
-          name: name,
-          src: file.name
-        })
-      });
-
-      submit.then(function (response) {
-        console.log(response);
-        self.closeModal();
-      });
-
-      return submit;
-    }
-  }, {
     key: 'disableSubmit',
     value: function disableSubmit(state) {
       this.setState({
         disableSubmit: state
       });
-    }
-  }, {
-    key: 'handleVideoSubmit',
-    value: function handleVideoSubmit(e) {
-      e.preventDefault();
-      var self = this;
-      var videoId = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__utils_js__["b" /* youtubeUrlParser */])(e.currentTarget.querySelector('[name="videoUrl"]').value);
-      if (videoId) {
-        this.setState({
-          showVideoURLError: false,
-          disableSubmit: true
-        });
-        this.submitMedia({
-          media_types_id: '2',
-          options: JSON.stringify({
-            id_youtube: videoId
-          })
-        }).then(function () {
-          self.closeModal();
-        });
-      } else {
-        this.setState({
-          showVideoURLError: true,
-          disableSubmit: false
-        });
-      }
-      return false;
     }
   }, {
     key: 'onMediaChange',
@@ -11720,10 +11690,6 @@ var MediaModal = function (_React$Component) {
         var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* submit */])('POST', _this2.props.fullUrl + '/api/media/store', {
           overrideMimeType: 'text/plain; charset=x-user-defined-binary',
           progressHandler: _this2.uploadPercentage,
-          uploadHandler: function uploadHandler(e) {
-            _this2.uploadCompleted(e);
-            // resolve(e);
-          },
           onreadyStateChange: function onreadyStateChange(e) {
             if (e.target.readyState === 4 && e.target.status === 200) {
               _this2.uploadCompleted(e);
@@ -11752,11 +11718,20 @@ var MediaModal = function (_React$Component) {
     }
   }, {
     key: 'uploadCompleted',
-    value: function uploadCompleted() {
+    value: function uploadCompleted(e) {
       this.setState({
         uploadCompleted: true,
         uploadPercentage: -1
       });
+      this.closeModal();
+      var response = JSON.parse(e.target.response);
+      var media = response.media;
+      media.options = JSON.parse(media.options);
+      if (media.media_types_id === '2') {
+        media.options.srcThumbnail = 'https://i.ytimg.com/vi/' + media.options.id_youtube + '/default.jpg';
+        media.options.src = 'https://i.ytimg.com/vi/' + media.options.id_youtube + '/sddefault.jpg';
+      }
+      this.props.submitSuccess(media);
     }
   }, {
     key: 'uploadPercentage',
@@ -11810,8 +11785,8 @@ var MediaModal = function (_React$Component) {
                 ' Video '
               )
             ),
-            this.state.show === 'imagen' && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__MediaImage_jsx__["a" /* MediaImagen */], { isVisible: this.props.isVisible, handleImageSubmit: this.handleImageSubmit, disableSubmit: this.disableSubmit, uploadPercentage: this.state.uploadPercentage }),
-            this.state.show === 'video' && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__MediaVideo_jsx__["a" /* MediaVideo */], { handleVideoSubmit: this.handleVideoSubmit })
+            this.state.show === 'imagen' && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__MediaImage_jsx__["a" /* MediaImagen */], { isVisible: this.props.isVisible, submitMedia: this.submitMedia, uploadPercentage: this.state.uploadPercentage }),
+            this.state.show === 'video' && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__MediaVideo_jsx__["a" /* MediaVideo */], { isVisible: this.props.isVisible, submitMedia: this.submitMedia })
           )
         )
       );
@@ -11839,6 +11814,7 @@ MediaModal.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_js__ = __webpack_require__(36);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MediaVideo; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -11847,6 +11823,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -11860,12 +11837,70 @@ var MediaVideo = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (MediaVideo.__proto__ || Object.getPrototypeOf(MediaVideo)).call(this, props));
 
     _this.state = {
-      showVideoURLError: false
+      showVideoURLError: false,
+      disableSubmit: true,
+      videoName: '',
+      videoUrl: ''
     };
+    _this.handleVideoSubmit = _this.handleVideoSubmit.bind(_this);
+    _this.videoNameChange = _this.videoNameChange.bind(_this);
+    _this.videoUrlChange = _this.videoUrlChange.bind(_this);
     return _this;
   }
 
   _createClass(MediaVideo, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.isVisible !== this.props.isVisible && !nextProps.isVisible) {
+        this.setState({
+          videoName: '',
+          videoUrl: ''
+        });
+      }
+    }
+  }, {
+    key: 'videoNameChange',
+    value: function videoNameChange(e) {
+      this.setState({
+        videoName: e.target.value
+      });
+    }
+  }, {
+    key: 'videoUrlChange',
+    value: function videoUrlChange(e) {
+      this.setState({
+        videoUrl: e.target.value,
+        disableSubmit: false
+      });
+    }
+  }, {
+    key: 'handleVideoSubmit',
+    value: function handleVideoSubmit(e) {
+      e.preventDefault();
+      var self = this;
+      var videoId = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_js__["b" /* youtubeUrlParser */])(e.currentTarget.querySelector('[name="videoUrl"]').value);
+      var name = e.currentTarget.querySelector('[name="name"]').value;
+      if (videoId) {
+        this.setState({
+          showVideoURLError: false,
+          disableSubmit: true
+        });
+        this.props.submitMedia({
+          media_types_id: '2',
+          options: JSON.stringify({
+            name: name,
+            id_youtube: videoId
+          })
+        });
+      } else {
+        this.setState({
+          showVideoURLError: true,
+          disableSubmit: false
+        });
+      }
+      return false;
+    }
+  }, {
     key: 'render',
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -11873,7 +11908,13 @@ var MediaVideo = function (_React$Component) {
         { id: 'mediaVideo' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'form',
-          { onSubmit: this.props.handleVideoSubmit },
+          { onSubmit: this.handleVideoSubmit },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'label',
+            { htmlFor: 'name' },
+            ' Nombre: ',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', placeholder: '', name: 'name', className: 'form-control', value: this.state.videoName, onChange: this.videoNameChange })
+          ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'p',
             null,
@@ -11884,7 +11925,7 @@ var MediaVideo = function (_React$Component) {
               ' Copia el enlace de YouTube aqui abajo.'
             )
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'videoUrl', type: 'text', placeholder: 'Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA' }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'videoUrl', type: 'text', onChange: this.videoUrlChange, placeholder: 'Ej: https://www.youtube.com/watch?v=6vpOHq8bkzA' }),
           this.state.showVideoURLError && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'p',
             { className: 'error' },
@@ -11893,7 +11934,7 @@ var MediaVideo = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'button',
-            { type: 'submit', className: 'btn pull-right' },
+            { type: 'submit', className: 'btn pull-right', disabled: this.state.disableSubmit },
             ' Listo '
           )
         )
@@ -11905,7 +11946,10 @@ var MediaVideo = function (_React$Component) {
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
 MediaVideo.propTypes = {
-  handleVideoSubmit: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+  handleVideoSubmit: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  isVisible: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  disableSubmit: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  disabled: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
 };
 
 

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { MediaImagen } from './MediaImage.jsx';
 import { MediaVideo } from './MediaVideo.jsx';
 import { submit } from '../utils.js';
-import { youtubeUrlParser } from '../utils.js';
 
 class MediaModal extends React.Component {
   constructor(props) {
@@ -19,8 +18,6 @@ class MediaModal extends React.Component {
     this.onMediaChange = this.onMediaChange.bind(this);
     this.disableSubmit = this.disableSubmit.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.handleVideoSubmit = this.handleVideoSubmit.bind(this);
-    this.handleImageSubmit = this.handleImageSubmit.bind(this);
     this.submitMedia = this.submitMedia.bind(this);
     this.uploadPercentage = this.uploadPercentage.bind(this);
     this.uploadCompleted = this.uploadCompleted.bind(this);
@@ -31,63 +28,10 @@ class MediaModal extends React.Component {
   componentWillUnmount() {
     document.querySelector('#mediaModal').removeEventListener('click', this.closeModal);
   }
-  handleImageSubmit(e) {
-    e.preventDefault();
-    const file = e.target.querySelector('input[name="imageFile"]').files[0];
-    const name = e.target.querySelector('input[name="name"]').value;
-    const self = this;
-
-    this.setState({
-      disableSubmit: true,
-      disableUpload: true
-    });
-
-    const submit = this.submitMedia({
-      media_types_id: '1',
-      image: file,
-      options: JSON.stringify({
-        name: name,
-        src: file.name,
-      })
-    });
-
-    submit.then((response)=>{
-      console.log(response);
-      self.closeModal();
-    });
-
-    return submit;
-  }
   disableSubmit(state) {
     this.setState({
       disableSubmit: state
     });
-  }
-  handleVideoSubmit(e) {
-    e.preventDefault();
-    const self = this;
-    const videoId = youtubeUrlParser(e.currentTarget.querySelector('[name="videoUrl"]').value);
-    if (videoId) {
-      this.setState({
-        showVideoURLError: false,
-        disableSubmit: true,
-      });
-      this.submitMedia({
-        media_types_id: '2',
-        options: JSON.stringify({
-          id_youtube: videoId,
-        })
-      })
-      .then(()=>{
-        self.closeModal();
-      });
-    } else {
-      this.setState({
-        showVideoURLError: true,
-        disableSubmit: false,
-      });
-    }
-    return false;
   }
   onMediaChange(e) {
     this.setState({
@@ -98,7 +42,7 @@ class MediaModal extends React.Component {
     this.props.closeModal();
 
     this.setState({
-      show:'select',
+      show: 'select',
       disableSubmit: true,
       disableUpload: false,
     });
@@ -109,10 +53,6 @@ class MediaModal extends React.Component {
       const request = submit('POST', `${this.props.fullUrl}/api/media/store`, {
         overrideMimeType: 'text/plain; charset=x-user-defined-binary',
         progressHandler: this.uploadPercentage,
-        uploadHandler: (e)=> {
-          this.uploadCompleted(e);
-          // resolve(e);
-        },
         onreadyStateChange: (e)=>{
           if (e.target.readyState === 4 && e.target.status === 200) {
             this.uploadCompleted(e);
@@ -137,11 +77,20 @@ class MediaModal extends React.Component {
     // TODO: Handle error in AJAX requests
     console.log(e);
   }
-  uploadCompleted() {
+  uploadCompleted(e) {
     this.setState({
       uploadCompleted: true,
       uploadPercentage: -1
     });
+    this.closeModal();
+    const response = JSON.parse(e.target.response);
+    const media = response.media;
+    media.options = JSON.parse(media.options);
+    if (media.media_types_id === '2') {
+      media.options.srcThumbnail = `https://i.ytimg.com/vi/${media.options.id_youtube}/default.jpg`;
+      media.options.src = `https://i.ytimg.com/vi/${media.options.id_youtube}/sddefault.jpg`;
+    }
+    this.props.submitSuccess(media);
   }
   uploadPercentage(e) {
     if (e.lengthComputable) {
@@ -165,8 +114,8 @@ class MediaModal extends React.Component {
               <option value="video"> Video </option>
             </select>
 
-            { this.state.show === 'imagen' && <MediaImagen isVisible={this.props.isVisible} handleImageSubmit={this.handleImageSubmit} disableSubmit={ this.disableSubmit } uploadPercentage={ this.state.uploadPercentage}/> }
-            { this.state.show === 'video' && <MediaVideo handleVideoSubmit={this.handleVideoSubmit}/> }
+            { this.state.show === 'imagen' && <MediaImagen isVisible={this.props.isVisible} submitMedia={this.submitMedia } uploadPercentage={ this.state.uploadPercentage}/> }
+            { this.state.show === 'video' && <MediaVideo isVisible={this.props.isVisible} submitMedia={this.submitMedia} /> }
 
           </div>
         </div>

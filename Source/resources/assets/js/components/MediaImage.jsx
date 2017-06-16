@@ -8,11 +8,14 @@ class MediaImagen extends React.Component {
     this.state = {
       imgPreviewSrc: false,
       imgName: '',
+      disableSubmit: true,
+      disableUpload: false
     };
 
     this.imgNameChange = this.imgNameChange.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
+    this.handleImageSubmit = this.handleImageSubmit.bind(this);
   }
   componentDidMount() {
     document.querySelector('#fileMentira').addEventListener('click', this.clickImageFile);
@@ -43,9 +46,9 @@ class MediaImagen extends React.Component {
     const reader = new FileReader();
     reader.onload = function readerOnload(evt) {
       self.setState({
-        imgPreviewSrc: evt.target.result
+        imgPreviewSrc: evt.target.result,
+        disableSubmit: false
       });
-      self.props.disableSubmit(false);
     };
     reader.readAsDataURL(file);
   }
@@ -58,6 +61,27 @@ class MediaImagen extends React.Component {
 
     this.handleFiles({target: { files: files}});
   }
+  handleImageSubmit(e) {
+    e.preventDefault();
+    const file = e.target.querySelector('input[name="imageFile"]').files[0];
+    const name = e.target.querySelector('input[name="name"]').value
+
+    this.setState({
+      disableSubmit: true,
+      disableUpload: true
+    });
+
+    const submit = this.props.submitMedia({
+      media_types_id: '1',
+      image: file,
+      options: JSON.stringify({
+        name: name,
+        src: file.name,
+      })
+    });
+
+    return submit;
+  }
   imgNameChange(e) {
     this.setState({
       imgName: e.target.value
@@ -66,7 +90,7 @@ class MediaImagen extends React.Component {
   render() {
     return (
       <div id="mediaImagen">
-        <form onSubmit={ this.props.handleImageSubmit }>
+        <form onSubmit={ this.handleImageSubmit }>
 
           <label htmlFor="name"> Nombre: <input type="text" placeholder="" name="name" className="form-control" value={this.state.imgName} onChange={ this.imgNameChange } /></label>
           <div id="modalDropZone" className={ (!this.state.imgPreviewSrc) ? '' : 'active'}
@@ -84,8 +108,8 @@ class MediaImagen extends React.Component {
           </div>
           <p> O buscar en carpeta...</p>
 
-          <input required className="form-control" name="imageFile" type="file" style={{display: 'none'}} onChange={ this.handleFiles } />
-          <button id="fileMentira" type="button" className="btn" disabled={ this.state.disableUpload }> Buscar... </button>
+          <input required className="form-control" name="imageFile" type="file" style={{display: 'none'}} onChange={ this.handleFiles } disabled={this.state.disableUpload} />
+          <button id="fileMentira" type="button" className="btn"> Buscar... </button>
           <br />
           <button type="submit" className="btn pull-right" disabled={this.state.disableSubmit}> Listo </button>
         </form>
@@ -97,7 +121,9 @@ class MediaImagen extends React.Component {
 MediaImagen.propTypes = {
   isVisible: PropTypes.bool,
   handleImageSubmit: PropTypes.func,
-  uploadPercentage: PropTypes.number
+  uploadPercentage: PropTypes.number,
+  disableSubmit: PropTypes.func,
+  disabled: PropTypes.bool
 };
 
 export { MediaImagen };

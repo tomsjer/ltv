@@ -20,6 +20,7 @@ class Biblioteca extends React.Component {
       modalVisible: false,
     };
 
+    this.addNewMedia = this.addNewMedia.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.mediaDownload = this.mediaDownload.bind(this);
@@ -127,7 +128,7 @@ class Biblioteca extends React.Component {
           <Buscador filter={ this.handleFilterText } />
           <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText }/>
           <a id="agregarMedia" href="#" onClick={ this.openModal }> + Agregar media </a>
-          <MediaModal closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} fullUrl={ this.props.fullUrl }/>
+          <MediaModal submitSuccess={ this.addNewMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} fullUrl={ this.props.fullUrl }/>
       </aside>
     );
   }
