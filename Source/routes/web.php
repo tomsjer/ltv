@@ -37,7 +37,7 @@ Route::group(['prefix' => 'api'], function () {
 	Route::get('mediatype/get','MediaTypeController@index');
 
 	//Media
-	Route::get('media/get','MediaController@index');
+	Route::get('media/get/{start?}/{limit?}','MediaController@index');
 
 	Route::get('media/get/{id}','MediaController@show');
 	//{ "media_types_id" : "1", "options": "{\"name\" : \"Imagen3\", \"src\" : \"storage/images/imagen.png\"}"}

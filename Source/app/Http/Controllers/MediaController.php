@@ -15,10 +15,10 @@ class MediaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($start = 0,$limit = 20)
     {
         //
-        return response()->json(Media::all());
+        return response()->json(Media::take($limit)->offset($start)->get());
     }
 
     /**
