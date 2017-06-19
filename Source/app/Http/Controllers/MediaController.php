@@ -188,17 +188,25 @@ class MediaController extends Controller
 
     public function storeSliders(Request $request){
         $data = $request->json()->all();
+        $return = true;
         if($data){
             foreach($data as $slide){
-                if($slide['loop'] != 0 || $slide['loop'] != ''){
-                    $this->slideVideo($slide);
+                if($slide['loop'] != 0 && $slide['loop'] != ''){
+                    $return = $this->slideVideo($slide);
                 }elseif($slide['intervalo'] !== ''){
-                    $this->slideImage($slide);
+                    $return = $this->slideImage($slide);
+                }
+                if(!$return){
+                    return response()->json([
+                        'message' => 'Ha ocurrido un error con el Slide: '.$slide['titulo'],
+                        'code' => '1'
+                    ]);
                 }
             }
         }
         return response()->json([
-            'message' => 'saved',
+            'message' => 'Guardado con exito',
+            'code' => '0'
         ]);
     }
 
