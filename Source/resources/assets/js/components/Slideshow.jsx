@@ -124,12 +124,23 @@ class Slideshow extends React.Component {
             <div role="tabpanel" className="tab-pane active" id="slide">
               <div id="slideContainer">
                 <div id="activeSlide" className="row">
-                  <div className="col-md-8">
-                    { this.state.slides.length && <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} /> }
-                    { !this.state.slides.length && <div><h3> No se ha creado ninguna diapositiva aun...</h3></div> }
-                    <Dropzone addSlide={ this.addSlide }/>
-                  </div>
-                    { this.state.slides.length && <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/> }
+                  { this.state.slides.length ?
+                    (
+                      <div>
+                        <div className="col-md-8">
+                          <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} />
+                        </div>
+                        <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
+                      </div>
+                    ) :
+                    ( <div className="slider-empty-placeholder">
+                        <h1>Ups...</h1>
+                        <h3> Parece que no ha creado ninguna diapositiva aun.</h3>
+                        <p>Desplaze algun contendio de la biblioteca hasta esta zona para agrgar una diapositiva.</p>
+                      </div>
+                    )
+                  }
+                  <Dropzone addSlide={ this.addSlide }/>
                 </div>
               </div>
             </div>

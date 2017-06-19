@@ -12,6 +12,7 @@ class Contenedor extends React.Component {
     this.start = 10;
     this.count = 10;
     this.dragStartHandler = this.dragStartHandler.bind(this);
+    this.dragEndHandler = this.dragEndHandler.bind(this);
     this.loadMore = this.loadMore.bind(this);
   }
   componentDidMount() {
@@ -25,6 +26,9 @@ class Contenedor extends React.Component {
   dragStartHandler(e) {
     e.dataTransfer.setData('text/plain', e.currentTarget.dataset.draginfo);
     document.querySelector('.dropzone-container').classList.add('active');
+  }
+  dragEndHandler() {
+    document.querySelector('.dropzone-container').classList.remove('active');
   }
   loadMore() {
     if (!this.state.isLoading ) {
@@ -42,7 +46,7 @@ class Contenedor extends React.Component {
   }
   renderMedia(element, i) {
     return (
-      <div className="item" key={i} data-dragInfo={JSON.stringify(element)} draggable="true" onDragStart={ this.dragStartHandler }>
+      <div className="item" key={i} data-dragInfo={JSON.stringify(element)} draggable="true" onDragStart={ this.dragStartHandler } onDragEnd={this.dragEndHandler}>
         <div className="img-container">
           <img src= { element.options.srcThumbnail } />
         </div>

@@ -29,14 +29,14 @@ class Dropzone extends React.Component {
     };
 
     this.props.addSlide(slide);
-    document.querySelector('.dropzone-container').classList.remove('active');
   }
   render() {
     return ( < div className = "dropzone-container" >
       < div className = "dropzone"
       onDrop = { this.dropHandler }
       onDragOver = { this.dragoverHandler } >
-      Arrastre contenido aquí... < /div> < /div >
+        <h3> Arrastre contenido aquí... </h3>
+      < /div> < /div >
     );
   }
 }

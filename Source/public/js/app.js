@@ -11169,6 +11169,7 @@ var Contenedor = function (_React$Component) {
     _this.start = 10;
     _this.count = 10;
     _this.dragStartHandler = _this.dragStartHandler.bind(_this);
+    _this.dragEndHandler = _this.dragEndHandler.bind(_this);
     _this.loadMore = _this.loadMore.bind(_this);
     return _this;
   }
@@ -11192,6 +11193,11 @@ var Contenedor = function (_React$Component) {
       document.querySelector('.dropzone-container').classList.add('active');
     }
   }, {
+    key: 'dragEndHandler',
+    value: function dragEndHandler() {
+      document.querySelector('.dropzone-container').classList.remove('active');
+    }
+  }, {
     key: 'loadMore',
     value: function loadMore() {
       var _this2 = this;
@@ -11213,7 +11219,7 @@ var Contenedor = function (_React$Component) {
     value: function renderMedia(element, i) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { className: 'item', key: i, 'data-dragInfo': JSON.stringify(element), draggable: 'true', onDragStart: this.dragStartHandler },
+        { className: 'item', key: i, 'data-dragInfo': JSON.stringify(element), draggable: 'true', onDragStart: this.dragStartHandler, onDragEnd: this.dragEndHandler },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'img-container' },
@@ -11346,7 +11352,6 @@ var Dropzone = function (_React$Component) {
       };
 
       this.props.addSlide(slide);
-      document.querySelector('.dropzone-container').classList.remove('active');
     }
   }, {
     key: 'render',
@@ -11359,7 +11364,11 @@ var Dropzone = function (_React$Component) {
           { className: 'dropzone',
             onDrop: this.dropHandler,
             onDragOver: this.dragoverHandler },
-          'Arrastre contenido aqu\xED... '
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'h3',
+            null,
+            ' Arrastre contenido aqu\xED... '
+          )
         ),
         ' '
       );
@@ -12424,22 +12433,35 @@ var Slideshow = function (_React$Component) {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
                   { id: 'activeSlide', className: 'row' },
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  this.state.slides.length ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: 'col-md-8' },
-                    this.state.slides.length && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide }),
-                    !this.state.slides.length && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                       'div',
-                      null,
-                      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'h3',
-                        null,
-                        ' No se ha creado ninguna diapositiva aun...'
-                      )
+                      { className: 'col-md-8' },
+                      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide })
                     ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Dropzone__["a" /* Dropzone */], { addSlide: this.addSlide })
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
+                  ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'slider-empty-placeholder' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'h1',
+                      null,
+                      'Ups...'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'h3',
+                      null,
+                      ' Parece que no ha creado ninguna diapositiva aun.'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'p',
+                      null,
+                      'Desplaze algun contendio de la biblioteca hasta esta zona para agrgar una diapositiva.'
+                    )
                   ),
-                  this.state.slides.length && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Dropzone__["a" /* Dropzone */], { addSlide: this.addSlide })
                 )
               )
             ),
