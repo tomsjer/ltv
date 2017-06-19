@@ -20,6 +20,7 @@ class UpdateSlidersTable extends Migration
             $table->string('thumbnail_src',250)->nullable();
             $table->string('video_id',250)->nullable();
             $table->integer('video_loop')->unsigned()->nullable();
+            $table->integer('media_type_id')->unsigned();
             $table->foreign('media_type_id')->references('id')->on('media_type');
             $table->text('description')->nullable()->change();
         });
