@@ -15,4 +15,12 @@ class Slider extends Model
     protected $fillable = [
         'title', 'description',
     ];
+
+    /**
+     * Get the phone record associated with the user.
+     */
+    public function media()
+    {
+        return $this->belongsTo('App\Media');
+    }
 }

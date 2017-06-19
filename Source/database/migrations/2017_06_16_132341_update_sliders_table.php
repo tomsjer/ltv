@@ -17,6 +17,7 @@ class UpdateSlidersTable extends Migration
             $table->text('title')->nullable();
             $table->text('subtitle')->nullable();
             $table->integer('video_loop')->unsigned()->nullable();
+            $table->integer('time_interval')->unsigned()->nullable();
             $table->text('description')->nullable()->change();
         });
     }
@@ -32,6 +33,7 @@ class UpdateSlidersTable extends Migration
             $table->dropColumn('title');
             $table->dropColumn('subtitle');
             $table->dropColumn('video_loop');
+            $table->integer('time_interval')->unsigned();
             $table->string('description',50)->change();
         });
     }

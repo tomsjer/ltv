@@ -188,22 +188,15 @@ class MediaController extends Controller
 
     public function storeSliders(Request $request){
         $data = $request->json()->all();
-
-        if($data['sliders']) {
-            foreach($data['sliders'] as $slide){
-                switch ($slide['tipo']){
-                    case 1: //Imagenes
-                        $this->slideImage($slide);
-                    break;
-                    case 2: //video
-                        $this->slideVideo($slide);
-                    break;
-                    default:
-                    break;
+        if($data){
+            foreach($data as $slide){
+                if($slide['loop'] != 0 || $slide['loop'] != ''){
+                    $this->slideVideo($slide);
+                }elseif($slide['intervalo'] !== ''){
+                    $this->slideImage($slide);
                 }
             }
         }
-
         return response()->json([
             'message' => 'saved',
         ]);
@@ -213,15 +206,15 @@ class MediaController extends Controller
         $slidesRaw = Slider::all();
         $slides = [];
 
-        if($all === 'all'){
-            $slides = $slidesRaw;
-        }else{
-            foreach($slidesRaw as $slide){
+        foreach($slidesRaw as $slide){
+            if($all === 'all'){
+                $slides[] = $this->getSlideData($slide);
+            }else{
                 if(
                     strtotime(date('Y-m-d')) > strtotime($slide->date_from) &&
                     strtotime(date('Y-m-d')) < strtotime($slide->date_until)
                 ){
-                    $slides[] = $slide;
+                    $slides[] = $this->getSlideData($slide);
                 }
             }
         }
@@ -230,8 +223,6 @@ class MediaController extends Controller
 
     private function slideImage($data){
         $rules_Image = [
-            'src' => 'required',
-            'srcThumbnail' => 'required',
             'intervalo'      => 'required',
             'desde'      => 'required',
             'hasta'      => 'required',
@@ -244,13 +235,10 @@ class MediaController extends Controller
         try{
             $newSlide = new Slider();
 
-            $newSlide->media_type_id    = $data['tipo'];
             $newSlide->media_id         = $data['media_id'];
             $newSlide->title            = $data['titulo'];
             $newSlide->subtitle         = $data['subtitulo'];
             $newSlide->description      = $data['descripcion'];
-            $newSlide->img_src          = $data['src'];
-            $newSlide->thumbnail_src    = $data['srcThumbnail'];
             $newSlide->time_interval    = $data['intervalo'];
             $newSlide->date_from        = $data['desde'];
             $newSlide->date_until       = $data['hasta'];
@@ -265,7 +253,6 @@ class MediaController extends Controller
     }
     private function slideVideo($data){
         $rules_video = [
-            'id_youtube' => 'required',
             'loop' => 'required',
             'desde'      => 'required',
             'hasta'      => 'required',
@@ -278,12 +265,10 @@ class MediaController extends Controller
         try{
             $newSlide = new Slider();
 
-            $newSlide->media_type_id= $data['tipo'];
             $newSlide->media_id     = $data['media_id'];
             $newSlide->title        = $data['titulo'];
             $newSlide->subtitle     = $data['subtitulo'];
             $newSlide->description  = $data['descripcion'];
-            $newSlide->video_id     = $data['id_youtube'];
             $newSlide->video_loop   = $data['loop'];
             $newSlide->date_from    = $data['desde'];
             $newSlide->date_until   = $data['hasta'];
@@ -296,4 +281,11 @@ class MediaController extends Controller
         return true;
     }
 
+    private function getSlideData($slide){
+        $data = $slide;
+        $slide->media;
+        $slide->media->mediaType;
+
+        return $data;
+    }
 }

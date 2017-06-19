@@ -15,4 +15,12 @@ class Media extends Model
     protected $fillable = [
         'media_types_id','options'
     ];
+
+    /**
+     * Get the phone record associated with the user.
+     */
+    public function mediaType()
+    {
+        return $this->belongsTo('App\MediaType','media_types_id');
+    }
 }
