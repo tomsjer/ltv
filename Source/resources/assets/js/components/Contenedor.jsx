@@ -12,36 +12,19 @@ class Contenedor extends React.Component {
     this.start = 10;
     this.count = 10;
     this.dragStartHandler = this.dragStartHandler.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
     this.loadMore = this.loadMore.bind(this);
   }
   componentDidMount() {
     this.contenedor = document.querySelector('#contenedor');
     this.contenedorWrapper = document.querySelector('#contenedor-wrapper');
-    // this.contenedorWrapper.addEventListener('scroll', this.handleScroll);
   }
   componentWillUnmount() {
-    // this.contenedorWrapper.removeEventListener('scroll', this.handleScroll);
     this.contenedorWrapper = null;
     this.contenedor = null;
   }
   dragStartHandler(e) {
-    e.dataTransfer.setData("text/plain", e.currentTarget.dataset.draginfo);
-  }
-  handleScroll(e) {
-    const rectWrapper  = e.target.getClientRects()[0];
-    const rectContenedor = this.contenedor.getClientRects()[0];
-    if ( rectContenedor.bottom - this.lazyLoadRange < rectWrapper.bottom && !this.state.isLoading) {
-      this.setState({
-        isLoading: true
-      });
-      this.props.getMedia(this.start)
-      .then((e)=>{
-        this.setState({
-          isLoading: false
-        });
-      });
-    }
+    e.dataTransfer.setData('text/plain', e.currentTarget.dataset.draginfo);
+    document.querySelector('.dropzone-container').classList.add('active');
   }
   loadMore() {
     if (!this.state.isLoading ) {
@@ -99,7 +82,8 @@ class Contenedor extends React.Component {
 Contenedor.propTypes = {
   media: PropTypes.array,
   layout: PropTypes.string,
-  filterText: PropTypes.string
+  filterText: PropTypes.string,
+  getMedia: PropTypes.func
 };
 
 export { Contenedor };

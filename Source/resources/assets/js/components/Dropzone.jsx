@@ -20,29 +20,28 @@ class Dropzone extends React.Component {
       descripcion: '',
       src: element.options.src,
       srcThumbnail: element.options.srcThumbnail,
-      tipo: element.media_types_id,
       intervalo: '',
       loop: 0,
       desde: '',
       hasta: '',
-      media_id: 0
+      media_id: element.id,
+      media_types_id: element.media_types_id
     };
 
     this.props.addSlide(slide);
+    document.querySelector('.dropzone-container').classList.remove('active');
   }
   render() {
     return ( < div className = "dropzone-container" >
       < div className = "dropzone"
       onDrop = { this.dropHandler }
-      onDragOver = { this.dragoverHandler }
-      onClick = { this.props.addNewSlide } >
-      Arrastre una imagen o haga click para agregar un nuevo slide < /div> < /div >
+      onDragOver = { this.dragoverHandler } >
+      Arrastre contenido aquí... < /div> < /div >
     );
   }
 }
 
 Dropzone.propTypes = {
-  addNewSlide: PropTypes.func,
   addSlide: PropTypes.func,
 };
 export { Dropzone };

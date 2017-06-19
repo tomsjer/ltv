@@ -11169,7 +11169,6 @@ var Contenedor = function (_React$Component) {
     _this.start = 10;
     _this.count = 10;
     _this.dragStartHandler = _this.dragStartHandler.bind(_this);
-    _this.handleScroll = _this.handleScroll.bind(_this);
     _this.loadMore = _this.loadMore.bind(_this);
     return _this;
   }
@@ -11179,51 +11178,32 @@ var Contenedor = function (_React$Component) {
     value: function componentDidMount() {
       this.contenedor = document.querySelector('#contenedor');
       this.contenedorWrapper = document.querySelector('#contenedor-wrapper');
-      // this.contenedorWrapper.addEventListener('scroll', this.handleScroll);
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      // this.contenedorWrapper.removeEventListener('scroll', this.handleScroll);
       this.contenedorWrapper = null;
       this.contenedor = null;
     }
   }, {
     key: 'dragStartHandler',
     value: function dragStartHandler(e) {
-      e.dataTransfer.setData("text/plain", e.currentTarget.dataset.draginfo);
-    }
-  }, {
-    key: 'handleScroll',
-    value: function handleScroll(e) {
-      var _this2 = this;
-
-      var rectWrapper = e.target.getClientRects()[0];
-      var rectContenedor = this.contenedor.getClientRects()[0];
-      if (rectContenedor.bottom - this.lazyLoadRange < rectWrapper.bottom && !this.state.isLoading) {
-        this.setState({
-          isLoading: true
-        });
-        this.props.getMedia(this.start).then(function (e) {
-          _this2.setState({
-            isLoading: false
-          });
-        });
-      }
+      e.dataTransfer.setData('text/plain', e.currentTarget.dataset.draginfo);
+      document.querySelector('.dropzone-container').classList.add('active');
     }
   }, {
     key: 'loadMore',
     value: function loadMore() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (!this.state.isLoading) {
         this.setState({ isLoading: true });
         this.props.getMedia(this.start).then(function (e) {
-          _this3.setState({
+          _this2.setState({
             isLoading: false
           });
           if (JSON.parse(e.target.response).length) {
-            _this3.start += _this3.count;
+            _this2.start += _this2.count;
           }
         });
       }
@@ -11258,16 +11238,16 @@ var Contenedor = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this3 = this;
 
       var media = [];
       this.props.media.sort(function (a, b) {
         return a.updated_at > b.updated_at ? -1 : 1;
       }).forEach(function (element, i) {
-        if (_this4.props.filterText !== '' && element.options.name && element.options.name.indexOf(_this4.props.filterText) === -1) {
+        if (_this3.props.filterText !== '' && element.options.name && element.options.name.indexOf(_this3.props.filterText) === -1) {
           return;
         }
-        media.push(_this4.renderMedia(element, i));
+        media.push(_this3.renderMedia(element, i));
       });
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
@@ -11300,7 +11280,8 @@ var Contenedor = function (_React$Component) {
 Contenedor.propTypes = {
   media: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
   layout: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-  filterText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
+  filterText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+  getMedia: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 
@@ -11356,15 +11337,16 @@ var Dropzone = function (_React$Component) {
         descripcion: '',
         src: element.options.src,
         srcThumbnail: element.options.srcThumbnail,
-        tipo: element.media_types_id,
         intervalo: '',
         loop: 0,
         desde: '',
         hasta: '',
-        media_id: 0
+        media_id: element.id,
+        media_types_id: element.media_types_id
       };
 
       this.props.addSlide(slide);
+      document.querySelector('.dropzone-container').classList.remove('active');
     }
   }, {
     key: 'render',
@@ -11376,9 +11358,8 @@ var Dropzone = function (_React$Component) {
           'div',
           { className: 'dropzone',
             onDrop: this.dropHandler,
-            onDragOver: this.dragoverHandler,
-            onClick: this.props.addNewSlide },
-          'Arrastre una imagen o haga click para agregar un nuevo slide '
+            onDragOver: this.dragoverHandler },
+          'Arrastre contenido aqu\xED... '
         ),
         ' '
       );
@@ -11389,7 +11370,6 @@ var Dropzone = function (_React$Component) {
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
 Dropzone.propTypes = {
-  addNewSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
   addSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
@@ -12085,13 +12065,13 @@ var SlideForm = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Titulo', type: 'text', value: this.props.slide.titulo, name: 'titulo' }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Subtitulo', type: 'text', value: this.props.slide.subtitulo, name: 'subtitulo' }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { onChange: this.handleChange, className: 'form-control', placeholder: 'Descripcion', type: 'textarea', value: this.props.slide.descripcion, rows: '10', cols: '20', name: 'descripcion' }),
-          (this.props.slide.tipo === 1 || this.props.slide.tipo === 3) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          (this.props.slide.media_types_id === 1 || this.props.slide.media_types_id === 3) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'label',
             { htmlFor: 'intervalo' },
             ' Intervalo',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, value: this.props.slide.intervalo, name: 'intervalo', className: 'form-control', type: 'number', placeholder: 'Segundos', min: '0' })
           ),
-          this.props.slide.tipo === 2 && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          this.props.slide.media_types_id === 2 && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'label',
             { htmlFor: 'loop' },
             ' Loops',
@@ -12293,25 +12273,16 @@ var Slideshow = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Slideshow.__proto__ || Object.getPrototypeOf(Slideshow)).call(this, props));
 
-    _this.blankSlide = {
-      order: 1,
-      titulo: '',
-      subtitulo: '',
-      descripcion: '',
-      src: 'http://placehold.it/600x400',
-      srcThumbnail: 'http://placehold.it/100x80'
-    };
     var slides = localStorage.getItem('slider');
     slides = slides && slides !== '' && slides.indexOf('[{') !== -1 ? JSON.parse(slides) : false;
     _this.state = {
       activeSlide: 0,
-      slides: slides ? slides : [Object.assign({}, _this.blankSlide)]
+      slides: slides ? slides : []
     };
 
     _this.saveSlider = _this.saveSlider.bind(_this);
     _this.addSlide = _this.addSlide.bind(_this);
     _this.removeSlide = _this.removeSlide.bind(_this);
-    _this.addBlankSlide = _this.addBlankSlide.bind(_this);
     _this.setActiveSlide = _this.setActiveSlide.bind(_this);
     _this.handleSlideFormChange = _this.handleSlideFormChange.bind(_this);
     return _this;
@@ -12337,7 +12308,6 @@ var Slideshow = function (_React$Component) {
     key: 'addSlide',
     value: function addSlide(slide) {
       var slides = this.state.slides.slice(0);
-      slide.order = slides.length + 1;
       slides.push(slide);
       this.setState({
         slides: slides
@@ -12346,32 +12316,28 @@ var Slideshow = function (_React$Component) {
   }, {
     key: 'saveSlider',
     value: function saveSlider() {
+      var slides = this.state.slides;
+      slides.forEach(function (slide) {
+        delete slide.src;
+        delete slide.srcThumbnail;
+        delete slide.media_types_id;
+      });
+      // TODO: hit POST slider/store
       localStorage.setItem('slider', JSON.stringify(this.state.slides));
     }
   }, {
     key: 'removeSlide',
     value: function removeSlide(index) {
       var slides = this.state.slides;
-      if (slides.length === 1) {
-        this.setState({
-          slides: [Object.assign({}, this.blankSlide)]
-        });
-      } else {
-        var newSlides = [];
-        slides.map(function (slide, slideIndex) {
-          if (slideIndex !== index) {
-            newSlides.push(slide);
-          }
-        });
-        this.setState({
-          slides: newSlides
-        });
-      }
-    }
-  }, {
-    key: 'addBlankSlide',
-    value: function addBlankSlide() {
-      this.addSlide(Object.assign({}, this.blankSlide));
+      var newSlides = [];
+      slides.map(function (slide, slideIndex) {
+        if (slideIndex !== index) {
+          newSlides.push(slide);
+        }
+      });
+      this.setState({
+        slides: newSlides
+      });
     }
   }, {
     key: 'render',
@@ -12401,10 +12367,19 @@ var Slideshow = function (_React$Component) {
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
                     { className: 'col-md-8' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide }),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Dropzone__["a" /* Dropzone */], { addNewSlide: this.addBlankSlide, addSlide: this.addSlide })
+                    this.state.slides.length && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide }),
+                    !this.state.slides.length && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'div',
+                      null,
+                      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'h3',
+                        null,
+                        ' No se ha creado ninguna diapositiva aun...'
+                      )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Dropzone__["a" /* Dropzone */], { addSlide: this.addSlide })
                   ),
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
+                  this.state.slides.length && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
                 )
               )
             ),
