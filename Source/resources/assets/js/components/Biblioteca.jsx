@@ -26,13 +26,13 @@ class Biblioteca extends React.Component {
     this.mediaDownload = this.mediaDownload.bind(this);
     this.toggleLayout = this.toggleLayout.bind(this);
     this.handleFilterText = this.handleFilterText.bind(this);
-
+    this.getMedia = this.getMedia.bind(this);
     this.getMedia();
   }
-  getMedia() {
+  getMedia(start, count) {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = submit('GET', `${this.props.fullUrl}/api/media/get`, {
+      const request = submit('GET', `${this.props.fullUrl}/api/media/get${start ? '/'+start : ''}`, {
 
         progressHandler: (e) => {
           console.log(e);
@@ -53,12 +53,16 @@ class Biblioteca extends React.Component {
     return promise;
   }
   mediaDownload(e) {
-    const media = JSON.parse(e.target.response);
-    media.map((element)=>{
+    const newMedia = JSON.parse(e.target.response);
+    if (!newMedia.length) {
+      return;
+    }
+    newMedia.map((element)=>{
       element.options = JSON.parse(element.options);
     });
+    const media = this.state.media.slice(0);
 
-    const videosIds = media.reduce((ac, el)=>{
+    const videosIds = newMedia.reduce((ac, el)=>{
       return (el.media_types_id === 2) ? `${ac},${el.options.id_youtube}` : ac;
     }, '');
 
@@ -77,19 +81,19 @@ class Biblioteca extends React.Component {
         if (!response.items.length) return;
 
         response.items.forEach((video)=>{
-          const el = media.find((el)=>{ return el.options.id_youtube === video.id});
+          const el = newMedia.find((el)=>{ return el.options.id_youtube === video.id});
           el.options.srcThumbnail = video.snippet.thumbnails.default.url;
           el.options.src = (video.snippet.thumbnails.standard) ? video.snippet.thumbnails.standard.url : video.snippet.thumbnails.high.url;
         });
 
         this.setState({
-          media: media
+          media: media.concat(newMedia)
         });
       });
     }
     else {
       this.setState({
-        media: media
+        media: media.concat(newMedia)
       });
     }
   }
@@ -126,7 +130,7 @@ class Biblioteca extends React.Component {
       <aside id="biblioteca">
           <Encabezado layout={ this.state.layout } handler={ this.toggleLayout }/>
           <Buscador filter={ this.handleFilterText } />
-          <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText }/>
+          <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText } getMedia={this.getMedia}/>
           <a id="agregarMedia" href="#" onClick={ this.openModal }> + Agregar media </a>
           <MediaModal submitSuccess={ this.addNewMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} fullUrl={ this.props.fullUrl }/>
       </aside>

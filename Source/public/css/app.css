@@ -8618,14 +8618,14 @@ aside#biblioteca #buscador span.btn:active {
 aside#biblioteca #contenedor-wrapper {
   position: relative;
   height: calc(100% - 138px);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 aside#biblioteca #contenedor {
-  height: 100%;
+  height: auto;
   width: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   padding-bottom: 8px;
 }
 

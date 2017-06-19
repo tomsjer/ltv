@@ -8,20 +8,23 @@ class Slideshow extends React.Component {
   constructor(props) {
     super(props);
     this.blankSlide = {
-        order: 1,
-        titulo: '',
-        subtitulo: '',
-        descripcion: '',
-        src: 'http://placehold.it/1200x400',
-        srcThumbnail: 'http://placehold.it/100x80'
+      order: 1,
+      titulo: '',
+      subtitulo: '',
+      descripcion: '',
+      src: 'http://placehold.it/600x400',
+      srcThumbnail: 'http://placehold.it/100x80'
     };
+    let slides = localStorage.getItem('slider');
+    slides = (slides && slides !== '' && slides.indexOf('[{') !== -1) ? JSON.parse(slides) : false;
     this.state = {
       activeSlide: 0,
-      slides: [
+      slides: (slides) ? slides : [
         Object.assign({}, this.blankSlide)
       ]
     };
 
+    this.saveSlider = this.saveSlider.bind(this);
     this.addSlide = this.addSlide.bind(this);
     this.removeSlide = this.removeSlide.bind(this);
     this.addBlankSlide = this.addBlankSlide.bind(this);
@@ -48,25 +51,27 @@ class Slideshow extends React.Component {
       slides: slides
     });
   }
-
-  removeSlide(index){
-    let slides = this.state.slides;
-    if(slides.length === 1){
-        this.setState({
-            slides: [
-                Object.assign({}, this.blankSlide)
-            ]
-        });
-    }else{
-      let newSlides = [];
-      slides.map(function(slide,slideIndex){
-        if(slideIndex !== index){
+  saveSlider() {
+    localStorage.setItem('slider', JSON.stringify(this.state.slides));
+  }
+  removeSlide(index) {
+    const slides = this.state.slides;
+    if (slides.length === 1) {
+      this.setState({
+        slides: [
+          Object.assign({}, this.blankSlide)
+        ]
+      });
+    } else {
+      const newSlides = [];
+      slides.map((slide, slideIndex)=> {
+        if (slideIndex !== index) {
           newSlides.push(slide);
         }
       });
-        this.setState({
-            slides: newSlides
-        });
+      this.setState({
+        slides: newSlides
+      });
     }
   }
   addBlankSlide() {
@@ -88,7 +93,7 @@ class Slideshow extends React.Component {
                     <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} />
                     <Dropzone addNewSlide={this.addBlankSlide} addSlide={ this.addSlide }/>
                   </div>
-                  <SlideForm index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
+                  <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
                 </div>
               </div>
             </div>

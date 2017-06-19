@@ -10923,19 +10923,19 @@ var Biblioteca = function (_React$Component) {
     _this.mediaDownload = _this.mediaDownload.bind(_this);
     _this.toggleLayout = _this.toggleLayout.bind(_this);
     _this.handleFilterText = _this.handleFilterText.bind(_this);
-
+    _this.getMedia = _this.getMedia.bind(_this);
     _this.getMedia();
     return _this;
   }
 
   _createClass(Biblioteca, [{
     key: 'getMedia',
-    value: function getMedia() {
+    value: function getMedia(start, count) {
       var _this2 = this;
 
       var promise = new Promise(function (resolve, reject) {
 
-        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__utils_js__["a" /* submit */])('GET', _this2.props.fullUrl + '/api/media/get', {
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__utils_js__["a" /* submit */])('GET', _this2.props.fullUrl + '/api/media/get' + (start ? '/' + start : ''), {
 
           progressHandler: function progressHandler(e) {
             console.log(e);
@@ -10960,12 +10960,16 @@ var Biblioteca = function (_React$Component) {
     value: function mediaDownload(e) {
       var _this3 = this;
 
-      var media = JSON.parse(e.target.response);
-      media.map(function (element) {
+      var newMedia = JSON.parse(e.target.response);
+      if (!newMedia.length) {
+        return;
+      }
+      newMedia.map(function (element) {
         element.options = JSON.parse(element.options);
       });
+      var media = this.state.media.slice(0);
 
-      var videosIds = media.reduce(function (ac, el) {
+      var videosIds = newMedia.reduce(function (ac, el) {
         return el.media_types_id === 2 ? ac + ',' + el.options.id_youtube : ac;
       }, '');
 
@@ -10982,7 +10986,7 @@ var Biblioteca = function (_React$Component) {
           if (!response.items.length) return;
 
           response.items.forEach(function (video) {
-            var el = media.find(function (el) {
+            var el = newMedia.find(function (el) {
               return el.options.id_youtube === video.id;
             });
             el.options.srcThumbnail = video.snippet.thumbnails.default.url;
@@ -10990,12 +10994,12 @@ var Biblioteca = function (_React$Component) {
           });
 
           _this3.setState({
-            media: media
+            media: media.concat(newMedia)
           });
         });
       } else {
         this.setState({
-          media: media
+          media: media.concat(newMedia)
         });
       }
     }
@@ -11045,7 +11049,7 @@ var Biblioteca = function (_React$Component) {
         { id: 'biblioteca' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Encabezado_jsx__["a" /* Encabezado */], { layout: this.state.layout, handler: this.toggleLayout }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Buscador_jsx__["a" /* Buscador */], { filter: this.handleFilterText }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Contenedor_jsx__["a" /* Contenedor */], { layout: this.state.layout, media: this.state.media, filterText: this.state.filterText }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Contenedor_jsx__["a" /* Contenedor */], { layout: this.state.layout, media: this.state.media, filterText: this.state.filterText, getMedia: this.getMedia }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'a',
           { id: 'agregarMedia', href: '#', onClick: this.openModal },
@@ -11158,24 +11162,78 @@ var Contenedor = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Contenedor.__proto__ || Object.getPrototypeOf(Contenedor)).call(this, props));
 
+    _this.state = {
+      isLoading: false
+    };
+    _this.lazyLoadRange = 100;
+    _this.start = 10;
+    _this.count = 10;
     _this.dragStartHandler = _this.dragStartHandler.bind(_this);
+    _this.handleScroll = _this.handleScroll.bind(_this);
+    _this.loadMore = _this.loadMore.bind(_this);
     return _this;
   }
 
   _createClass(Contenedor, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.contenedor = document.querySelector('#contenedor');
+      this.contenedorWrapper = document.querySelector('#contenedor-wrapper');
+      // this.contenedorWrapper.addEventListener('scroll', this.handleScroll);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      // this.contenedorWrapper.removeEventListener('scroll', this.handleScroll);
+      this.contenedorWrapper = null;
+      this.contenedor = null;
+    }
+  }, {
     key: 'dragStartHandler',
     value: function dragStartHandler(e) {
-      console.log("dragStart");
-      // Add the target element's id to the data transfer object
       e.dataTransfer.setData("text/plain", e.currentTarget.dataset.draginfo);
-      // e.dataTransfer.dropEffect = "copy";
+    }
+  }, {
+    key: 'handleScroll',
+    value: function handleScroll(e) {
+      var _this2 = this;
+
+      var rectWrapper = e.target.getClientRects()[0];
+      var rectContenedor = this.contenedor.getClientRects()[0];
+      if (rectContenedor.bottom - this.lazyLoadRange < rectWrapper.bottom && !this.state.isLoading) {
+        this.setState({
+          isLoading: true
+        });
+        this.props.getMedia(this.start).then(function (e) {
+          _this2.setState({
+            isLoading: false
+          });
+        });
+      }
+    }
+  }, {
+    key: 'loadMore',
+    value: function loadMore() {
+      var _this3 = this;
+
+      if (!this.state.isLoading) {
+        this.setState({ isLoading: true });
+        this.props.getMedia(this.start).then(function (e) {
+          _this3.setState({
+            isLoading: false
+          });
+          if (JSON.parse(e.target.response).length) {
+            _this3.start += _this3.count;
+          }
+        });
+      }
     }
   }, {
     key: 'renderMedia',
     value: function renderMedia(element, i) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { className: 'item', key: i, 'data-dragInfo': JSON.stringify(element.options), draggable: 'true', onDragStart: this.dragStartHandler },
+        { className: 'item', key: i, 'data-dragInfo': JSON.stringify(element), draggable: 'true', onDragStart: this.dragStartHandler },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'img-container' },
@@ -11200,16 +11258,16 @@ var Contenedor = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this4 = this;
 
       var media = [];
       this.props.media.sort(function (a, b) {
         return a.updated_at > b.updated_at ? -1 : 1;
       }).forEach(function (element, i) {
-        if (_this2.props.filterText !== '' && element.options.name && element.options.name.indexOf(_this2.props.filterText) === -1) {
+        if (_this4.props.filterText !== '' && element.options.name && element.options.name.indexOf(_this4.props.filterText) === -1) {
           return;
         }
-        media.push(_this2.renderMedia(element, i));
+        media.push(_this4.renderMedia(element, i));
       });
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
@@ -11217,7 +11275,20 @@ var Contenedor = function (_React$Component) {
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { id: 'contenedor', className: this.props.layout },
-          media
+          media,
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'row' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'div',
+              { className: 'col-xs-12' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'button',
+                { className: 'btn btn-default', type: 'button', onClick: this.loadMore, disabled: this.state.isLoading },
+                'Cargar m\xE1s...'
+              )
+            )
+          )
         )
       );
     }
@@ -11256,59 +11327,70 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 var Dropzone = function (_React$Component) {
-    _inherits(Dropzone, _React$Component);
+  _inherits(Dropzone, _React$Component);
 
-    function Dropzone(props) {
-        _classCallCheck(this, Dropzone);
+  function Dropzone(props) {
+    _classCallCheck(this, Dropzone);
 
-        var _this = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this, props));
 
-        _this.dropHandler = _this.dropHandler.bind(_this);
-        _this.dragoverHandler = _this.dragoverHandler.bind(_this);
-        return _this;
+    _this.dropHandler = _this.dropHandler.bind(_this);
+    _this.dragoverHandler = _this.dragoverHandler.bind(_this);
+    return _this;
+  }
+
+  _createClass(Dropzone, [{
+    key: 'dragoverHandler',
+    value: function dragoverHandler(ev) {
+      ev.preventDefault();
+      ev.dataTransfer.dropEffect = 'move';
     }
+  }, {
+    key: 'dropHandler',
+    value: function dropHandler(ev) {
+      ev.preventDefault();
+      var element = JSON.parse(ev.dataTransfer.getData('text'));
+      var slide = {
+        titulo: element.options.name || '',
+        subtitulo: '',
+        descripcion: '',
+        src: element.options.src,
+        srcThumbnail: element.options.srcThumbnail,
+        tipo: element.media_types_id,
+        intervalo: '',
+        loop: 0,
+        desde: '',
+        hasta: '',
+        media_id: 0
+      };
 
-    _createClass(Dropzone, [{
-        key: 'dragoverHandler',
-        value: function dragoverHandler(ev) {
-            ev.preventDefault();
-            ev.dataTransfer.dropEffect = 'move';
-        }
-    }, {
-        key: 'dropHandler',
-        value: function dropHandler(ev) {
-            ev.preventDefault();
-            var image = JSON.parse(ev.dataTransfer.getData('text'));
-            var slide = {
-                titulo: image.name || '',
-                subtitulo: '',
-                descripcion: '',
-                src: image.src,
-                srcThumbnail: image.src
-            };
-            this.props.addSlide(slide);
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'dropzone-container' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { className: 'dropzone', onDrop: this.dropHandler, onDragOver: this.dragoverHandler, onClick: this.props.addNewSlide },
-                    'Arrastre una imagen o haga click para agregar un nuevo slide'
-                )
-            );
-        }
-    }]);
+      this.props.addSlide(slide);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'div',
+        { className: 'dropzone-container' },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          { className: 'dropzone',
+            onDrop: this.dropHandler,
+            onDragOver: this.dragoverHandler,
+            onClick: this.props.addNewSlide },
+          'Arrastre una imagen o haga click para agregar un nuevo slide '
+        ),
+        ' '
+      );
+    }
+  }]);
 
-    return Dropzone;
+  return Dropzone;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
 Dropzone.propTypes = {
-    addNewSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-    addSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+  addNewSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  addSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 
@@ -11673,7 +11755,6 @@ var MediaModal = function (_React$Component) {
     key: 'closeModal',
     value: function closeModal() {
       this.props.closeModal();
-
       this.setState({
         show: 'select',
         disableSubmit: true,
@@ -11768,7 +11849,7 @@ var MediaModal = function (_React$Component) {
             { id: 'modalBody' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'select',
-              { className: 'form-control', onChange: this.onMediaChange },
+              { className: 'form-control', onChange: this.onMediaChange, value: this.state.show },
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'option',
                 { value: 'select' },
@@ -12004,12 +12085,18 @@ var SlideForm = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Titulo', type: 'text', value: this.props.slide.titulo, name: 'titulo' }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Subtitulo', type: 'text', value: this.props.slide.subtitulo, name: 'subtitulo' }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { onChange: this.handleChange, className: 'form-control', placeholder: 'Descripcion', type: 'textarea', value: this.props.slide.descripcion, rows: '10', cols: '20', name: 'descripcion' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          (this.props.slide.tipo === 1 || this.props.slide.tipo === 3) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'label',
             { htmlFor: 'intervalo' },
-            ' Intervalo'
+            ' Intervalo',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, value: this.props.slide.intervalo, name: 'intervalo', className: 'form-control', type: 'number', placeholder: 'Segundos', min: '0' })
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, name: 'intervalo', className: 'form-control', type: 'number', placeholder: 'Segundos', min: '0' }),
+          this.props.slide.tipo === 2 && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'label',
+            { htmlFor: 'loop' },
+            ' Loops',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, value: this.props.slide.loop, name: 'loop', className: 'form-control', type: 'number', placeholder: 'Loops', min: '0' })
+          ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'row' },
@@ -12021,7 +12108,7 @@ var SlideForm = function (_React$Component) {
                 { htmlFor: 'desde' },
                 ' Desde '
               ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, name: 'desde', className: 'form-control', type: 'date' })
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, value: this.props.slide.desde, name: 'desde', className: 'form-control', type: 'date' })
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'div',
@@ -12031,23 +12118,15 @@ var SlideForm = function (_React$Component) {
                 { htmlFor: 'hasta' },
                 ' Hasta '
               ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, name: 'hasta', className: 'form-control', type: 'date' })
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, value: this.props.slide.hasta, name: 'hasta', className: 'form-control', type: 'date' })
             )
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'button',
+            { className: 'form-control', type: 'button', onClick: this.props.saveSlider },
+            ' GUARDAR '
           )
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          'p',
-          null,
-          'Metadata'
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          'p',
-          null,
-          'Fecha de creacion ........ 17/04/2017',
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          'Peso ..................... 2.5MB',
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          'Ubicacion .............../opt/images/lorealtv/01.jpg'
         )
       );
     }
@@ -12219,14 +12298,17 @@ var Slideshow = function (_React$Component) {
       titulo: '',
       subtitulo: '',
       descripcion: '',
-      src: 'http://placehold.it/1200x400',
+      src: 'http://placehold.it/600x400',
       srcThumbnail: 'http://placehold.it/100x80'
     };
+    var slides = localStorage.getItem('slider');
+    slides = slides && slides !== '' && slides.indexOf('[{') !== -1 ? JSON.parse(slides) : false;
     _this.state = {
       activeSlide: 0,
-      slides: [Object.assign({}, _this.blankSlide)]
+      slides: slides ? slides : [Object.assign({}, _this.blankSlide)]
     };
 
+    _this.saveSlider = _this.saveSlider.bind(_this);
     _this.addSlide = _this.addSlide.bind(_this);
     _this.removeSlide = _this.removeSlide.bind(_this);
     _this.addBlankSlide = _this.addBlankSlide.bind(_this);
@@ -12260,6 +12342,11 @@ var Slideshow = function (_React$Component) {
       this.setState({
         slides: slides
       });
+    }
+  }, {
+    key: 'saveSlider',
+    value: function saveSlider() {
+      localStorage.setItem('slider', JSON.stringify(this.state.slides));
     }
   }, {
     key: 'removeSlide',
@@ -12317,7 +12404,7 @@ var Slideshow = function (_React$Component) {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Dropzone__["a" /* Dropzone */], { addNewSlide: this.addBlankSlide, addSlide: this.addSlide })
                   ),
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
                 )
               )
             ),

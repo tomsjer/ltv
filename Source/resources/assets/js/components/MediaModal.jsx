@@ -40,7 +40,6 @@ class MediaModal extends React.Component {
   }
   closeModal() {
     this.props.closeModal();
-
     this.setState({
       show: 'select',
       disableSubmit: true,
@@ -108,7 +107,7 @@ class MediaModal extends React.Component {
           <div id="modalHeader"> Subir Media <a href="#" onClick={ this.closeModal }>&times;</a></div>
           <div id="modalBody">
 
-            <select className="form-control"  onChange={ this.onMediaChange }>
+            <select className="form-control"  onChange={ this.onMediaChange } value={ this.state.show }>
               <option value="select">Seleccionar tipo</option>
               <option value="imagen"> Imagen </option>
               <option value="video"> Video </option>

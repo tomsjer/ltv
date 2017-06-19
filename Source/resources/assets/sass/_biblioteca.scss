@@ -37,13 +37,13 @@ aside#biblioteca {
   #contenedor-wrapper {
     position: relative;
     height: calc(100% - 138px);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
   #contenedor {
-    height: 100%;
+    height: auto;
     width: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: hidden;
     padding-bottom: 8px;
     .item {
       margin: 8px 0 0 8px;
