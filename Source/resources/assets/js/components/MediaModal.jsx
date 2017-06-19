@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { MediaImagen } from './MediaImage.jsx';
 import { MediaVideo } from './MediaVideo.jsx';
-import { submit } from '../utils.js';
+import { ajax } from '../utils.js';
 
 class MediaModal extends React.Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class MediaModal extends React.Component {
   submitMedia(data) {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = submit('POST', `${this.props.fullUrl}/api/media/store`, {
+      const request = ajax('POST', `${this.props.fullUrl}/api/media/store`, {
         overrideMimeType: 'text/plain; charset=x-user-defined-binary',
         progressHandler: this.uploadPercentage,
         onreadyStateChange: (e)=>{

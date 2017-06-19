@@ -10,7 +10,7 @@ export function fetch(url, options) {
   });
   return promise;
 }
-export function submit(method, url, options) {
+export function ajax(method, url, options) {
   const xhr = new XMLHttpRequest();
   if (options.progressHandler) {
     xhr.upload.addEventListener('progress', options.progressHandler, false);

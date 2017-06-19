@@ -1,18 +1,18 @@
+/* globals Promise */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { SlideForm } from './SlideForm.jsx';
 import { Slider } from './Slider.jsx';
 import { Dropzone } from  './Dropzone';
+import { ajax } from '../utils';
 
 class Slideshow extends React.Component {
   constructor(props) {
     super(props);
 
-    let slides = localStorage.getItem('slider');
-    slides = (slides && slides !== '' && slides.indexOf('[{') !== -1) ? JSON.parse(slides) : false;
     this.state = {
       activeSlide: 0,
-      slides: (slides) ? slides : []
+      slides: []
     };
 
     this.saveSlider = this.saveSlider.bind(this);
@@ -20,6 +20,39 @@ class Slideshow extends React.Component {
     this.removeSlide = this.removeSlide.bind(this);
     this.setActiveSlide = this.setActiveSlide.bind(this);
     this.handleSlideFormChange = this.handleSlideFormChange.bind(this);
+    this.getSlides = this.getSlides.bind(this);
+
+    this.getSlides()
+    .then((_response)=>{
+      const slides = (_response && _response !== '' && _response.indexOf('[{') !== -1) ? JSON.parse(_response) : [];
+      this.setState({
+        slides: slides
+      });
+    });
+  }
+  getSlides() {
+    const promise = new Promise((resolve, reject)=> {
+
+      const request = ajax('GET', `${this.props.fullUrl}/api/sliders/get`, {
+
+        progressHandler: (e) => {
+          console.log(e);
+        },
+        onreadyStateChange: (e)=> {
+          if (e.target.readyState === 4 && e.target.status === 200) {
+            resolve(e.target.response);
+          } else {
+            console.log(`Error: ${e}`);
+          }
+        },
+        errorHandler: (err)=>{
+          console.log(err);
+        }
+      });
+      request.send();
+    });
+
+    return promise;
   }
   handleSlideFormChange(slide, prop, value) {
     const slides = this.state.slides.slice(0);
@@ -47,8 +80,25 @@ class Slideshow extends React.Component {
       delete slide.srcThumbnail;
       delete slide.media_types_id;
     });
-    // TODO: hit POST slider/store
-    localStorage.setItem('slider', JSON.stringify(this.state.slides));
+
+    const promise = new Promise((resolve, reject)=> {
+
+      const request = ajax('POST', `${this.props.fullUrl}/api/sliders`, {
+        progressHandler: (e)=>{ console.log(e); },
+        onreadyStateChange: (e)=>{
+          if (e.target.readyState === 4 && e.target.status === 200) {
+            resolve(e);
+          } else {
+            console.log(`Error: ${e}`);
+          }
+        },
+        errorHandler: (e)=>{ console.log(e); },
+      });
+      request.setRequestHeader('Content-Type', 'application/json')
+      request.send(JSON.stringify(slides));
+    });
+
+    return promise;
   }
   removeSlide(index) {
     const slides = this.state.slides;
@@ -110,7 +160,8 @@ Porahor no vamos a utilizar los cumpleaños...
 
 Slideshow.propTypes = {
   slides: PropTypes.array,
-  handleChange: PropTypes.func
+  handleChange: PropTypes.func,
+  fullUrl: PropTypes.string
 };
 
 export { Slideshow };

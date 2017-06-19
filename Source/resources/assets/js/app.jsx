@@ -20,7 +20,7 @@ class App extends React.Component {
     return (
       <div>
         <Biblioteca fullUrl={ this.fullUrl } openModal ={ this.openModal }/>
-        <Slideshow />
+        <Slideshow  fullUrl={ this.fullUrl }/>
       </div>
     );
   }

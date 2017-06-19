@@ -6,7 +6,7 @@ import { Encabezado } from './Encabezado.jsx';
 import { Contenedor } from './Contenedor.jsx';
 import { Buscador } from './Buscador.jsx';
 import { MediaModal } from './MediaModal.jsx';
-import { submit } from '../utils.js';
+import { ajax } from '../utils.js';
 import { initYoutubeAPI } from '../initYoutube.js';
 
 class Biblioteca extends React.Component {
@@ -32,7 +32,7 @@ class Biblioteca extends React.Component {
   getMedia(start, count) {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = submit('GET', `${this.props.fullUrl}/api/media/get${start ? '/'+start : ''}`, {
+      const request = ajax('GET', `${this.props.fullUrl}/api/media/get${start ? '/'+start : ''}`, {
 
         progressHandler: (e) => {
           console.log(e);

@@ -4733,7 +4733,7 @@ module.exports = canDefineProperty;
 
 "use strict";
 /* unused harmony export fetch */
-/* harmony export (immutable) */ __webpack_exports__["a"] = submit;
+/* harmony export (immutable) */ __webpack_exports__["a"] = ajax;
 /* harmony export (immutable) */ __webpack_exports__["b"] = youtubeUrlParser;
 function fetch(url, options) {
   var promise = new Promise(function (resolve, reject) {
@@ -4745,7 +4745,7 @@ function fetch(url, options) {
   });
   return promise;
 }
-function submit(method, url, options) {
+function ajax(method, url, options) {
   var xhr = new XMLHttpRequest();
   if (options.progressHandler) {
     xhr.upload.addEventListener('progress', options.progressHandler, false);
@@ -10851,7 +10851,7 @@ var App = function (_React$Component) {
         'div',
         null,
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_Biblioteca_jsx__["a" /* Biblioteca */], { fullUrl: this.fullUrl, openModal: this.openModal }),
-        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_Slideshow_jsx__["a" /* Slideshow */], null)
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_Slideshow_jsx__["a" /* Slideshow */], { fullUrl: this.fullUrl })
       );
     }
   }]);
@@ -10935,7 +10935,7 @@ var Biblioteca = function (_React$Component) {
 
       var promise = new Promise(function (resolve, reject) {
 
-        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__utils_js__["a" /* submit */])('GET', _this2.props.fullUrl + '/api/media/get' + (start ? '/' + start : ''), {
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__utils_js__["a" /* ajax */])('GET', _this2.props.fullUrl + '/api/media/get' + (start ? '/' + start : ''), {
 
           progressHandler: function progressHandler(e) {
             console.log(e);
@@ -11748,7 +11748,7 @@ var MediaModal = function (_React$Component) {
 
       var promise = new Promise(function (resolve, reject) {
 
-        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* submit */])('POST', _this2.props.fullUrl + '/api/media/store', {
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* ajax */])('POST', _this2.props.fullUrl + '/api/media/store', {
           overrideMimeType: 'text/plain; charset=x-user-defined-binary',
           progressHandler: _this2.uploadPercentage,
           onreadyStateChange: function onreadyStateChange(e) {
@@ -12250,6 +12250,7 @@ var Slider = function (_React$Component) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Slider_jsx__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Dropzone__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils__ = __webpack_require__(36);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Slideshow; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -12258,6 +12259,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/* globals Promise */
 
 
 
@@ -12273,11 +12276,9 @@ var Slideshow = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Slideshow.__proto__ || Object.getPrototypeOf(Slideshow)).call(this, props));
 
-    var slides = localStorage.getItem('slider');
-    slides = slides && slides !== '' && slides.indexOf('[{') !== -1 ? JSON.parse(slides) : false;
     _this.state = {
       activeSlide: 0,
-      slides: slides ? slides : []
+      slides: []
     };
 
     _this.saveSlider = _this.saveSlider.bind(_this);
@@ -12285,10 +12286,46 @@ var Slideshow = function (_React$Component) {
     _this.removeSlide = _this.removeSlide.bind(_this);
     _this.setActiveSlide = _this.setActiveSlide.bind(_this);
     _this.handleSlideFormChange = _this.handleSlideFormChange.bind(_this);
+    _this.getSlides = _this.getSlides.bind(_this);
+
+    _this.getSlides().then(function (_response) {
+      var slides = _response && _response !== '' && _response.indexOf('[{') !== -1 ? JSON.parse(_response) : [];
+      _this.setState({
+        slides: slides
+      });
+    });
     return _this;
   }
 
   _createClass(Slideshow, [{
+    key: 'getSlides',
+    value: function getSlides() {
+      var _this2 = this;
+
+      var promise = new Promise(function (resolve, reject) {
+
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils__["a" /* ajax */])('GET', _this2.props.fullUrl + '/api/sliders/get', {
+
+          progressHandler: function progressHandler(e) {
+            console.log(e);
+          },
+          onreadyStateChange: function onreadyStateChange(e) {
+            if (e.target.readyState === 4 && e.target.status === 200) {
+              resolve(e.target.response);
+            } else {
+              console.log('Error: ' + e);
+            }
+          },
+          errorHandler: function errorHandler(err) {
+            console.log(err);
+          }
+        });
+        request.send();
+      });
+
+      return promise;
+    }
+  }, {
     key: 'handleSlideFormChange',
     value: function handleSlideFormChange(slide, prop, value) {
       var slides = this.state.slides.slice(0);
@@ -12316,14 +12353,37 @@ var Slideshow = function (_React$Component) {
   }, {
     key: 'saveSlider',
     value: function saveSlider() {
+      var _this3 = this;
+
       var slides = this.state.slides;
       slides.forEach(function (slide) {
         delete slide.src;
         delete slide.srcThumbnail;
         delete slide.media_types_id;
       });
-      // TODO: hit POST slider/store
-      localStorage.setItem('slider', JSON.stringify(this.state.slides));
+
+      var promise = new Promise(function (resolve, reject) {
+
+        var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils__["a" /* ajax */])('POST', _this3.props.fullUrl + '/api/sliders', {
+          progressHandler: function progressHandler(e) {
+            console.log(e);
+          },
+          onreadyStateChange: function onreadyStateChange(e) {
+            if (e.target.readyState === 4 && e.target.status === 200) {
+              resolve(e);
+            } else {
+              console.log('Error: ' + e);
+            }
+          },
+          errorHandler: function errorHandler(e) {
+            console.log(e);
+          }
+        });
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send(JSON.stringify(slides));
+      });
+
+      return promise;
     }
   }, {
     key: 'removeSlide',
@@ -12418,7 +12478,8 @@ Porahor no vamos a utilizar los cumpleaños...
 
 Slideshow.propTypes = {
   slides: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
-  handleChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+  handleChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  fullUrl: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
 };
 
 
