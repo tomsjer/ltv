@@ -15,7 +15,7 @@ class Slider extends React.Component {
       centerMode: true,
       centerPadding: '0px',
       customPaging: (i)=>{
-        return <a><img src={this.props.slides[i].srcThumbnail}/><span>{i+1}</span></a>;
+        return <a><img src={this.props.slides[i].srcThumbnail}/><span>{ i + 1 }</span></a>;
       },
       beforeChange: (currentSlide, nextSlide)=>{
         props.afterChangeHook(nextSlide);
@@ -25,13 +25,15 @@ class Slider extends React.Component {
 
   render() {
     const slides = this.props.slides.map((slide, i)=>{
-      return (
+      return slide.willDelete ? null : (
         <div key={i}>
-          <img className="img-responsive" src={slide.src} />
-          { slide.titulo && <h3> {slide.titulo} </h3> }
-          { slide.subtitulo && <h4> {slide.subtitulo} </h4> }
-          { slide.descripcion && <p> {slide.descripcion} </p> }
-          <i className="glyphicon glyphicon-remove-circle remove-slide" onClick={() => { this.props.removeSlide(i) }} />
+          <div className="slick-slide-container">
+            <img className="img-responsive" src={slide.src} />
+            { slide.title && <h3> {slide.title} </h3> }
+            { slide.subtitle && <h4> {slide.subtitle} </h4> }
+            { slide.description && <p> {slide.description} </p> }
+            <i className="glyphicon glyphicon-remove-circle remove-slide" onClick={() => { this.props.removeSlide(i); }} />
+          </div>
         </div>);
     });
 
@@ -44,5 +46,11 @@ class Slider extends React.Component {
     );
   }
 }
+
+Slider.propTypes = {
+  slides: PropTypes.array,
+  afterChangeHook: PropTypes.func,
+  removeSlide: PropTypes.func
+};
 
 export { Slider };

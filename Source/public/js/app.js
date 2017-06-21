@@ -12062,56 +12062,52 @@ var SlideForm = function (_React$Component) {
     key: 'render',
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'div',
-        { className: 'col-md-4 slide-form' },
+        'form',
+        { action: 'return false;', method: 'POST', onSubmit: this.props.saveSlider },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Titulo', type: 'text', value: this.props.slide.title ? this.props.slide.title : '', name: 'title' }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Subtitulo', type: 'text', value: this.props.slide.subtitle ? this.props.slide.subtitle : '', name: 'subtitle' }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { onChange: this.handleChange, className: 'form-control', placeholder: 'Descripcion', type: 'textarea', value: this.props.slide.description ? this.props.slide.description : '', rows: '10', cols: '20', name: 'description' }),
+        (this.props.slide.media_types_id === 1 || this.props.slide.media_types_id === 3) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'label',
+          { htmlFor: 'intervalo' },
+          ' Intervalo',
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.time_interval, name: 'time_interval', className: 'form-control', type: 'number', placeholder: 'Segundos', min: '0' })
+        ),
+        this.props.slide.media_types_id === 2 && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'label',
+          { htmlFor: 'video_loop' },
+          ' Loops',
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.video_loop, name: 'video_loop', className: 'form-control', type: 'number', placeholder: 'Loops', min: '0' })
+        ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          'form',
-          { action: 'return false;', method: 'POST', onSubmit: this.props.saveSlider },
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Titulo', type: 'text', value: this.props.slide.title, name: 'title' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Subtitulo', type: 'text', value: this.props.slide.subtitle, name: 'subtitle' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { onChange: this.handleChange, className: 'form-control', placeholder: 'Descripcion', type: 'textarea', value: this.props.slide.description, rows: '10', cols: '20', name: 'description' }),
-          (this.props.slide.media_types_id === 1 || this.props.slide.media_types_id === 3) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'label',
-            { htmlFor: 'intervalo' },
-            ' Intervalo',
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.time_interval, name: 'time_interval', className: 'form-control', type: 'number', placeholder: 'Segundos', min: '0' })
-          ),
-          this.props.slide.media_types_id === 2 && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'label',
-            { htmlFor: 'video_loop' },
-            ' Loops',
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.video_loop, name: 'video_loop', className: 'form-control', type: 'number', placeholder: 'Loops', min: '0' })
+          'div',
+          { className: 'row' },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'col-md-6' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'label',
+              { htmlFor: 'desde' },
+              ' Desde '
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.date_from, name: 'date_from', className: 'form-control', type: 'date' })
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'row' },
+            { className: 'col-md-6' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'div',
-              { className: 'col-md-6' },
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'label',
-                { htmlFor: 'desde' },
-                ' Desde '
-              ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.date_from, name: 'date_from', className: 'form-control', type: 'date' })
+              'label',
+              { htmlFor: 'hasta' },
+              ' Hasta '
             ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'div',
-              { className: 'col-md-6' },
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'label',
-                { htmlFor: 'hasta' },
-                ' Hasta '
-              ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.date_until, name: 'date_until', className: 'form-control', type: 'date' })
-            )
-          ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'button',
-            { className: 'form-control', type: 'submit' },
-            ' GUARDAR '
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.date_until, name: 'date_until', className: 'form-control', type: 'date' })
           )
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'button',
+          { className: 'form-control', type: 'submit' },
+          ' GUARDAR '
         )
       );
     }
@@ -12123,7 +12119,8 @@ var SlideForm = function (_React$Component) {
 SlideForm.propTypes = {
   slide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
   handleChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-  index: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number
+  index: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
+  saveSlider: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 
@@ -12195,34 +12192,38 @@ var Slider = function (_React$Component) {
       var _this2 = this;
 
       var slides = this.props.slides.map(function (slide, i) {
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        return slide.willDelete ? null : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { key: i },
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { className: 'img-responsive', src: slide.src }),
-          slide.titulo && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'h3',
-            null,
-            ' ',
-            slide.titulo,
-            ' '
-          ),
-          slide.subtitulo && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'h4',
-            null,
-            ' ',
-            slide.subtitulo,
-            ' '
-          ),
-          slide.descripcion && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'p',
-            null,
-            ' ',
-            slide.descripcion,
-            ' '
-          ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'glyphicon glyphicon-remove-circle remove-slide', onClick: function onClick() {
-              _this2.props.removeSlide(i);
-            } })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'slick-slide-container' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { className: 'img-responsive', src: slide.src }),
+            slide.title && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'h3',
+              null,
+              ' ',
+              slide.title,
+              ' '
+            ),
+            slide.subtitle && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'h4',
+              null,
+              ' ',
+              slide.subtitle,
+              ' '
+            ),
+            slide.description && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'p',
+              null,
+              ' ',
+              slide.description,
+              ' '
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'glyphicon glyphicon-remove-circle remove-slide', onClick: function onClick() {
+                _this2.props.removeSlide(i);
+              } })
+          )
         );
       });
 
@@ -12240,6 +12241,12 @@ var Slider = function (_React$Component) {
 
   return Slider;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+Slider.propTypes = {
+  slides: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
+  afterChangeHook: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  removeSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+};
 
 
 
@@ -12283,7 +12290,8 @@ var Slideshow = function (_React$Component) {
 
     _this.state = {
       activeSlide: 0,
-      slides: []
+      slides: [],
+      loading: true
     };
 
     _this.saveSlider = _this.saveSlider.bind(_this);
@@ -12302,7 +12310,8 @@ var Slideshow = function (_React$Component) {
         slide.srcThumbnail = slide.media_types_id === 2 ? 'https://i.ytimg.com/vi/' + slide.media.options.id_youtube + '/default.jpg' : slide.media.options.srcThumbnail;
       });
       _this.setState({
-        slides: slides
+        slides: slides,
+        loading: false
       });
     });
     return _this;
@@ -12409,9 +12418,54 @@ var Slideshow = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      // const slidesThumbnails = this.state.slides.map((slide, i)=>{
-      //   return ( <li key={i} onClick={ this.setActiveSlide } data-index={i} className={ (i === this.state.activeSlide) ? 'active' : '' }><img src={slide.srcThumbnail}/></li> );
-      // });
+      var sliderContainer = void 0;
+
+      if (this.state.loading) {
+        sliderContainer = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          null,
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'h4',
+            null,
+            'Cargando...'
+          )
+        );
+      } else if (this.state.slides.length) {
+        sliderContainer = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          null,
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'col-md-8 col-lg-9' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide })
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'col-md-4 col-lg-3 slide-form' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
+          )
+        );
+      } else {
+        sliderContainer = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          { className: 'slider-empty-placeholder' },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'h1',
+            null,
+            'Ups...'
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'h3',
+            null,
+            ' Parece que no ha creado ninguna diapositiva aun.'
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'p',
+            null,
+            'Desplaze algun contendio de la biblioteca hasta esta zona para agrgar una diapositiva.'
+          )
+        );
+      }
 
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
@@ -12431,34 +12485,7 @@ var Slideshow = function (_React$Component) {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
                   { id: 'activeSlide', className: 'row' },
-                  this.state.slides.length ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    null,
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                      'div',
-                      { className: 'col-md-8' },
-                      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide })
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
-                  ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { className: 'slider-empty-placeholder' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                      'h1',
-                      null,
-                      'Ups...'
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                      'h3',
-                      null,
-                      ' Parece que no ha creado ninguna diapositiva aun.'
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                      'p',
-                      null,
-                      'Desplaze algun contendio de la biblioteca hasta esta zona para agrgar una diapositiva.'
-                    )
-                  ),
+                  sliderContainer,
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Dropzone__["a" /* Dropzone */], { addSlide: this.addSlide })
                 )
               )

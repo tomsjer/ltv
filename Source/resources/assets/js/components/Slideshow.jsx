@@ -12,7 +12,8 @@ class Slideshow extends React.Component {
 
     this.state = {
       activeSlide: 0,
-      slides: []
+      slides: [],
+      loading: true
     };
 
     this.saveSlider = this.saveSlider.bind(this);
@@ -32,7 +33,8 @@ class Slideshow extends React.Component {
         slide.srcThumbnail = (slide.media_types_id === 2) ? `https://i.ytimg.com/vi/${slide.media.options.id_youtube}/default.jpg` : slide.media.options.srcThumbnail;
       });
       this.setState({
-        slides: slides
+        slides: slides,
+        loading: false
       });
     });
   }
@@ -118,9 +120,29 @@ class Slideshow extends React.Component {
     });
   }
   render() {
-    // const slidesThumbnails = this.state.slides.map((slide, i)=>{
-    //   return ( <li key={i} onClick={ this.setActiveSlide } data-index={i} className={ (i === this.state.activeSlide) ? 'active' : '' }><img src={slide.srcThumbnail}/></li> );
-    // });
+    let sliderContainer;
+
+    if (this.state.loading) {
+      sliderContainer = (<div><h4>Cargando...</h4></div>);
+    } else if (this.state.slides.length) {
+      sliderContainer = (
+        <div>
+          <div className="col-md-8 col-lg-9">
+            <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} />
+          </div>
+          <div className="col-md-4 col-lg-3 slide-form">
+            <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
+          </div>
+        </div>
+      );
+    } else {
+      sliderContainer = ( <div className="slider-empty-placeholder">
+          <h1>Ups...</h1>
+          <h3> Parece que no ha creado ninguna diapositiva aun.</h3>
+          <p>Desplaze algun contendio de la biblioteca hasta esta zona para agrgar una diapositiva.</p>
+        </div>
+      );
+    }
 
     return (
       <div className="slideShow-container col-xs-12">
@@ -129,22 +151,7 @@ class Slideshow extends React.Component {
             <div role="tabpanel" className="tab-pane active" id="slide">
               <div id="slideContainer">
                 <div id="activeSlide" className="row">
-                  { this.state.slides.length ?
-                    (
-                      <div>
-                        <div className="col-md-8">
-                          <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} />
-                        </div>
-                        <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
-                      </div>
-                    ) :
-                    ( <div className="slider-empty-placeholder">
-                        <h1>Ups...</h1>
-                        <h3> Parece que no ha creado ninguna diapositiva aun.</h3>
-                        <p>Desplaze algun contendio de la biblioteca hasta esta zona para agrgar una diapositiva.</p>
-                      </div>
-                    )
-                  }
+                  { sliderContainer }
                   <Dropzone addSlide={ this.addSlide }/>
                 </div>
               </div>

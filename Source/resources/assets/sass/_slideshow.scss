@@ -7,15 +7,16 @@
   overflow-y: scroll;
 
   .slider-empty-placeholder {
-    width: 100%;
+    width: 600px;
     height: 400px;
     border: solid 8px #fff;
     box-shadow: 0 4px 8px rgba(100, 100, 100, 0.5);
     padding: 80px 140px;
     background: #ddd;
-    max-width: 600px;
-    margin: auto;
-    margin-top: 24px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
     
     h1, h3{
       text-align: center;
