@@ -12371,10 +12371,16 @@ var Slideshow = function (_React$Component) {
       ev.preventDefault();
 
       var slides = this.state.slides;
-      slides.forEach(function (slide) {
+      slides.map(function (slide) {
         delete slide.src;
         delete slide.srcThumbnail;
         delete slide.media_types_id;
+        if (slide.willDelete) {
+          if (typeof slide.id === 'undefined') {
+            return null;
+          }
+        }
+        return slide;
       });
 
       var request = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils__["a" /* ajax */])('POST', this.props.fullUrl + '/api/sliders', {
@@ -12398,15 +12404,10 @@ var Slideshow = function (_React$Component) {
   }, {
     key: 'removeSlide',
     value: function removeSlide(index) {
-      var slides = this.state.slides;
-      var newSlides = [];
-      slides.map(function (slide, slideIndex) {
-        if (slideIndex !== index) {
-          newSlides.push(slide);
-        }
-      });
+      var slides = this.state.slides.slice(0);
+      slides[index].willDelete = true;
       this.setState({
-        slides: newSlides
+        slides: slides
       });
     }
   }, {

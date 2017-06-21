@@ -191,7 +191,9 @@ class MediaController extends Controller
         $return = true;
         if($data){
             foreach($data as $slide){
-                if($slide['video_loop'] != 0 && $slide['video_loop'] != ''){
+                if(isset($data['willDelete'])){
+                    $this->deleteSlide($slide);
+                } elseif($slide['video_loop'] != 0 && $slide['video_loop'] != ''){
                     $return = $this->slideVideo($slide);
                 }elseif($slide['time_interval'] !== ''){
                     $return = $this->slideImage($slide);
@@ -297,5 +299,17 @@ class MediaController extends Controller
         $slide->media->mediaType;
 
         return $data;
+    }
+
+    private function deleteSlide($slide){
+        try{
+            $slide = Slider::find($data['id']);
+            $slide->delete();
+
+        }catch (Exception $e) {
+            \Log::info('Error while deleting Media: '.$e);
+            return false;
+        }
+        return true;
     }
 }

@@ -83,10 +83,16 @@ class Slideshow extends React.Component {
     ev.preventDefault();
 
     const slides = this.state.slides;
-    slides.forEach((slide)=>{
+    slides.map((slide)=>{
       delete slide.src;
       delete slide.srcThumbnail;
       delete slide.media_types_id;
+      if (slide.willDelete) {
+        if (typeof slide.id === 'undefined') {
+          return null;
+        }
+      }
+      return slide;
     });
 
     const request = ajax('POST', `${this.props.fullUrl}/api/sliders`, {
@@ -105,15 +111,10 @@ class Slideshow extends React.Component {
     return false;
   }
   removeSlide(index) {
-    const slides = this.state.slides;
-    const newSlides = [];
-    slides.map((slide, slideIndex)=> {
-      if (slideIndex !== index) {
-        newSlides.push(slide);
-      }
-    });
+    const slides = this.state.slides.slice(0);
+    slides[index].willDelete = true;
     this.setState({
-      slides: newSlides
+      slides: slides
     });
   }
   render() {
