@@ -303,7 +303,7 @@ class MediaController extends Controller
 
     private function deleteSlide($slide){
         try{
-            $slide = Slider::find($data['id']);
+            $slide = Slider::find($slide['id']);
             $slide->delete();
 
         }catch (Exception $e) {

@@ -11266,13 +11266,9 @@ var Contenedor = function (_React$Component) {
             'div',
             { className: 'row' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'div',
-              { className: 'col-xs-12' },
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'button',
-                { className: 'btn btn-default', type: 'button', onClick: this.loadMore, disabled: this.state.isLoading },
-                'Cargar m\xE1s...'
-              )
+              'button',
+              { className: 'btn btn-default  col-xs-10 col-xs-offset-1', type: 'button', onClick: this.loadMore, disabled: this.state.isLoading },
+              'Cargar m\xE1s...'
             )
           )
         )

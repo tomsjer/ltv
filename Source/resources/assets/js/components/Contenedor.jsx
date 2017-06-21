@@ -73,9 +73,7 @@ class Contenedor extends React.Component {
         <div id="contenedor" className={ this.props.layout}>
           { media }
           <div className="row">
-            <div className="col-xs-12">
-              <button className="btn btn-default" type="button" onClick={this.loadMore} disabled={this.state.isLoading}>Cargar más...</button>
-            </div>
+            <button className="btn btn-default  col-xs-10 col-xs-offset-1" type="button" onClick={this.loadMore} disabled={this.state.isLoading}>Cargar más...</button>
           </div>
         </div>
       </div>
