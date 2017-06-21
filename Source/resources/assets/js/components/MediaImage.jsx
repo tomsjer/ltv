@@ -37,8 +37,9 @@ class MediaImagen extends React.Component {
   handleFiles(e) {
     const file = e.target.files[0];
     const imageType = /^image\//;
+    const imageSize = 12*1000000; //edit number for MB
 
-    if (!file || !imageType.test(file.type)) {
+    if (!file || (!imageType.test(file.type) || file.size > imageSize)) {
       return;
     }
 
@@ -108,7 +109,7 @@ class MediaImagen extends React.Component {
           </div>
           <p> O buscar en carpeta...</p>
 
-          <input required className="form-control" name="imageFile" type="file" style={{display: 'none'}} onChange={ this.handleFiles } disabled={this.state.disableUpload} />
+          <input required className="form-control" name="imageFile" type="file" style={{display: 'none'}} onChange={ this.handleFiles } disabled={this.state.disableUpload} accept="image/*" />
           <button id="fileMentira" type="button" className="btn"> Buscar... </button>
           <br />
           <button type="submit" className="btn pull-right" disabled={this.state.disableSubmit}> Listo </button>
