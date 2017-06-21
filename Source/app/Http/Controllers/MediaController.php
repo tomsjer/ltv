@@ -191,14 +191,14 @@ class MediaController extends Controller
         $return = true;
         if($data){
             foreach($data as $slide){
-                if($slide['loop'] != 0 && $slide['loop'] != ''){
+                if($slide['video_loop'] != 0 && $slide['video_loop'] != ''){
                     $return = $this->slideVideo($slide);
-                }elseif($slide['intervalo'] !== ''){
+                }elseif($slide['time_interval'] !== ''){
                     $return = $this->slideImage($slide);
                 }
                 if(!$return){
                     return response()->json([
-                        'message' => 'Ha ocurrido un error con el Slide: '.$slide['titulo'],
+                        'message' => 'Ha ocurrido un error con el Slide: '.$slide['title'],
                         'code' => '1'
                     ]);
                 }
@@ -231,9 +231,9 @@ class MediaController extends Controller
 
     private function slideImage($data){
         $rules_Image = [
-            'intervalo'      => 'required',
-            'desde'      => 'required',
-            'hasta'      => 'required',
+            'time_interval'      => 'required',
+            'date_from'      => 'required',
+            'date_until'      => 'required',
         ];
 
         $validator = \Validator::make($data, $rules_Image);
@@ -241,17 +241,18 @@ class MediaController extends Controller
             return false;
         }
         try{
-            $newSlide = new Slider();
 
-            $newSlide->media_id         = $data['media_id'];
-            $newSlide->title            = $data['titulo'];
-            $newSlide->subtitle         = $data['subtitulo'];
-            $newSlide->description      = $data['descripcion'];
-            $newSlide->time_interval    = $data['intervalo'];
-            $newSlide->date_from        = $data['desde'];
-            $newSlide->date_until       = $data['hasta'];
+            $slide = (isset($data['id'])) ? Slider::find($data['id']) : new Slider();
+            
+            $slide->media_id         = $data['media_id'];
+            $slide->title            = $data['title'];
+            $slide->subtitle         = $data['subtitle'];
+            $slide->description      = $data['description'];
+            $slide->time_interval    = $data['time_interval'];
+            $slide->date_from        = $data['date_from'];
+            $slide->date_until       = $data['date_until'];
 
-            $newSlide->save();
+            $slide->save();
         }catch (Exception $e) {
             \Log::info('Error update Media: '.$e);
             return false;
@@ -261,9 +262,9 @@ class MediaController extends Controller
     }
     private function slideVideo($data){
         $rules_video = [
-            'loop' => 'required',
-            'desde'      => 'required',
-            'hasta'      => 'required',
+            'video_loop' => 'required',
+            'date_from'      => 'required',
+            'date_until'      => 'required',
         ];
 
         $validator = \Validator::make($data, $rules_video);
@@ -271,17 +272,18 @@ class MediaController extends Controller
             return false;
         }
         try{
-            $newSlide = new Slider();
+            
+            $slide = (isset($data['id'])) ? Slider::find($data['id']) : new Slider();
 
-            $newSlide->media_id     = $data['media_id'];
-            $newSlide->title        = $data['titulo'];
-            $newSlide->subtitle     = $data['subtitulo'];
-            $newSlide->description  = $data['descripcion'];
-            $newSlide->video_loop   = $data['loop'];
-            $newSlide->date_from    = $data['desde'];
-            $newSlide->date_until   = $data['hasta'];
+            $slide->media_id     = $data['media_id'];
+            $slide->title        = $data['title'];
+            $slide->subtitle     = $data['subtitle'];
+            $slide->description  = $data['description'];
+            $slide->video_loop   = $data['video_loop'];
+            $slide->date_from    = $data['date_from'];
+            $slide->date_until   = $data['date_until'];
 
-            $newSlide->save();
+            $slide->save();
         }catch (Exception $e) {
             \Log::info('Error update Media: '.$e);
             return false;

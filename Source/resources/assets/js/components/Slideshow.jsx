@@ -25,6 +25,12 @@ class Slideshow extends React.Component {
     this.getSlides()
     .then((_response)=>{
       const slides = (_response && _response !== '' && _response.indexOf('[{') !== -1) ? JSON.parse(_response) : [];
+      slides.map((slide)=>{
+        slide.media.options = JSON.parse(slide.media.options);
+        slide.media_types_id = slide.media.media_types_id;
+        slide.src = (slide.media_types_id === 2) ? `https://i.ytimg.com/vi/${slide.media.options.id_youtube}/sddefault.jpg`  : slide.media.options.src;
+        slide.srcThumbnail = (slide.media_types_id === 2) ? `https://i.ytimg.com/vi/${slide.media.options.id_youtube}/default.jpg` : slide.media.options.srcThumbnail;
+      });
       this.setState({
         slides: slides
       });
@@ -33,7 +39,7 @@ class Slideshow extends React.Component {
   getSlides() {
     const promise = new Promise((resolve, reject)=> {
 
-      const request = ajax('GET', `${this.props.fullUrl}/api/sliders/get`, {
+      const request = ajax('GET', `${this.props.fullUrl}/api/sliders/all`, {
 
         progressHandler: (e) => {
           console.log(e);
@@ -73,7 +79,9 @@ class Slideshow extends React.Component {
       slides: slides
     });
   }
-  saveSlider() {
+  saveSlider(ev) {
+    ev.preventDefault();
+
     const slides = this.state.slides;
     slides.forEach((slide)=>{
       delete slide.src;
@@ -81,24 +89,20 @@ class Slideshow extends React.Component {
       delete slide.media_types_id;
     });
 
-    const promise = new Promise((resolve, reject)=> {
-
-      const request = ajax('POST', `${this.props.fullUrl}/api/sliders`, {
-        progressHandler: (e)=>{ console.log(e); },
-        onreadyStateChange: (e)=>{
-          if (e.target.readyState === 4 && e.target.status === 200) {
-            resolve(e);
-          } else {
-            console.log(`Error: ${e}`);
-          }
-        },
-        errorHandler: (e)=>{ console.log(e); },
-      });
-      request.setRequestHeader('Content-Type', 'application/json')
-      request.send(JSON.stringify(slides));
+    const request = ajax('POST', `${this.props.fullUrl}/api/sliders`, {
+      progressHandler: (e)=>{ console.log(e); },
+      onreadyStateChange: (e)=>{
+        if (e.target.readyState === 4 && e.target.status === 200) {
+        } else {
+          console.log(`Error: ${e}`);
+        }
+      },
+      errorHandler: (e)=>{ console.log(e); },
     });
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(JSON.stringify(slides));
 
-    return promise;
+    return false;
   }
   removeSlide(index) {
     const slides = this.state.slides;

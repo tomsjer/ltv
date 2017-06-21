@@ -15,15 +15,15 @@ class Dropzone extends React.Component {
     ev.preventDefault();
     const element = JSON.parse(ev.dataTransfer.getData('text'));
     const slide = {
-      titulo: element.options.name || '',
-      subtitulo: '',
-      descripcion: '',
+      title: element.options.name || '',
+      subtitle: '',
+      description: '',
       src: element.options.src,
       srcThumbnail: element.options.srcThumbnail,
-      intervalo: '',
-      loop: 0,
-      desde: '',
-      hasta: '',
+      time_interval: '',
+      video_loop: 0,
+      date_from: '',
+      date_until: '',
       media_id: element.id,
       media_types_id: element.media_types_id
     };

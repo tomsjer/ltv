@@ -13,32 +13,32 @@ class SlideForm extends React.Component {
   render() {
     return (
       <div className="col-md-4 slide-form">
-        <form action="return false;" method="POST">
-          <input onChange={ this.handleChange } className="form-control" placeholder="Titulo" type="text" value={this.props.slide.titulo} name="titulo" />
-          <input  onChange={ this.handleChange } className="form-control" placeholder="Subtitulo" type="text" value={ this.props.slide.subtitulo} name="subtitulo"/>
-          <textarea  onChange={ this.handleChange } className="form-control" placeholder="Descripcion" type="textarea" value={ this.props.slide.descripcion} rows="10" cols="20" name="descripcion"/>
+        <form action="return false;" method="POST" onSubmit={  this.props.saveSlider  }>
+          <input onChange={ this.handleChange } className="form-control" placeholder="Titulo" type="text" value={this.props.slide.title} name="title" />
+          <input  onChange={ this.handleChange } className="form-control" placeholder="Subtitulo" type="text" value={ this.props.slide.subtitle} name="subtitle"/>
+          <textarea  onChange={ this.handleChange } className="form-control" placeholder="Descripcion" type="textarea" value={ this.props.slide.description} rows="10" cols="20" name="description"/>
           { (this.props.slide.media_types_id === 1 || this.props.slide.media_types_id === 3) &&
             <label htmlFor="intervalo"> Intervalo
-              <input onChange={ this.handleChange } value={ this.props.slide.intervalo} name="intervalo" className="form-control" type="number" placeholder="Segundos" min="0"/>
+              <input required onChange={ this.handleChange } value={ this.props.slide.time_interval} name="time_interval" className="form-control" type="number" placeholder="Segundos" min="0"/>
             </label>
           }
           { this.props.slide.media_types_id === 2 &&
-            <label htmlFor="loop"> Loops
-              <input onChange={ this.handleChange } value={ this.props.slide.loop} name="loop" className="form-control" type="number" placeholder="Loops" min="0"/>
+            <label htmlFor="video_loop"> Loops
+              <input required onChange={ this.handleChange } value={ this.props.slide.video_loop} name="video_loop" className="form-control" type="number" placeholder="Loops" min="0"/>
             </label>
           }
           <div className="row">
             <div className="col-md-6">
               <label htmlFor="desde"> Desde </label>
-                <input onChange={ this.handleChange } value={ this.props.slide.desde} name="desde" className="form-control" type="date" />
+                <input required onChange={ this.handleChange } value={ this.props.slide.date_from} name="date_from" className="form-control" type="date" />
             </div>
             <div className="col-md-6">
               <label htmlFor="hasta"> Hasta </label>
-                <input onChange={ this.handleChange } value={ this.props.slide.hasta} name="hasta" className="form-control" type="date" />
+                <input required onChange={ this.handleChange } value={ this.props.slide.date_until} name="date_until" className="form-control" type="date" />
             </div>
           </div>
           <br/>
-          <button className="form-control" type="button" onClick={ this.props.saveSlider }> GUARDAR </button>
+          <button className="form-control" type="submit"> GUARDAR </button>
         </form>
         {/* <p>Metadata</p>
         <p>Fecha de creacion ........ 17/04/2017<br/>
