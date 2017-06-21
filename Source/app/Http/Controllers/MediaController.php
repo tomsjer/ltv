@@ -191,7 +191,7 @@ class MediaController extends Controller
         $return = true;
         if($data){
             foreach($data as $slide){
-                if(isset($data['willDelete'])){
+                if(isset($slide['willDelete'])){
                     $this->deleteSlide($slide);
                 } elseif($slide['video_loop'] != 0 && $slide['video_loop'] != ''){
                     $return = $this->slideVideo($slide);
