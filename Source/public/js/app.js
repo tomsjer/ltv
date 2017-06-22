@@ -2958,6 +2958,60 @@ module.exports = React;
 
 /***/ }),
 /* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export fetch */
+/* harmony export (immutable) */ __webpack_exports__["a"] = ajax;
+/* harmony export (immutable) */ __webpack_exports__["c"] = youtubeUrlParser;
+/* harmony export (immutable) */ __webpack_exports__["b"] = setDefaultDate;
+function fetch(url, options) {
+  var promise = new Promise(function (resolve, reject) {
+    fetch(url, options).then(function (response) {
+      resolve(response);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+  return promise;
+}
+function ajax(method, url, options) {
+  var xhr = new XMLHttpRequest();
+  if (options.progressHandler) {
+    xhr.upload.addEventListener('progress', options.progressHandler, false);
+  }
+  if (options.uploadHandler) {
+    xhr.upload.addEventListener('load', options.uploadHandler, false);
+  }
+  if (options.overriveMimeTpye) {
+    xhr.overriveMimeTpye(options.overriveMimeTpye);
+  }
+  if (options.onreadyStateChange) {
+    xhr.onreadystatechange = options.onreadyStateChange;
+  }
+  xhr.open(method, url);
+  return xhr;
+}
+
+function youtubeUrlParser(url) {
+  var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  var match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    match = match[2];
+  } else {
+    match = null;
+  }
+  return match;
+}
+
+function setDefaultDate() {
+  var d = new Date();
+  var iso = d.toISOString();
+  return iso.replace(/(T.*)/, '');
+}
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3241,7 +3295,7 @@ module.exports = EventPluginHub;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3257,7 +3311,7 @@ module.exports = EventPluginHub;
 
 
 
-var EventPluginHub = __webpack_require__(23);
+var EventPluginHub = __webpack_require__(24);
 var EventPluginUtils = __webpack_require__(40);
 
 var accumulateInto = __webpack_require__(76);
@@ -3381,7 +3435,7 @@ module.exports = EventPropagators;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3434,7 +3488,7 @@ var ReactInstanceMap = {
 module.exports = ReactInstanceMap;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3496,53 +3550,6 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-
-/***/ }),
-/* 27 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export fetch */
-/* harmony export (immutable) */ __webpack_exports__["a"] = ajax;
-/* harmony export (immutable) */ __webpack_exports__["b"] = youtubeUrlParser;
-function fetch(url, options) {
-  var promise = new Promise(function (resolve, reject) {
-    fetch(url, options).then(function (response) {
-      resolve(response);
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-  return promise;
-}
-function ajax(method, url, options) {
-  var xhr = new XMLHttpRequest();
-  if (options.progressHandler) {
-    xhr.upload.addEventListener('progress', options.progressHandler, false);
-  }
-  if (options.uploadHandler) {
-    xhr.upload.addEventListener('load', options.uploadHandler, false);
-  }
-  if (options.overriveMimeTpye) {
-    xhr.overriveMimeTpye(options.overriveMimeTpye);
-  }
-  if (options.onreadyStateChange) {
-    xhr.onreadystatechange = options.onreadyStateChange;
-  }
-  xhr.open(method, url);
-  return xhr;
-}
-
-function youtubeUrlParser(url) {
-  var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  var match = url.match(regExp);
-  if (match && match[2].length === 11) {
-    match = match[2];
-  } else {
-    match = null;
-  }
-  return match;
-}
 
 /***/ }),
 /* 28 */
@@ -4220,7 +4227,7 @@ module.exports = ReactBrowserEventEmitter;
 
 
 
-var SyntheticUIEvent = __webpack_require__(26);
+var SyntheticUIEvent = __webpack_require__(27);
 var ViewportMetrics = __webpack_require__(75);
 
 var getEventModifierState = __webpack_require__(48);
@@ -5697,7 +5704,7 @@ module.exports = ReactErrorUtils;
 var _prodInvariant = __webpack_require__(3);
 
 var ReactCurrentOwner = __webpack_require__(13);
-var ReactInstanceMap = __webpack_require__(25);
+var ReactInstanceMap = __webpack_require__(26);
 var ReactInstrumentation = __webpack_require__(10);
 var ReactUpdates = __webpack_require__(12);
 
@@ -8989,7 +8996,7 @@ var ReactDOMComponentTree = __webpack_require__(5);
 var ReactDOMContainerInfo = __webpack_require__(145);
 var ReactDOMFeatureFlags = __webpack_require__(147);
 var ReactFeatureFlags = __webpack_require__(69);
-var ReactInstanceMap = __webpack_require__(25);
+var ReactInstanceMap = __webpack_require__(26);
 var ReactInstrumentation = __webpack_require__(10);
 var ReactMarkupChecksum = __webpack_require__(167);
 var ReactReconciler = __webpack_require__(21);
@@ -10880,7 +10887,7 @@ __WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(__WEBPACK_IMPORTED_MODU
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Contenedor_jsx__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Buscador_jsx__ = __webpack_require__(93);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MediaModal_jsx__ = __webpack_require__(98);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_js__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_js__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__initYoutube_js__ = __webpack_require__(103);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Biblioteca; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -10974,7 +10981,7 @@ var Biblioteca = function (_React$Component) {
       }, '');
 
       if (videosIds.length) {
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_7__initYoutube_js__["a" /* initYoutubeAPI */])().then(function () {
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_7__initYoutube_js__["b" /* initYoutubeAPI */])().then(function () {
           var promise = new Promise(function (resolve, reject) {
             gapi.client.youtube.videos.list({
               part: 'snippet',
@@ -11297,6 +11304,7 @@ Contenedor.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(23);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Dropzone; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -11305,6 +11313,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -11337,12 +11346,13 @@ var Dropzone = function (_React$Component) {
         title: element.options.name || '',
         subtitle: '',
         description: '',
-        src: element.options.src,
-        srcThumbnail: element.options.srcThumbnail,
-        time_interval: '',
-        video_loop: 0,
-        date_from: '',
-        date_until: '',
+        media: element,
+        // src: element.options.src,
+        // srcThumbnail: element.options.srcThumbnail,
+        time_interval: 5,
+        video_loop: 1,
+        date_from: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils__["b" /* setDefaultDate */])(),
+        date_until: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils__["b" /* setDefaultDate */])(),
         media_id: element.id,
         media_types_id: element.media_types_id
       };
@@ -11522,8 +11532,9 @@ var MediaImagen = function (_React$Component) {
     value: function handleFiles(e) {
       var file = e.target.files[0];
       var imageType = /^image\//;
+      var imageSize = 12 * 1000000; //edit number for MB
 
-      if (!file || !imageType.test(file.type)) {
+      if (!file || !imageType.test(file.type) || file.size > imageSize) {
         return;
       }
 
@@ -11630,7 +11641,7 @@ var MediaImagen = function (_React$Component) {
             null,
             ' O buscar en carpeta...'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'imageFile', type: 'file', style: { display: 'none' }, onChange: this.handleFiles, disabled: this.state.disableUpload }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, className: 'form-control', name: 'imageFile', type: 'file', style: { display: 'none' }, onChange: this.handleFiles, disabled: this.state.disableUpload, accept: 'image/*' }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'button',
             { id: 'fileMentira', type: 'button', className: 'btn' },
@@ -11671,7 +11682,7 @@ MediaImagen.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MediaImage_jsx__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MediaVideo_jsx__ = __webpack_require__(99);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_js__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_js__ = __webpack_require__(23);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MediaModal; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -11880,7 +11891,7 @@ MediaModal.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_js__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_js__ = __webpack_require__(23);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MediaVideo; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -11944,7 +11955,7 @@ var MediaVideo = function (_React$Component) {
     value: function handleVideoSubmit(e) {
       e.preventDefault();
       var self = this;
-      var videoId = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_js__["b" /* youtubeUrlParser */])(e.currentTarget.querySelector('[name="videoUrl"]').value);
+      var videoId = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_js__["c" /* youtubeUrlParser */])(e.currentTarget.querySelector('[name="videoUrl"]').value);
       var name = e.currentTarget.querySelector('[name="name"]').value;
       if (videoId) {
         this.setState({
@@ -12050,6 +12061,7 @@ var SlideForm = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (SlideForm.__proto__ || Object.getPrototypeOf(SlideForm)).call(this, props));
 
     _this.handleChange = _this.handleChange.bind(_this);
+    _this.submitSlideshow = _this.submitSlideshow.bind(_this);
     return _this;
   }
 
@@ -12059,11 +12071,18 @@ var SlideForm = function (_React$Component) {
       this.props.handleChange(this.props.index, e.target.name, e.target.value);
     }
   }, {
+    key: 'submitSlideshow',
+    value: function submitSlideshow(e) {
+      e.preventDefault();
+      this.props.saveSlider(e);
+      return false;
+    }
+  }, {
     key: 'render',
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'form',
-        { action: 'return false;', method: 'POST', onSubmit: this.props.saveSlider },
+        { action: 'return false;', method: 'POST', onSubmit: this.submitSlideshow },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Titulo', type: 'text', value: this.props.slide.title ? this.props.slide.title : '', name: 'title' }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.handleChange, className: 'form-control', placeholder: 'Subtitulo', type: 'text', value: this.props.slide.subtitle ? this.props.slide.subtitle : '', name: 'subtitle' }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { onChange: this.handleChange, className: 'form-control', placeholder: 'Descripcion', type: 'textarea', value: this.props.slide.description ? this.props.slide.description : '', rows: '10', cols: '20', name: 'description' }),
@@ -12071,13 +12090,13 @@ var SlideForm = function (_React$Component) {
           'label',
           { htmlFor: 'intervalo' },
           ' Intervalo',
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.time_interval, name: 'time_interval', className: 'form-control', type: 'number', placeholder: 'Segundos', min: '0' })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.time_interval, name: 'time_interval', className: 'form-control', type: 'number', placeholder: 'Segundos', min: '1' })
         ),
         this.props.slide.media_types_id === 2 && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'label',
           { htmlFor: 'video_loop' },
           ' Loops',
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.video_loop, name: 'video_loop', className: 'form-control', type: 'number', placeholder: 'Loops', min: '0' })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { required: true, onChange: this.handleChange, value: this.props.slide.video_loop, name: 'video_loop', className: 'form-control', type: 'number', placeholder: 'Loops', min: '1' })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
@@ -12136,6 +12155,8 @@ SlideForm.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_slick__ = __webpack_require__(202);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_slick___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_slick__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__SlideVideo__ = __webpack_require__(237);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SlideImage__ = __webpack_require__(238);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Slider; });
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -12146,6 +12167,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
 
 
 
@@ -12171,7 +12194,7 @@ var Slider = function (_React$Component) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'a',
           null,
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: _this.props.slides[i].srcThumbnail }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: _this.props.slides[i].media.options.srcThumbnail }),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'span',
             null,
@@ -12181,12 +12204,32 @@ var Slider = function (_React$Component) {
       },
       beforeChange: function beforeChange(currentSlide, nextSlide) {
         props.afterChangeHook(nextSlide);
+        if (_this.props.slides[currentSlide].media_types_id === 2 && _this.videoSlides[currentSlide]) {
+          _this.videoSlides[currentSlide].checkPlay();
+        }
+      },
+      afterChange: function afterChange(currentSlide) {
+        if (_this.props.slides[currentSlide].media_types_id === 2 && _this.videoSlides[currentSlide]) {
+          _this.videoSlides[currentSlide].playVideo();
+        }
+        if (_this.props.slides[currentSlide].media_types_id === 1 && _this.imageSlides[currentSlide]) {
+          _this.imageSlides[currentSlide].afterChange();
+        }
       }
     };
+
+    _this.videoSlides = {};
+    _this.imageSlides = {};
+    _this.nextSlide = _this.nextSlide.bind(_this);
     return _this;
   }
 
   _createClass(Slider, [{
+    key: 'nextSlide',
+    value: function nextSlide() {
+      this.refs.slider.slickNext();
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -12198,7 +12241,11 @@ var Slider = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'slick-slide-container' },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { className: 'img-responsive', src: slide.src }),
+            slide.media_types_id === 1 ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__SlideImage__["a" /* SlideImage */], { ref: function ref(el) {
+                _this2.imageSlides[i] = el;
+              }, slide: slide, nextSlide: _this2.nextSlide, playback: _this2.props.playback, index: i, activeSlide: _this2.props.activeSlide }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__SlideVideo__["a" /* SlideVideo */], { ref: function ref(el) {
+                _this2.videoSlides[i] = el;
+              }, slide: slide, nextSlide: _this2.nextSlide, playback: _this2.props.playback, index: i, activeSlide: _this2.props.activeSlides }),
             slide.title && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'h3',
               null,
@@ -12245,7 +12292,8 @@ var Slider = function (_React$Component) {
 Slider.propTypes = {
   slides: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
   afterChangeHook: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-  removeSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+  removeSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  playback: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
 };
 
 
@@ -12262,7 +12310,8 @@ Slider.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Slider_jsx__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Dropzone__ = __webpack_require__(95);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__initYoutube__ = __webpack_require__(103);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Slideshow; });
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -12273,6 +12322,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /* globals Promise */
+
 
 
 
@@ -12291,7 +12341,8 @@ var Slideshow = function (_React$Component) {
     _this.state = {
       activeSlide: 0,
       slides: [],
-      loading: true
+      loading: true,
+      playback: false
     };
 
     _this.saveSlider = _this.saveSlider.bind(_this);
@@ -12300,18 +12351,23 @@ var Slideshow = function (_React$Component) {
     _this.setActiveSlide = _this.setActiveSlide.bind(_this);
     _this.handleSlideFormChange = _this.handleSlideFormChange.bind(_this);
     _this.getSlides = _this.getSlides.bind(_this);
+    _this.playSlideshow = _this.playSlideshow.bind(_this);
+    _this.pauseSlideshow = _this.pauseSlideshow.bind(_this);
 
     _this.getSlides().then(function (_response) {
       var slides = _response && _response !== '' && _response.indexOf('[{') !== -1 ? JSON.parse(_response) : [];
       slides.map(function (slide) {
         slide.media.options = JSON.parse(slide.media.options);
         slide.media_types_id = slide.media.media_types_id;
-        slide.src = slide.media_types_id === 2 ? 'https://i.ytimg.com/vi/' + slide.media.options.id_youtube + '/sddefault.jpg' : slide.media.options.src;
-        slide.srcThumbnail = slide.media_types_id === 2 ? 'https://i.ytimg.com/vi/' + slide.media.options.id_youtube + '/default.jpg' : slide.media.options.srcThumbnail;
+        slide.media.options.srcThumbnail = slide.media_types_id === 2 ? 'https://i.ytimg.com/vi/' + slide.media.options.id_youtube + '/default.jpg' : slide.media.options.srcThumbnail;
       });
       _this.setState({
-        slides: slides,
-        loading: false
+        slides: slides
+      });
+      __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__initYoutube__["a" /* initYoutubeIframeAPI */])().then(function () {
+        _this.setState({
+          loading: false
+        });
       });
     });
     return _this;
@@ -12372,14 +12428,13 @@ var Slideshow = function (_React$Component) {
     }
   }, {
     key: 'saveSlider',
-    value: function saveSlider(ev) {
-      ev.preventDefault();
+    value: function saveSlider(e) {
 
-      var slides = this.state.slides;
+      var slides = this.state.slides.slice(0);
       slides.map(function (slide) {
-        delete slide.src;
-        delete slide.srcThumbnail;
-        delete slide.media_types_id;
+        // delete slide.src;
+        // delete slide.srcThumbnail;
+        // delete slide.media_types_id;
         if (slide.willDelete) {
           if (typeof slide.id === 'undefined') {
             return null;
@@ -12403,8 +12458,7 @@ var Slideshow = function (_React$Component) {
       });
       request.setRequestHeader('Content-Type', 'application/json');
       request.send(JSON.stringify(slides));
-
-      return false;
+      return true;
     }
   }, {
     key: 'removeSlide',
@@ -12413,6 +12467,20 @@ var Slideshow = function (_React$Component) {
       slides[index].willDelete = true;
       this.setState({
         slides: slides
+      });
+    }
+  }, {
+    key: 'playSlideshow',
+    value: function playSlideshow() {
+      this.setState({
+        playback: true
+      });
+    }
+  }, {
+    key: 'pauseSlideshow',
+    value: function pauseSlideshow() {
+      this.setState({
+        playback: false
       });
     }
   }, {
@@ -12437,12 +12505,26 @@ var Slideshow = function (_React$Component) {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'col-md-8 col-lg-9' },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide })
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Slider_jsx__["a" /* Slider */], { slides: this.state.slides, afterChangeHook: this.setActiveSlide, removeSlide: this.removeSlide, playback: this.state.playback, activeSlide: this.state.activeSlide })
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'col-md-4 col-lg-3 slide-form' },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length })
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__SlideForm_jsx__["a" /* SlideForm */], { saveSlider: this.saveSlider, index: this.state.activeSlide, slide: this.state.slides[this.state.activeSlide], handleChange: this.handleSlideFormChange, maxOrder: this.state.slides.length }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'div',
+              { className: 'btn-group', role: 'group', 'aria-label': '...' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'button',
+                { type: 'button', className: !this.state.playback ? 'btn btn-default' : 'btn btn-default disabled', onClick: this.playSlideshow },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'glyphicon glyphicon-play' })
+              ),
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'button',
+                { type: 'button', className: this.state.playback ? 'btn btn-default' : 'btn btn-default disabled', onClick: this.pauseSlideshow },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: 'glyphicon glyphicon-pause' })
+              )
+            )
           )
         );
       } else {
@@ -12508,21 +12590,6 @@ var Slideshow = function (_React$Component) {
   return Slideshow;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
-/*
-Porahor no vamos a utilizar los cumpleaños...
-
-<ul className="nav nav-tabs" role="tablist">
-  <li role="presentation" className="active">
-    <a href="#slide" aria-controls="slide" role="tab" data-toggle="tab">
-      Slideshow
-    </a>
-  </li>
-  <li role="presentation">
-    <a href="#birthday" aria-controls="birthday" role="tab" data-toggle="tab">Cumpleaños</a>
-  </li>
-</ul>
- */
-
 Slideshow.propTypes = {
   slides: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
   handleChange: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
@@ -12538,8 +12605,9 @@ Slideshow.propTypes = {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gapi__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_gapi___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_gapi__);
-/* harmony export (immutable) */ __webpack_exports__["a"] = initYoutubeAPI;
-/* global gapi, Promise */
+/* harmony export (immutable) */ __webpack_exports__["b"] = initYoutubeAPI;
+/* harmony export (immutable) */ __webpack_exports__["a"] = initYoutubeIframeAPI;
+/* global gapi, Promise, onYouTubeIframeAPIReady */
 
 
 function initYoutubeAPI() {
@@ -12552,6 +12620,22 @@ function initYoutubeAPI() {
       }).then(resolve);
       // .cath(reject); // Its thowing error
     });
+  });
+
+  return promise;
+}
+
+function initYoutubeIframeAPI() {
+  var promise = new Promise(function (resolve, reject) {
+    var tag = document.createElement('script');
+
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
+      resolve();
+    };
   });
 
   return promise;
@@ -27458,7 +27542,7 @@ module.exports = AutoFocusUtils;
 
 
 
-var EventPropagators = __webpack_require__(24);
+var EventPropagators = __webpack_require__(25);
 var ExecutionEnvironment = __webpack_require__(7);
 var FallbackCompositionState = __webpack_require__(138);
 var SyntheticCompositionEvent = __webpack_require__(181);
@@ -28063,8 +28147,8 @@ module.exports = CSSPropertyOperations;
 
 
 
-var EventPluginHub = __webpack_require__(23);
-var EventPropagators = __webpack_require__(24);
+var EventPluginHub = __webpack_require__(24);
+var EventPropagators = __webpack_require__(25);
 var ExecutionEnvironment = __webpack_require__(7);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactUpdates = __webpack_require__(12);
@@ -28499,7 +28583,7 @@ module.exports = DefaultEventPluginOrder;
 
 
 
-var EventPropagators = __webpack_require__(24);
+var EventPropagators = __webpack_require__(25);
 var ReactDOMComponentTree = __webpack_require__(5);
 var SyntheticMouseEvent = __webpack_require__(32);
 
@@ -29147,7 +29231,7 @@ var React = __webpack_require__(22);
 var ReactComponentEnvironment = __webpack_require__(43);
 var ReactCurrentOwner = __webpack_require__(13);
 var ReactErrorUtils = __webpack_require__(44);
-var ReactInstanceMap = __webpack_require__(25);
+var ReactInstanceMap = __webpack_require__(26);
 var ReactInstrumentation = __webpack_require__(10);
 var ReactNodeTypes = __webpack_require__(73);
 var ReactReconciler = __webpack_require__(21);
@@ -30176,7 +30260,7 @@ var DOMLazyTree = __webpack_require__(20);
 var DOMNamespaces = __webpack_require__(39);
 var DOMProperty = __webpack_require__(15);
 var DOMPropertyOperations = __webpack_require__(65);
-var EventPluginHub = __webpack_require__(23);
+var EventPluginHub = __webpack_require__(24);
 var EventPluginRegistry = __webpack_require__(30);
 var ReactBrowserEventEmitter = __webpack_require__(31);
 var ReactDOMComponentFlags = __webpack_require__(66);
@@ -33274,7 +33358,7 @@ module.exports = REACT_ELEMENT_TYPE;
 
 
 
-var EventPluginHub = __webpack_require__(23);
+var EventPluginHub = __webpack_require__(24);
 
 function runEventQueueInBatch(events) {
   EventPluginHub.enqueueEvents(events);
@@ -33512,7 +33596,7 @@ module.exports = ReactHostOperationHistoryHook;
 
 
 var DOMProperty = __webpack_require__(15);
-var EventPluginHub = __webpack_require__(23);
+var EventPluginHub = __webpack_require__(24);
 var EventPluginUtils = __webpack_require__(40);
 var ReactComponentEnvironment = __webpack_require__(43);
 var ReactEmptyComponent = __webpack_require__(68);
@@ -33651,7 +33735,7 @@ module.exports = ReactMarkupChecksum;
 var _prodInvariant = __webpack_require__(3);
 
 var ReactComponentEnvironment = __webpack_require__(43);
-var ReactInstanceMap = __webpack_require__(25);
+var ReactInstanceMap = __webpack_require__(26);
 var ReactInstrumentation = __webpack_require__(10);
 
 var ReactCurrentOwner = __webpack_require__(13);
@@ -35080,7 +35164,7 @@ module.exports = SVGDOMPropertyConfig;
 
 
 
-var EventPropagators = __webpack_require__(24);
+var EventPropagators = __webpack_require__(25);
 var ExecutionEnvironment = __webpack_require__(7);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactInputSelection = __webpack_require__(71);
@@ -35280,7 +35364,7 @@ module.exports = SelectEventPlugin;
 var _prodInvariant = __webpack_require__(3);
 
 var EventListener = __webpack_require__(57);
-var EventPropagators = __webpack_require__(24);
+var EventPropagators = __webpack_require__(25);
 var ReactDOMComponentTree = __webpack_require__(5);
 var SyntheticAnimationEvent = __webpack_require__(179);
 var SyntheticClipboardEvent = __webpack_require__(180);
@@ -35291,7 +35375,7 @@ var SyntheticMouseEvent = __webpack_require__(32);
 var SyntheticDragEvent = __webpack_require__(182);
 var SyntheticTouchEvent = __webpack_require__(186);
 var SyntheticTransitionEvent = __webpack_require__(187);
-var SyntheticUIEvent = __webpack_require__(26);
+var SyntheticUIEvent = __webpack_require__(27);
 var SyntheticWheelEvent = __webpack_require__(188);
 
 var emptyFunction = __webpack_require__(9);
@@ -35679,7 +35763,7 @@ module.exports = SyntheticDragEvent;
 
 
 
-var SyntheticUIEvent = __webpack_require__(26);
+var SyntheticUIEvent = __webpack_require__(27);
 
 /**
  * @interface FocusEvent
@@ -35762,7 +35846,7 @@ module.exports = SyntheticInputEvent;
 
 
 
-var SyntheticUIEvent = __webpack_require__(26);
+var SyntheticUIEvent = __webpack_require__(27);
 
 var getEventCharCode = __webpack_require__(47);
 var getEventKey = __webpack_require__(194);
@@ -35851,7 +35935,7 @@ module.exports = SyntheticKeyboardEvent;
 
 
 
-var SyntheticUIEvent = __webpack_require__(26);
+var SyntheticUIEvent = __webpack_require__(27);
 
 var getEventModifierState = __webpack_require__(48);
 
@@ -36235,7 +36319,7 @@ var _prodInvariant = __webpack_require__(3);
 
 var ReactCurrentOwner = __webpack_require__(13);
 var ReactDOMComponentTree = __webpack_require__(5);
-var ReactInstanceMap = __webpack_require__(25);
+var ReactInstanceMap = __webpack_require__(26);
 
 var getHostComponentFromComposite = __webpack_require__(78);
 var invariant = __webpack_require__(1);
@@ -39793,6 +39877,205 @@ module.exports = gapi;
 
 __webpack_require__(90);
 module.exports = __webpack_require__(91);
+
+
+/***/ }),
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */,
+/* 234 */,
+/* 235 */,
+/* 236 */,
+/* 237 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SlideVideo; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/* globals YT */
+
+
+
+var SlideVideo = function (_React$Component) {
+  _inherits(SlideVideo, _React$Component);
+
+  function SlideVideo(props) {
+    _classCallCheck(this, SlideVideo);
+
+    var _this = _possibleConstructorReturn(this, (SlideVideo.__proto__ || Object.getPrototypeOf(SlideVideo)).call(this, props));
+
+    _this.loops = _this.props.slide.video_loop;
+
+    _this.checkPlay = _this.checkPlay.bind(_this);
+    _this.playVideo = _this.playVideo.bind(_this);
+    return _this;
+  }
+
+  _createClass(SlideVideo, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.player = new YT.Player(this.slideElement, {
+        videoId: this.props.slide.media.options.id_youtube,
+        events: {
+          'onStateChange': function onStateChange(e) {
+            if (_this2.props.playback) {
+              if (e.data === YT.PlayerState.ENDED) {
+                _this2.loops--;
+                if (_this2.loops) {
+                  _this2.player.playVideo();
+                } else {
+                  _this2.loops = _this2.props.slide.video_loop;
+                  _this2.props.nextSlide();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (this.props.playback !== nextProps.playback && nextProps.playback && this.props.activeSlide === this.props.index) {
+        this.player.playVideo();
+      }
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.player = null;
+    }
+  }, {
+    key: 'playVideo',
+    value: function playVideo() {
+      if (this.props.playback) {
+        this.player.playVideo();
+      }
+    }
+  }, {
+    key: 'checkPlay',
+    value: function checkPlay() {
+      if (this.player.getPlayerState() === YT.PlayerState.PLAYING) {
+        this.player.stopVideo();
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { ref: function ref(el) {
+          _this3.slideElement = el;
+        } });
+    }
+  }]);
+
+  return SlideVideo;
+}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+SlideVideo.propTypes = {
+  slide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+  nextSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  playback: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
+};
+
+
+
+/***/ }),
+/* 238 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SlideImage; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+var SlideImage = function (_React$Component) {
+  _inherits(SlideImage, _React$Component);
+
+  function SlideImage(props) {
+    _classCallCheck(this, SlideImage);
+
+    var _this = _possibleConstructorReturn(this, (SlideImage.__proto__ || Object.getPrototypeOf(SlideImage)).call(this, props));
+
+    _this.afterChange = _this.afterChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(SlideImage, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.playback) {
+        this.timeout = setTimeout(this.props.nextSlide, this.props.slide.time_interval * 1000);
+      }
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (this.props.playback !== nextProps.playback && nextProps.playback && this.props.activeSlide === this.props.index) {
+        this.timeout = setTimeout(this.props.nextSlide, this.props.slide.time_interval * 1000);
+      }
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      clearTimeout(this.timeout);
+    }
+  }, {
+    key: 'afterChange',
+    value: function afterChange() {
+      if (this.props.playback && this.props.activeSlide === this.props.index) {
+        this.timeout = setTimeout(this.props.nextSlide, this.props.slide.time_interval * 1000);
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { className: 'img-responsive', src: this.props.slide.media.options.src });
+    }
+  }]);
+
+  return SlideImage;
+}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+SlideImage.propTypes = {
+  slide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+  nextSlide: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  playback: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
+};
+
 
 
 /***/ })

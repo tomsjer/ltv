@@ -5,6 +5,7 @@ import { SlideForm } from './SlideForm.jsx';
 import { Slider } from './Slider.jsx';
 import { Dropzone } from  './Dropzone';
 import { ajax } from '../utils';
+import { initYoutubeIframeAPI } from '../initYoutube';
 
 class Slideshow extends React.Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class Slideshow extends React.Component {
     this.state = {
       activeSlide: 0,
       slides: [],
-      loading: true
+      loading: true,
+      playback: false
     };
 
     this.saveSlider = this.saveSlider.bind(this);
@@ -22,6 +24,8 @@ class Slideshow extends React.Component {
     this.setActiveSlide = this.setActiveSlide.bind(this);
     this.handleSlideFormChange = this.handleSlideFormChange.bind(this);
     this.getSlides = this.getSlides.bind(this);
+    this.playSlideshow = this.playSlideshow.bind(this);
+    this.pauseSlideshow = this.pauseSlideshow.bind(this);
 
     this.getSlides()
     .then((_response)=>{
@@ -29,12 +33,16 @@ class Slideshow extends React.Component {
       slides.map((slide)=>{
         slide.media.options = JSON.parse(slide.media.options);
         slide.media_types_id = slide.media.media_types_id;
-        slide.src = (slide.media_types_id === 2) ? `https://i.ytimg.com/vi/${slide.media.options.id_youtube}/sddefault.jpg`  : slide.media.options.src;
-        slide.srcThumbnail = (slide.media_types_id === 2) ? `https://i.ytimg.com/vi/${slide.media.options.id_youtube}/default.jpg` : slide.media.options.srcThumbnail;
+        slide.media.options.srcThumbnail = (slide.media_types_id === 2) ? `https://i.ytimg.com/vi/${slide.media.options.id_youtube}/default.jpg` : slide.media.options.srcThumbnail;
       });
       this.setState({
-        slides: slides,
-        loading: false
+        slides: slides
+      });
+      initYoutubeIframeAPI()
+      .then(()=>{
+        this.setState({
+          loading: false
+        });
       });
     });
   }
@@ -81,14 +89,13 @@ class Slideshow extends React.Component {
       slides: slides
     });
   }
-  saveSlider(ev) {
-    ev.preventDefault();
+  saveSlider(e) {
 
-    const slides = this.state.slides;
+    const slides = this.state.slides.slice(0);
     slides.map((slide)=>{
-      delete slide.src;
-      delete slide.srcThumbnail;
-      delete slide.media_types_id;
+      // delete slide.src;
+      // delete slide.srcThumbnail;
+      // delete slide.media_types_id;
       if (slide.willDelete) {
         if (typeof slide.id === 'undefined') {
           return null;
@@ -109,14 +116,23 @@ class Slideshow extends React.Component {
     });
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify(slides));
-
-    return false;
+    return true;
   }
   removeSlide(index) {
     const slides = this.state.slides.slice(0);
     slides[index].willDelete = true;
     this.setState({
       slides: slides
+    });
+  }
+  playSlideshow() {
+    this.setState({
+      playback: true
+    });
+  }
+  pauseSlideshow() {
+    this.setState({
+      playback: false
     });
   }
   render() {
@@ -128,10 +144,14 @@ class Slideshow extends React.Component {
       sliderContainer = (
         <div>
           <div className="col-md-8 col-lg-9">
-            <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} />
+            <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} playback={ this.state.playback } activeSlide={ this.state.activeSlide }/>
           </div>
           <div className="col-md-4 col-lg-3 slide-form">
             <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
+            <div className="btn-group" role="group" aria-label="...">
+              <button type="button" className={ !this.state.playback ? 'btn btn-default' : 'btn btn-default disabled'} onClick={ this.playSlideshow }><span className="glyphicon glyphicon-play"/></button>
+              <button type="button" className={ this.state.playback ? 'btn btn-default' : 'btn btn-default disabled'} onClick={ this.pauseSlideshow }><span className="glyphicon glyphicon-pause"/></button>
+            </div>
           </div>
         </div>
       );
@@ -165,21 +185,6 @@ class Slideshow extends React.Component {
     );
   }
 }
-
-/*
-Porahor no vamos a utilizar los cumpleaños...
-
-<ul className="nav nav-tabs" role="tablist">
-  <li role="presentation" className="active">
-    <a href="#slide" aria-controls="slide" role="tab" data-toggle="tab">
-      Slideshow
-    </a>
-  </li>
-  <li role="presentation">
-    <a href="#birthday" aria-controls="birthday" role="tab" data-toggle="tab">Cumpleaños</a>
-  </li>
-</ul>
- */
 
 Slideshow.propTypes = {
   slides: PropTypes.array,

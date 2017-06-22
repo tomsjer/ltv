@@ -1,4 +1,4 @@
-/* global gapi, Promise */
+/* global gapi, Promise, onYouTubeIframeAPIReady */
 import gapi from 'gapi';
 
 export function initYoutubeAPI() {
@@ -13,6 +13,22 @@ export function initYoutubeAPI() {
       .then(resolve)
       // .cath(reject); // Its thowing error
     });
+  });
+
+  return promise;
+}
+
+export function initYoutubeIframeAPI() {
+  const promise = new Promise((resolve, reject)=>{
+    const tag = document.createElement('script');
+
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
+      resolve();
+    };
   });
 
   return promise;

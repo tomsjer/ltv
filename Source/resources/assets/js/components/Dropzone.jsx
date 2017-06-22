@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { setDefaultDate } from '../utils';
 
 class Dropzone extends React.Component {
   constructor(props) {
@@ -18,12 +19,13 @@ class Dropzone extends React.Component {
       title: element.options.name || '',
       subtitle: '',
       description: '',
-      src: element.options.src,
-      srcThumbnail: element.options.srcThumbnail,
-      time_interval: '',
-      video_loop: 0,
-      date_from: '',
-      date_until: '',
+      media: element,
+      // src: element.options.src,
+      // srcThumbnail: element.options.srcThumbnail,
+      time_interval: 5,
+      video_loop: 1,
+      date_from: setDefaultDate(),
+      date_until: setDefaultDate(),
       media_id: element.id,
       media_types_id: element.media_types_id
     };

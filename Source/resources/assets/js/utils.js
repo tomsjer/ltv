@@ -38,3 +38,9 @@ export function youtubeUrlParser( url ) {
   }
   return match;
 }
+
+export function setDefaultDate() {
+  const d = new Date();
+  const iso = d.toISOString();
+  return iso.replace(/(T.*)/, '');
+}
