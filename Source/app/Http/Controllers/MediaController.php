@@ -193,9 +193,9 @@ class MediaController extends Controller
             foreach($data as $slide){
                 if(isset($slide['willDelete']) && isset($slide['id'])){
                     $this->deleteSlide($slide);
-                } elseif($slide['video_loop'] != 0 && $slide['video_loop'] != ''){
+                } elseif($slide['media']['media_types_id'] === 2){
                     $return = $this->slideVideo($slide);
-                }elseif($slide['time_interval'] !== ''){
+                }elseif($slide['media']['media_types_id'] === 1){
                     $return = $this->slideImage($slide);
                 }
                 if(!$return){
@@ -254,7 +254,8 @@ class MediaController extends Controller
             $slide->date_from        = $data['date_from'];
             $slide->date_until       = $data['date_until'];
 
-            $slide->save();
+            return $slide->save();
+
         }catch (Exception $e) {
             \Log::info('Error update Media: '.$e);
             return false;

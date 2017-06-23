@@ -2,12 +2,20 @@
 // Body
 $body-bg: #f5f8fa;
 
+//** Padding between columns. Gets divided in half for the left and right.
+$grid-gutter-width:         30px !default;
+
 // Borders
 $laravel-border-color: darken($body-bg, 10%);
 $list-group-border: $laravel-border-color;
 $navbar-default-border: $laravel-border-color;
 $panel-default-border: $laravel-border-color;
 $panel-inner-border: $laravel-border-color;
+
+// Border radius
+$border-radius-base: 0;
+$btn-border-radius-large: 0;
+$btn-border-radius-small: 0;
 
 // Brands
 $brand-primary: #3097D1;

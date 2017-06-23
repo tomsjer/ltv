@@ -23,7 +23,7 @@ class SlideForm extends React.Component {
         <input  onChange={ this.handleChange } className="form-control" placeholder="Subtitulo" type="text" value={ (this.props.slide.subtitle) ? this.props.slide.subtitle : '' } name="subtitle"/>
         <textarea  onChange={ this.handleChange } className="form-control" placeholder="Descripcion" type="textarea" value={ (this.props.slide.description) ? this.props.slide.description : '' } rows="10" cols="20" name="description"/>
           { (this.props.slide.media_types_id === 1 || this.props.slide.media_types_id === 3) &&
-            <label htmlFor="intervalo"> Intervalo
+            <label htmlFor="time_interval"> Intervalo
               <input required onChange={ this.handleChange } value={ this.props.slide.time_interval } name="time_interval" className="form-control" type="number" placeholder="Segundos" min="1"/>
             </label>
           }
@@ -43,7 +43,7 @@ class SlideForm extends React.Component {
           </div>
         </div>
         <br/>
-        <button className="form-control" type="submit"> GUARDAR </button>
+        {/* <button className="form-control" type="submit"> GUARDAR </button> */ }
       </form>
     );
   }

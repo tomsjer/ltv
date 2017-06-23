@@ -21,11 +21,13 @@ class Slideshow extends React.Component {
     this.saveSlider = this.saveSlider.bind(this);
     this.addSlide = this.addSlide.bind(this);
     this.removeSlide = this.removeSlide.bind(this);
+    this.reenableSlide = this.reenableSlide.bind(this);
     this.setActiveSlide = this.setActiveSlide.bind(this);
     this.handleSlideFormChange = this.handleSlideFormChange.bind(this);
     this.getSlides = this.getSlides.bind(this);
     this.playSlideshow = this.playSlideshow.bind(this);
     this.pauseSlideshow = this.pauseSlideshow.bind(this);
+    this.allSlidesValid = this.allSlidesValid.bind(this);
 
     this.getSlides()
     .then((_response)=>{
@@ -89,13 +91,9 @@ class Slideshow extends React.Component {
       slides: slides
     });
   }
-  saveSlider(e) {
-
-    const slides = this.state.slides.slice(0);
+  saveSlider() {
+    let slides = this.state.slides.slice(0);
     slides.map((slide)=>{
-      // delete slide.src;
-      // delete slide.srcThumbnail;
-      // delete slide.media_types_id;
       if (slide.willDelete) {
         if (typeof slide.id === 'undefined') {
           return null;
@@ -108,6 +106,7 @@ class Slideshow extends React.Component {
       progressHandler: (e)=>{ console.log(e); },
       onreadyStateChange: (e)=>{
         if (e.target.readyState === 4 && e.target.status === 200) {
+          window.location.refresh(true);
         } else {
           console.log(`Error: ${e}`);
         }
@@ -120,7 +119,19 @@ class Slideshow extends React.Component {
   }
   removeSlide(index) {
     const slides = this.state.slides.slice(0);
-    slides[index].willDelete = true;
+    if (typeof slides[index].id === 'undefined') {
+      slides.splice(index, 1);
+    } else {
+      slides[index].willDelete = true;
+    }
+
+    this.setState({
+      slides: slides
+    });
+  }
+  reenableSlide(index) {
+    const slides = this.state.slides.slice(0);
+    delete slides[index].willDelete;
     this.setState({
       slides: slides
     });
@@ -135,16 +146,20 @@ class Slideshow extends React.Component {
       playback: false
     });
   }
+  allSlidesValid() {
+    const isValid = this.state.slides.some(slide => typeof slide.willDelete === 'undefined');
+    return isValid;
+  }
   render() {
     let sliderContainer;
 
     if (this.state.loading) {
       sliderContainer = (<div><h4>Cargando...</h4></div>);
-    } else if (this.state.slides.length) {
+    } else if (this.state.slides.length && this.allSlidesValid()) {
       sliderContainer = (
         <div>
           <div className="col-md-8 col-lg-9">
-            <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} playback={ this.state.playback } activeSlide={ this.state.activeSlide }/>
+            <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} reenableSlide={ this.reenableSlide } playback={ this.state.playback } activeSlide={ this.state.activeSlide }/>
           </div>
           <div className="col-md-4 col-lg-3 slide-form">
             <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
@@ -172,6 +187,7 @@ class Slideshow extends React.Component {
               <div id="slideContainer">
                 <div id="activeSlide" className="row">
                   { sliderContainer }
+                  <button className="btn btn-success" type="button" onClick={ this.saveSlider }> GUARDAR </button>
                   <Dropzone addSlide={ this.addSlide }/>
                 </div>
               </div>

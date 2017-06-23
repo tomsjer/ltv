@@ -44,18 +44,25 @@ class Slider extends React.Component {
   }
   render() {
     const slides = this.props.slides.map((slide, i)=>{
-      return slide.willDelete ? null : (
+      return (
         <div key={i}>
           <div className="slick-slide-container">
+            { slide.willDelete ?
+              <div className="will-delete-overlay">
+                <h3>¡Atención!</h3><p><b>Al guardar el slideshow esta diapositiva se borrará definitivamente.</b></p>
+                <i className="glyphicon glyphicon-ok-circle reenable-slide" onClick={() => { this.props.reenableSlide(i); }} />
+              </div>
+              :
+              <i className="glyphicon glyphicon-remove-circle remove-slide" onClick={() => { this.props.removeSlide(i); }} />
+            }
             { slide.media_types_id === 1 ?
                 <SlideImage ref={(el)=>{ this.imageSlides[i] = el; }} slide={ slide } nextSlide={ this.nextSlide } playback={ this.props.playback } index={i} activeSlide={ this.props.activeSlide }/>
               :
-                <SlideVideo ref={(el)=>{ this.videoSlides[i] = el; }} slide={ slide } nextSlide={ this.nextSlide } playback={ this.props.playback } index={i} activeSlide={ this.props.activeSlides }/>
+                <SlideVideo ref={(el)=>{ this.videoSlides[i] = el; }} slide={ slide } nextSlide={ this.nextSlide } playback={ this.props.playback } index={i} activeSlide={ this.props.activeSlide }/>
             }
             { slide.title && <h3> {slide.title} </h3> }
             { slide.subtitle && <h4> {slide.subtitle} </h4> }
             { slide.description && <p> {slide.description} </p> }
-            <i className="glyphicon glyphicon-remove-circle remove-slide" onClick={() => { this.props.removeSlide(i); }} />
           </div>
         </div>);
     });
@@ -74,7 +81,9 @@ Slider.propTypes = {
   slides: PropTypes.array,
   afterChangeHook: PropTypes.func,
   removeSlide: PropTypes.func,
-  playback: PropTypes.bool
+  reenableSlide: PropTypes.func,
+  playback: PropTypes.bool,
+  activeSlide: PropTypes.number
 };
 
 export { Slider };

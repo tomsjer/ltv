@@ -34,6 +34,9 @@ class SlideVideo extends React.Component {
     if (this.props.playback !== nextProps.playback && nextProps.playback && (this.props.activeSlide === this.props.index)) {
       this.player.playVideo();
     }
+    if (this.props.playback !== nextProps.playback && !nextProps.playback && (this.props.activeSlide === this.props.index)) {
+      this.player.stopVideo();
+    }
   }
   componentWillUnmount() {
     this.player = null;
@@ -56,7 +59,9 @@ class SlideVideo extends React.Component {
 SlideVideo.propTypes = {
   slide: PropTypes.object,
   nextSlide: PropTypes.func,
-  playback: PropTypes.bool
+  playback: PropTypes.bool,
+  activeSlide: PropTypes.number,
+  index: PropTypes.number
 };
 
 export { SlideVideo };

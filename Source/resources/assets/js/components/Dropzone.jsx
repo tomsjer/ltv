@@ -14,6 +14,7 @@ class Dropzone extends React.Component {
   }
   dropHandler(ev) {
     ev.preventDefault();
+    document.querySelector('.dropzone-container').classList.remove('active');
     const element = JSON.parse(ev.dataTransfer.getData('text'));
     const slide = {
       title: element.options.name || '',
