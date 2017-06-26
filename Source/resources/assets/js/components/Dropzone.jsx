@@ -17,12 +17,10 @@ class Dropzone extends React.Component {
     document.querySelector('.dropzone-container').classList.remove('active');
     const element = JSON.parse(ev.dataTransfer.getData('text'));
     const slide = {
-      title: element.options.name || '',
+      title: '',
       subtitle: '',
       description: '',
       media: element,
-      // src: element.options.src,
-      // srcThumbnail: element.options.srcThumbnail,
       time_interval: 5,
       video_loop: 1,
       date_from: setDefaultDate(),

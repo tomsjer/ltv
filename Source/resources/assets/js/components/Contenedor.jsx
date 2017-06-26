@@ -72,6 +72,7 @@ class Contenedor extends React.Component {
       <div id="contenedor-wrapper">
         <div id="contenedor" className={ this.props.layout}>
           { media }
+          { this.props.loading && <div><h4 className="loading">Cargando <span /></h4></div> }
           <div className="row">
             <button className="btn btn-default  col-xs-10 col-xs-offset-1" type="button" onClick={this.loadMore} disabled={this.state.isLoading}>Cargar más...</button>
           </div>
@@ -85,7 +86,8 @@ Contenedor.propTypes = {
   media: PropTypes.array,
   layout: PropTypes.string,
   filterText: PropTypes.string,
-  getMedia: PropTypes.func
+  getMedia: PropTypes.func,
+  loading: PropTypes.bool
 };
 
 export { Contenedor };

@@ -6,7 +6,7 @@ class SlideVideo extends React.Component {
   constructor(props) {
     super(props);
     this.loops = this.props.slide.video_loop;
-
+    this.playerReady = false;
     this.checkPlay = this.checkPlay.bind(this);
     this.playVideo = this.playVideo.bind(this);
   }
@@ -14,6 +14,12 @@ class SlideVideo extends React.Component {
     this.player = new YT.Player(this.slideElement, {
       videoId: this.props.slide.media.options.id_youtube,
       events: {
+        'onReady': ()=>{
+          this.playerReady = true;
+          if (this.props.playback && (this.props.activeSlide === this.props.index)) {
+            this.player.playVideo();
+          }
+        },
         'onStateChange': (e)=>{
           if (this.props.playback) {
             if (e.data === YT.PlayerState.ENDED) {
@@ -31,10 +37,10 @@ class SlideVideo extends React.Component {
     });
   }
   componentWillReceiveProps(nextProps) {
-    if (this.props.playback !== nextProps.playback && nextProps.playback && (this.props.activeSlide === this.props.index)) {
+    if (this.playerReady && this.props.playback !== nextProps.playback && nextProps.playback && (this.props.activeSlide === this.props.index)) {
       this.player.playVideo();
     }
-    if (this.props.playback !== nextProps.playback && !nextProps.playback && (this.props.activeSlide === this.props.index)) {
+    if (this.playerReady && this.props.playback !== nextProps.playback && !nextProps.playback && (this.props.activeSlide === this.props.index)) {
       this.player.stopVideo();
     }
   }
@@ -42,12 +48,12 @@ class SlideVideo extends React.Component {
     this.player = null;
   }
   playVideo() {
-    if (this.props.playback) {
+    if (this.playerReady &&  this.props.playback) {
       this.player.playVideo();
     }
   }
   checkPlay() {
-    if (this.player.getPlayerState() === YT.PlayerState.PLAYING) {
+    if (this.playerReady && this.player.getPlayerState() === YT.PlayerState.PLAYING) {
       this.player.stopVideo();
     }
   }

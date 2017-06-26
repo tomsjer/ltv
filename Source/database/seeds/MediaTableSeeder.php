@@ -11,35 +11,32 @@ class MediaTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+      
+      $cant = 20;
+      
+      for ($i = 0; $i < $cant / 2; $i++) {
         //Imagen
-        App\Media::create(array(
-	        'media_types_id'     => '1',
-	        'options'     => '{"name" : "Test1", "src" : "storage/images/imagen1.png"}',
-	    ));
+          App\Media::create(array(
+  	        'media_types_id'     => '1',
+  	        'options'     => '{"name" : "Imagen '. $i .'", "src" : "storage/images/imagen'. $i .'.png"}',
+  	    ));
+        sleep(1);
+      }
 
-	    //Imagen2
-        App\Media::create(array(
-	        'media_types_id'     => '1',
-	        'options'     => '{"name" : "Test2", "src" : "storage/images/imagen2.png"}',
-	    ));
-
+      for ($j = 0; $j < $cant / 2; $j++) {
 	    //Video
         App\Media::create(array(
 	        'media_types_id'     => '2',
-	        'options'     => '{ "name" : "Video1", "id_youtube" : "YQHsXMglC9A" }',
-	    ));
+	        'options'     => '{ "name" : "Video '. $j .'", "id_youtube" : "OYRIBJ4hTAE" }',
+	      ));
+        sleep(1);
+      }
 
-	    //Video2
-        App\Media::create(array(
-	        'media_types_id'     => '2',
-	        'options'     => '{ "name" : "Video2", "id_youtube" : "FLjMeoUBWVo" }',
-	    ));
-
-	   	//Pronóstico
-        App\Media::create(array(
-	        'media_types_id'     => '3',
-	        'options'     => '{"bg" : "storage/forecast/bg1.png" }',
-	    ));
+	   	// TBD
+      // Pronóstico
+      //    App\Media::create(array(
+	    //     'media_types_id'     => '3',
+	    //     'options'     => '{"bg" : "storage/forecast/bg1.png" }',
+	    // ));
     }
 }

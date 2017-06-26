@@ -15,7 +15,10 @@ class Slideshow extends React.Component {
       activeSlide: 0,
       slides: [],
       loading: true,
-      playback: false
+      playback: false,
+      saving: false,
+      showSuccess: false,
+      showError: false
     };
 
     this.saveSlider = this.saveSlider.bind(this);
@@ -105,16 +108,30 @@ class Slideshow extends React.Component {
     const request = ajax('POST', `${this.props.fullUrl}/api/sliders`, {
       progressHandler: (e)=>{ console.log(e); },
       onreadyStateChange: (e)=>{
-        if (e.target.readyState === 4 && e.target.status === 200) {
-          window.location.refresh(true);
-        } else {
-          console.log(`Error: ${e}`);
+        if (e.target.readyState === 4) {
+          if (e.target.status === 200) {
+            this.setState({
+              saving: false,
+              showSuccess: true
+            });
+            // TODO: descomentar en prod
+            // setTimeout(()=>{
+            //   window.location.reload(true);
+            // }, 5000);
+          } else {
+            this.setState({
+              showError: true
+            });
+          }
         }
       },
       errorHandler: (e)=>{ console.log(e); },
     });
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify(slides));
+    this.setState({
+      saving: true
+    });
     return true;
   }
   removeSlide(index) {
@@ -154,8 +171,8 @@ class Slideshow extends React.Component {
     let sliderContainer;
 
     if (this.state.loading) {
-      sliderContainer = (<div><h4>Cargando...</h4></div>);
-    } else if (this.state.slides.length && this.allSlidesValid()) {
+      sliderContainer = (<div><h4 className="loading">Cargando <span /></h4></div>);
+    } else if (this.state.slides.length) {
       sliderContainer = (
         <div>
           <div className="col-md-8 col-lg-9">
@@ -163,10 +180,6 @@ class Slideshow extends React.Component {
           </div>
           <div className="col-md-4 col-lg-3 slide-form">
             <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
-            <div className="btn-group" role="group" aria-label="...">
-              <button type="button" className={ !this.state.playback ? 'btn btn-default' : 'btn btn-default disabled'} onClick={ this.playSlideshow }><span className="glyphicon glyphicon-play"/></button>
-              <button type="button" className={ this.state.playback ? 'btn btn-default' : 'btn btn-default disabled'} onClick={ this.pauseSlideshow }><span className="glyphicon glyphicon-pause"/></button>
-            </div>
           </div>
         </div>
       );
@@ -187,7 +200,15 @@ class Slideshow extends React.Component {
               <div id="slideContainer">
                 <div id="activeSlide" className="row">
                   { sliderContainer }
-                  <button className="btn btn-success" type="button" onClick={ this.saveSlider }> GUARDAR </button>
+                  <div className="btn-group" role="group" aria-label="...">
+                    { this.state.slides.length === 0 ? null : ( <button type="button" className={ !this.state.playback ? 'btn btn-default' : 'btn btn-default disabled btn-danger'} onClick={ this.playSlideshow }><span className="glyphicon glyphicon-play"/></button>)}
+                    { this.state.slides.length === 0 ? null : ( <button type="button" className={ this.state.playback ? 'btn btn-default' : 'btn btn-default disabled'} onClick={ this.pauseSlideshow }><span className="glyphicon glyphicon-pause"/></button>)}
+                    <button className="btn btn-success" type="button" onClick={ this.saveSlider }> GUARDAR </button>
+                  </div>
+                  { (this.state.saving || this.state.showSuccess || this.state.showError)  && <div className="backdrop" /> }
+                  { this.state.saving && <div className="alert alert-warning" role="alert"><p><strong>Guardando...</strong></p></div> }
+                  { this.state.showSuccess && <div className="alert alert-success" role="alert"><p><b>¡Se guardo correctamente!</b> La página se recargará para mantenerse actualizada.</p></div>}
+                  { this.state.showError && <div className="alert alert-danger" role="alert"><p><b>¡Ocurrió un error!</b> Recargue la página e intente nuevamente.</p></div>}
                   <Dropzone addSlide={ this.addSlide }/>
                 </div>
               </div>

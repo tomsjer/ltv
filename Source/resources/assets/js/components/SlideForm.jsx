@@ -17,21 +17,24 @@ class SlideForm extends React.Component {
     return false;
   }
   render() {
-    return (
+    return !this.props.slide ? null : (
       <form action="return false;" method="POST" onSubmit={  this.submitSlideshow  }>
+        <label htmlFor="title"> Título </label>
         <input onChange={ this.handleChange } className="form-control" placeholder="Titulo" type="text" value={ (this.props.slide.title) ? this.props.slide.title : '' } name="title" />
+        <label htmlFor="subtitle"> Subtítulo </label>
         <input  onChange={ this.handleChange } className="form-control" placeholder="Subtitulo" type="text" value={ (this.props.slide.subtitle) ? this.props.slide.subtitle : '' } name="subtitle"/>
+        <label htmlFor="description"> Intervalo </label>
         <textarea  onChange={ this.handleChange } className="form-control" placeholder="Descripcion" type="textarea" value={ (this.props.slide.description) ? this.props.slide.description : '' } rows="10" cols="20" name="description"/>
-          { (this.props.slide.media_types_id === 1 || this.props.slide.media_types_id === 3) &&
-            <label htmlFor="time_interval"> Intervalo
-              <input required onChange={ this.handleChange } value={ this.props.slide.time_interval } name="time_interval" className="form-control" type="number" placeholder="Segundos" min="1"/>
-            </label>
-          }
-          { this.props.slide.media_types_id === 2 &&
-            <label htmlFor="video_loop"> Loops
-              <input required onChange={ this.handleChange } value={ this.props.slide.video_loop } name="video_loop" className="form-control" type="number" placeholder="Loops" min="1"/>
-            </label>
-          }
+        { (this.props.slide.media_types_id === 1 || this.props.slide.media_types_id === 3) &&
+          <label htmlFor="time_interval"> Intervalo
+            <input required onChange={ this.handleChange } value={ this.props.slide.time_interval } name="time_interval" className="form-control" type="number" placeholder="Segundos" min="1"/>
+          </label>
+        }
+        { this.props.slide.media_types_id === 2 &&
+          <label htmlFor="video_loop"> Loops
+            <input required onChange={ this.handleChange } value={ this.props.slide.video_loop } name="video_loop" className="form-control" type="number" placeholder="Loops" min="1"/>
+          </label>
+        }
         <div className="row">
           <div className="col-md-6">
             <label htmlFor="desde"> Desde </label>

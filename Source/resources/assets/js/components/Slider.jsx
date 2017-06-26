@@ -8,6 +8,10 @@ class Slider extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      currentSlide: 1
+    };
+    const self = this;
     this.settings = {
       dots: true,
       infinite: false,
@@ -17,20 +21,28 @@ class Slider extends React.Component {
       centerMode: true,
       centerPadding: '0px',
       customPaging: (i)=>{
-        return <a><img src={this.props.slides[i].media.options.srcThumbnail}/><span>{ i + 1 }</span></a>;
+        return (
+          <a className={ self.props.slides[i].willDelete ? 'will-delete-overlay' : '' } >
+            <img src={self.props.slides[i].media.options.srcThumbnail}/>
+            <span>{ i + 1 }</span>
+          </a>
+        );
       },
       beforeChange: (currentSlide, nextSlide)=>{
-        props.afterChangeHook(nextSlide);
-        if (this.props.slides[currentSlide].media_types_id === 2 && this.videoSlides[currentSlide]) {
-          this.videoSlides[currentSlide].checkPlay();
+        if (self.props.slides[currentSlide] && self.props.slides[currentSlide].media_types_id === 2 && self.videoSlides[currentSlide]) {
+          self.videoSlides[currentSlide].checkPlay();
         }
+        self.setState({
+          currentSlide: nextSlide + 1
+        });
+        self.props.afterChangeHook(nextSlide);
       },
       afterChange: (currentSlide)=>{
-        if (this.props.slides[currentSlide].media_types_id === 2 && this.videoSlides[currentSlide]) {
-          this.videoSlides[currentSlide].playVideo();
+        if (self.props.slides[currentSlide] && self.props.slides[currentSlide].media_types_id === 2 && self.videoSlides[currentSlide]) {
+          self.videoSlides[currentSlide].playVideo();
         }
-        if (this.props.slides[currentSlide].media_types_id === 1 && this.imageSlides[currentSlide]) {
-          this.imageSlides[currentSlide].afterChange();
+        if (self.props.slides[currentSlide] && self.props.slides[currentSlide].media_types_id === 1 && self.imageSlides[currentSlide]) {
+          self.imageSlides[currentSlide].afterChange();
         }
       }
     };
@@ -49,11 +61,11 @@ class Slider extends React.Component {
           <div className="slick-slide-container">
             { slide.willDelete ?
               <div className="will-delete-overlay">
-                <h3>¡Atención!</h3><p><b>Al guardar el slideshow esta diapositiva se borrará definitivamente.</b></p>
-                <i className="glyphicon glyphicon-ok-circle reenable-slide" onClick={() => { this.props.reenableSlide(i); }} />
+                <h3>¡Atención!</h3><br /><p><b>Al guardar el slideshow esta diapositiva se borrará definitivamente.</b></p>
+                <i title="Activar" className="glyphicon glyphicon-ok-circle reenable-slide" onClick={() => { this.props.reenableSlide(i); }} />
               </div>
               :
-              <i className="glyphicon glyphicon-remove-circle remove-slide" onClick={() => { this.props.removeSlide(i); }} />
+              <i title="Borrar" className="glyphicon glyphicon-remove-circle remove-slide" onClick={() => { this.props.removeSlide(i); }} />
             }
             { slide.media_types_id === 1 ?
                 <SlideImage ref={(el)=>{ this.imageSlides[i] = el; }} slide={ slide } nextSlide={ this.nextSlide } playback={ this.props.playback } index={i} activeSlide={ this.props.activeSlide }/>
@@ -63,6 +75,7 @@ class Slider extends React.Component {
             { slide.title && <h3> {slide.title} </h3> }
             { slide.subtitle && <h4> {slide.subtitle} </h4> }
             { slide.description && <p> {slide.description} </p> }
+            <div className="counter"> {this.state.currentSlide} / {this.props.slides.length} </div>
           </div>
         </div>);
     });

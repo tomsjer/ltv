@@ -18,6 +18,7 @@ class Biblioteca extends React.Component {
       media: [],
       filterText: '',
       modalVisible: false,
+      loading: true
     };
 
     this.addNewMedia = this.addNewMedia.bind(this);
@@ -87,13 +88,15 @@ class Biblioteca extends React.Component {
         });
 
         this.setState({
-          media: media.concat(newMedia)
+          media: media.concat(newMedia),
+          loading: false,
         });
       });
     }
     else {
       this.setState({
-        media: media.concat(newMedia)
+        media: media.concat(newMedia),
+        loading: false,
       });
     }
   }
@@ -130,7 +133,7 @@ class Biblioteca extends React.Component {
       <aside id="biblioteca">
           <Encabezado layout={ this.state.layout } handler={ this.toggleLayout }/>
           <Buscador filter={ this.handleFilterText } />
-          <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText } getMedia={this.getMedia}/>
+          <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText } getMedia={this.getMedia} loading={ this.state.loading }/>
           <a id="agregarMedia" href="#" onClick={ this.openModal }> + Agregar media </a>
           <MediaModal submitSuccess={ this.addNewMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} fullUrl={ this.props.fullUrl }/>
       </aside>
