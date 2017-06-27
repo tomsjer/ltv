@@ -25,10 +25,11 @@ SlideImage.prototype = {
   },
   render: function() {
     this.$slideElement = $('<div class="slide" id="slide_' + this.i + '"/>');
-    this.$slideElement.css('background-image', "url('" + this.media.src + "')");
-    this.$title = this.title ? $('<h1>' + this.title + '</h1>') : '';
-    this.$subtitle = this.subtitle ? $('<p>' + this.subtitle + '</p>') : '';
-    this.$slideElement.append( this.$title, this.$subtitle );
+    this.$slideElement.css('background-image', "url('/" + this.media.options.src + "')");
+    this.$title = this.title ? $('<h3>' + this.title + '</h3>') : '';
+    this.$subtitle = this.subtitle ? $('<h4>' + this.subtitle + '</h4>') : '';
+    this.$description = this.description ? $('<p>' + this.description + '</p>') : '';
+    this.$slideElement.append( this.$title, this.$subtitle, this.$description );
     $(".slider").append( this.$slideElement );
   }
 };
@@ -44,14 +45,15 @@ SlideVideo.prototype = {
   },
   render: function() {
     this.$slideElement = $('<div class="slide" id="slide_' + this.i + '"/>');
-    this.$slideElement.css('background-image', "url('" + this.media.src + "')");
-    this.$title = this.title ? $('<h1>' + this.title + '</h1>') : '';
-    this.$subtitle = this.subtitle ? $('<p>' + this.subtitle + '</p>') : '';
+    this.$playerEl = $('<div />');
+    this.$title = this.title ? $('<h3>' + this.title + '</h3>') : '';
+    this.$subtitle = this.subtitle ? $('<h4>' + this.subtitle + '</h4>') : '';
+    this.$description = this.description ? $('<p>' + this.description + '</p>') : '';
     
     this.loops = this.video_loop;
-    this.$slideElement.append( this.$title, this.$subtitle );
+    this.$slideElement.append( this.$playerEl, this.$title, this.$subtitle, this.$description );
     $(".slider").append( this.$slideElement );
-    this.player = new YT.Player(this.$slideElement.get(0), {
+    this.player = new YT.Player(this.$playerEl.get(0), {
       videoId: this.media.options.id_youtube,
       events: {
         'onReady': () => {
