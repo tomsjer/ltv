@@ -12759,10 +12759,9 @@ var Slideshow = function (_React$Component) {
                 saving: false,
                 showSuccess: true
               });
-              // TODO: descomentar en prod
-              // setTimeout(()=>{
-              //   window.location.reload(true);
-              // }, 5000);
+              setTimeout(function () {
+                window.location.reload(true);
+              }, 5000);
             } else {
               _this3.setState({
                 showError: true

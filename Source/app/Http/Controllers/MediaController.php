@@ -57,8 +57,8 @@ class MediaController extends Controller
                 $img = \Image::make($request->image)->resize(100,100);
                 $path = $img->save(storage_path('app/public/images/thumbnail/'.$media->id."_".$name.".".$extension));
                 $path = $request->image->storeAs('public/images/full/', $media->id."_".$name.".".$extension);
-                $media_options->src = "images/full/".$media->id."_".$name.".".$extension;
-                $media_options->srcThumnail = "images/thumbnail/".$media->id."_".$name.".".$extension;
+                $media_options->src = "storage/images/full/".$media->id."_".$name.".".$extension;
+                $media_options->srcThumbnail = "storage/images/thumbnail/".$media->id."_".$name.".".$extension;
                 $media->options = json_encode($media_options);
                 
                 $media->save();

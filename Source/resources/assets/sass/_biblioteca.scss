@@ -71,9 +71,20 @@ aside#biblioteca {
       }
       
       ul {
+        
+        cursor: grab;
+        cursor: -webkit-grab;
+        cursor: -moz-grab;
         padding: 0;
         margin: 0;
         list-style-type: none;
+
+        li {
+          &:first-child {
+            font-weight: 600;
+            color: #222;
+          }
+        }
       }
     }
 
@@ -90,6 +101,40 @@ aside#biblioteca {
 
           img {
             max-height: 100px;
+          }
+        }
+        ul {
+          position: absolute;
+          width: 100%;
+          top: 50%;
+          left: 50%;
+          -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+          text-align: center;
+          color: #ccc;
+          opacity: 0;
+          transition: opacity 0.25s ease-in-out;
+          z-index: 1000;
+          li {
+            &:first-child {
+              color: #dedede;
+            }
+          }
+        }
+
+        &:hover {
+          &:before {
+            content: '';
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.5);
+            top: 0;
+            left: 0;
+            z-index: 1;
+          }
+          ul {
+            opacity: 1;
           }
         }
       }
@@ -113,7 +158,7 @@ aside#biblioteca {
           position: relative;
           float: left;
           width: calc(100% - 80px);
-          padding: 4px;
+          padding: 8px;
           font-size: 14px;
         }
       }

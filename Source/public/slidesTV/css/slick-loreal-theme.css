@@ -2,7 +2,9 @@
 .slick-list .slick-track .slick-slide {
   width: 100%;
   position: relative;
-  background: #bbb; }
+  background: #bbb; 
+  background-size: cover;
+  background-position: center; }
   .slick-list .slick-track .slick-slide > * {
     position: absolute; }
   .slick-list .slick-track .slick-slide img, .slick-list .slick-track .slick-slide iframe {

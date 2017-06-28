@@ -8655,9 +8655,17 @@ aside#biblioteca #contenedor .item .img-container img {
 }
 
 aside#biblioteca #contenedor .item ul {
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
   padding: 0;
   margin: 0;
   list-style-type: none;
+}
+
+aside#biblioteca #contenedor .item ul li:first-child {
+  font-weight: 600;
+  color: #222;
 }
 
 aside#biblioteca #contenedor.grid .item {
@@ -8672,6 +8680,39 @@ aside#biblioteca #contenedor.grid .item .img-container {
 
 aside#biblioteca #contenedor.grid .item .img-container img {
   max-height: 100px;
+}
+
+aside#biblioteca #contenedor.grid .item ul {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ccc;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+  z-index: 1000;
+}
+
+aside#biblioteca #contenedor.grid .item ul li:first-child {
+  color: #dedede;
+}
+
+aside#biblioteca #contenedor.grid .item:hover:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+aside#biblioteca #contenedor.grid .item:hover ul {
+  opacity: 1;
 }
 
 aside#biblioteca #contenedor.list .item {
@@ -8693,7 +8734,7 @@ aside#biblioteca #contenedor.list .item ul {
   position: relative;
   float: left;
   width: calc(100% - 80px);
-  padding: 4px;
+  padding: 8px;
   font-size: 14px;
 }
 

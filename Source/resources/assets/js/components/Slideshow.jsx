@@ -114,10 +114,9 @@ class Slideshow extends React.Component {
               saving: false,
               showSuccess: true
             });
-            // TODO: descomentar en prod
-            // setTimeout(()=>{
-            //   window.location.reload(true);
-            // }, 5000);
+            setTimeout(()=>{
+              window.location.reload(true);
+            }, 5000);
           } else {
             this.setState({
               showError: true

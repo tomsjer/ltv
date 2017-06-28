@@ -12,22 +12,24 @@ class MediaTableSeeder extends Seeder
     public function run()
     {
       
-      $cant = 20;
+      $cant = 4;
       
-      for ($i = 0; $i < $cant / 2; $i++) {
+      for ($i = 0; $i < $cant; $i++) {
         //Imagen
-          App\Media::create(array(
-  	        'media_types_id'     => '1',
-  	        'options'     => '{"name" : "Imagen '. $i .'", "src" : "storage/images/imagen'. $i .'.png"}',
+        App\Media::create(array(
+	        'media_types_id'     => '1',
+	        'options'     => '{"name" : "Imagen '. $i .'", "src" : "storage/images/full/'. $i .'_test.jpeg", "srcThumbnail" : "storage/images/thumbnail/'. $i .'_test.jpeg"}',
   	    ));
         sleep(1);
       }
 
-      for ($j = 0; $j < $cant / 2; $j++) {
+      $videos = array( "Y4rhgoKvW3Y", "OYRIBJ4hTAE", "h__Jlt2Kkc4", "9BMx2E3MGZ8" );
+      
+      foreach ($videos as $video){
 	    //Video
         App\Media::create(array(
 	        'media_types_id'     => '2',
-	        'options'     => '{ "name" : "Video '. $j .'", "id_youtube" : "OYRIBJ4hTAE" }',
+	        'options'     => '{ "name" : "Video", "id_youtube" : "'.  $video .'" }',
 	      ));
         sleep(1);
       }
