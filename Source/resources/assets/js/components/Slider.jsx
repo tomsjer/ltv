@@ -14,15 +14,16 @@ class Slider extends React.Component {
     const self = this;
     this.settings = {
       dots: true,
-      infinite: false,
+      infinite: true,
       speed: 100,
       slidesToShow: 1,
       slidesToScroll: 1,
       centerMode: true,
       centerPadding: '0px',
       customPaging: (i)=>{
+
         return (
-          <a className={ self.props.slides[i].willDelete ? 'will-delete-overlay' : '' } >
+          <a className={ self.props.slides[i].willDelete || this.props.hasExpired(self.props.slides[i]) ? 'will-delete-overlay' : '' } >
             <img src={self.props.slides[i].media.options.srcThumbnail}/>
             <span>{ i + 1 }</span>
           </a>
@@ -50,9 +51,24 @@ class Slider extends React.Component {
     this.videoSlides = {};
     this.imageSlides = {};
     this.nextSlide = this.nextSlide.bind(this);
+    this.handleKey = this.handleKey.bind(this);
   }
   nextSlide() {
     this.refs.slider.slickNext();
+  }
+  handleKey(e) {
+    if(e.keyCode === 39) {
+      this.refs.slider.slickNext();
+    }
+    if(e.keyCode === 37) {
+      this.refs.slider.slickPrev();
+    }
+  }
+  componentDidMount(){
+    window.addEventListener('keyup', this.handleKey);
+  }
+  componentWillUnmount(){
+    window.removeEventListener('keyup', this.handleKey);
   }
   render() {
     const slides = this.props.slides.map((slide, i)=>{
@@ -96,7 +112,8 @@ Slider.propTypes = {
   removeSlide: PropTypes.func,
   reenableSlide: PropTypes.func,
   playback: PropTypes.bool,
-  activeSlide: PropTypes.number
+  activeSlide: PropTypes.number,
+  hasExpired: PropTypes.func
 };
 
 export { Slider };

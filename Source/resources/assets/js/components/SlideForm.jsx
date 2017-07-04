@@ -1,3 +1,4 @@
+/* globals $ */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -35,7 +36,7 @@ class SlideForm extends React.Component {
             <input required onChange={ this.handleChange } value={ this.props.slide.video_loop } name="video_loop" className="form-control" type="number" placeholder="Loops" min="1"/>
           </label>
         }
-        <div className="row">
+        <div className={ this.props.hasExpired(this.props.slide) ? 'row has-error' : 'row' }>
           <div className="col-md-6">
             <label htmlFor="desde"> Desde </label>
               <input required onChange={ this.handleChange } value={ this.props.slide.date_from } name="date_from" className="form-control" type="date" />
@@ -44,6 +45,11 @@ class SlideForm extends React.Component {
             <label htmlFor="hasta"> Hasta </label>
               <input required onChange={ this.handleChange } value={ this.props.slide.date_until } name="date_until" className="form-control" type="date" />
           </div>
+          { this.props.hasExpired(this.props.slide) && (
+            <div className="col-xs-12">
+              <p className="text-danger bg-danger">Esta diapositiva ha vencido. Bórrela o actualice su fecha de vigencia.</p>
+            </div>
+          )}
         </div>
         <br/>
         {/* <button className="form-control" type="submit"> GUARDAR </button> */ }
@@ -56,7 +62,8 @@ SlideForm.propTypes =  {
   slide: PropTypes.object,
   handleChange: PropTypes.func,
   index: PropTypes.number,
-  saveSlider: PropTypes.func
+  saveSlider: PropTypes.func,
+  hasExpired: PropTypes.func
 };
 
 export { SlideForm };

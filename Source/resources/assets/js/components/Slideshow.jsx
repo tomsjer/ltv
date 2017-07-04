@@ -31,6 +31,7 @@ class Slideshow extends React.Component {
     this.playSlideshow = this.playSlideshow.bind(this);
     this.pauseSlideshow = this.pauseSlideshow.bind(this);
     this.allSlidesValid = this.allSlidesValid.bind(this);
+    this.hasExpired = this.hasExpired.bind(this);
 
     this.getSlides()
     .then((_response)=>{
@@ -166,6 +167,13 @@ class Slideshow extends React.Component {
     const isValid = this.state.slides.some(slide => typeof slide.willDelete === 'undefined');
     return isValid;
   }
+  hasExpired(slide) {
+    // const df = Date.parse(slide.date_from + 'T00:00:00');
+    const du = Date.parse(slide.date_until + 'T24:00:00');
+    const now = Date.now();
+    // return !(df <= now && du >= now);
+    return now > du;
+  }
   render() {
     let sliderContainer;
 
@@ -175,10 +183,10 @@ class Slideshow extends React.Component {
       sliderContainer = (
         <div>
           <div className="col-md-8 col-lg-9">
-            <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} reenableSlide={ this.reenableSlide } playback={ this.state.playback } activeSlide={ this.state.activeSlide }/>
+            <Slider slides={ this.state.slides } afterChangeHook={ this.setActiveSlide } removeSlide={this.removeSlide} reenableSlide={ this.reenableSlide } playback={ this.state.playback } activeSlide={ this.state.activeSlide } hasExpired={ this.hasExpired }/>
           </div>
           <div className="col-md-4 col-lg-3 slide-form">
-            <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}/>
+            <SlideForm saveSlider={this.saveSlider} index={this.state.activeSlide} slide={ this.state.slides[this.state.activeSlide] } handleChange={ this.handleSlideFormChange } maxOrder={this.state.slides.length}  hasExpired={ this.hasExpired }/>
           </div>
         </div>
       );

@@ -47,12 +47,14 @@ class Contenedor extends React.Component {
   renderMedia(element, i) {
     return (
       <div className="item" key={i} data-dragInfo={JSON.stringify(element)} draggable="true" onDragStart={ this.dragStartHandler } onDragEnd={this.dragEndHandler}>
+        <a href={ '#' +  element.id } data-index={i} onClick={ this.props.deleteMedia } className="btn"><span className="glyphicon glyphicon-remove" /></a>
         <div className="img-container">
           <img src= { element.options.srcThumbnail } />
         </div>
         <ul>
           <li>{element.options.name}</li>
           <li>{element.created_at.slice(0, 10)}</li>
+          <span className={ element.media_types_id === 1 ? 'glyphicon glyphicon-picture' : 'glyphicon glyphicon-facetime-video' }  />
         </ul>
       </div>
     );
@@ -87,7 +89,8 @@ Contenedor.propTypes = {
   layout: PropTypes.string,
   filterText: PropTypes.string,
   getMedia: PropTypes.func,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  deleteMedia: PropTypes.func
 };
 
 export { Contenedor };

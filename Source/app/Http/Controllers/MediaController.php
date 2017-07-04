@@ -18,7 +18,7 @@ class MediaController extends Controller
     public function index($start = 0,$limit = 10)
     {
         //
-        return response()->json(Media::take($limit)->offset($start)->get());
+        return response()->json(Media::latest()->take($limit)->offset($start)->get());
     }
 
     /**
@@ -161,10 +161,10 @@ class MediaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Media  $media
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Media $media)
+    public function destroy($id)
     {
         //
         //Get the Media
@@ -174,14 +174,17 @@ class MediaController extends Controller
                 'message' => 'Record not found',
             ]);
         }
- 
-        if($media->delete()) {
+        
+        try {
+            $media->delete();
              return response()->json([
                 'message' => 'Delete sucessfull',
             ]);
-        } else {
+        }
+        catch(\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'message' => 'Could not delete a media',
+                'msg' => $e
             ]);
         }
     }

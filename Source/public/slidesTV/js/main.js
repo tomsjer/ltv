@@ -2,7 +2,7 @@ var slides;
 var activeSlide = 0;
 var timeoutId = 0;
 var slider;
-var endpoint = "http://lorealtv.com/api/sliders/all";
+var endpoint = window.location.origin + "/api/sliders/all";
 
 var SlideImage = function(){};
 SlideImage.prototype = {
@@ -33,13 +33,16 @@ SlideImage.prototype = {
     $(".slider").append( this.$slideElement );
   }
 };
-var SlideVideo = function(){};
+var SlideVideo = function(){
+  this.playerReady = false;
+};
 SlideVideo.prototype = {
   beforeChange: function(e, slick, c, n) {
-    this.player.stopVideo();
+    this.player.pauseVideo();
+    this.player.seekTo(0);
   },
   afterChange: function(e, slick, c) {
-    if(this.player) {
+    if(this.playerReady) {
       this.player.playVideo();
     }
   },
@@ -131,8 +134,16 @@ function onYouTubeIframeAPIReady() {
         slides[activeSlide].afterChange.apply(slides[activeSlide], [].slice.call(arguments));
       });
 
-      // Manually triggering first slide timeout()
-      slides[0].init();
+      
+
+      $('.slider').imagesLoaded({ background: '.slide' },()=>{
+        $('#preloader').css({ opacity: 0 });
+        setTimeout(()=>{
+          $('#preloader').remove();
+        }, 1000)
+        // Manually triggering first slide timeout()
+        // slides[0].init();
+      });
     },
     done: function() {
 

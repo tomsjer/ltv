@@ -18,10 +18,16 @@ class Biblioteca extends React.Component {
       media: [],
       filterText: '',
       modalVisible: false,
-      loading: true
+      loading: true,
+      mediaToDelete: null,
+      showDeletionSuccess: false,
+      showDeletionMsg: false,
     };
 
     this.addNewMedia = this.addNewMedia.bind(this);
+    this.removeMedia = this.removeMedia.bind(this);
+    this.deleteMedia = this.deleteMedia.bind(this);
+    this.showDeletionError = this.showDeletionError.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.mediaDownload = this.mediaDownload.bind(this);
@@ -107,6 +113,38 @@ class Biblioteca extends React.Component {
       media: media
     });
   }
+  removeMedia() {
+    const media = this.state.media.slice(0);
+    media.splice(this.mediaToDeleteIndex, 1);
+    this.setState({
+      media: media,
+      showDeletionSuccess: true
+    });
+    this.mediaToDeleteIndex = null;
+    setTimeout(()=>{
+      this.setState({
+        showDeletionSuccess: false
+      })
+    }, 5000);
+  }
+  showDeletionError() {
+    this.setState({
+      showDeletionMsg: true
+    });
+    setTimeout(()=>{
+      this.setState({
+        showDeletionMsg: false
+      });
+    }, 5000)
+  }
+  deleteMedia(element) {
+    const id = element.currentTarget.getAttribute('href').replace('#', '');
+    this.mediaToDeleteIndex = element.currentTarget.dataset.index;
+    this.setState({
+      modalVisible: true,
+      mediaToDelete: id
+    });
+  }
   toggleLayout(e) {
     this.setState({
       layout: e.currentTarget.dataset.layout
@@ -125,7 +163,8 @@ class Biblioteca extends React.Component {
   closeModal() {
     this.setState({
       modalVisible: false,
-      uploadPercentage: -1
+      uploadPercentage: -1,
+      mediaToDelete: null
     });
   }
   render() {
@@ -133,9 +172,21 @@ class Biblioteca extends React.Component {
       <aside id="biblioteca">
           <Encabezado layout={ this.state.layout } handler={ this.toggleLayout }/>
           <Buscador filter={ this.handleFilterText } />
-          <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText } getMedia={this.getMedia} loading={ this.state.loading }/>
+          <Contenedor layout={ this.state.layout } media = { this.state.media } filterText={ this.state.filterText } getMedia={this.getMedia} loading={ this.state.loading } deleteMedia={ this.deleteMedia }/>
           <a id="agregarMedia" href="#" onClick={ this.openModal }> + Agregar media </a>
-          <MediaModal submitSuccess={ this.addNewMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} fullUrl={ this.props.fullUrl }/>
+          <MediaModal submitSuccess={ this.addNewMedia } closeModal ={ this.closeModal} isVisible={ this.state.modalVisible} fullUrl={ this.props.fullUrl } mediaToDelete={ this.state.mediaToDelete } removeMedia={ this.removeMedia } showDeletionError={ this.showDeletionError }/>
+          { this.state.showDeletionSuccess && (
+              <div>
+                <div className="backdrop" />
+                <div className="alert alert-success" role="alert"><p>Se elimino el elemento correctamente.</p></div>
+              </div>
+            )}
+          { this.state.showDeletionMsg && (
+              <div>
+                <div className="backdrop" />
+                <div className="alert alert-danger" role="alert"><p>No se pude eliminar el elemento. Verifique que el elemento no esté en uso.</p></div>
+              </div>
+            )}
       </aside>
     );
   }

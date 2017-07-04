@@ -51,16 +51,27 @@ aside#biblioteca {
       position: relative;
       float: left;
       background: #f3f3f3;
-      
-      .img-container {
-        
+      transition: transform 0.125s ease, box-shadow 0.125s ease;
+
+      &, & *, & *:before {
         cursor: grab;
         cursor: -webkit-grab;
         cursor: -moz-grab;
+      }
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 2px 4px 4px #bbb;
+
+      }
+
+      .img-container {
+        
         position: relative;
+        overflow: hidden;
 
         img {
-          max-width: 100%;
+          width: auto;
           height: 100%;
           top: 50%;
           left: 50%;
@@ -84,6 +95,29 @@ aside#biblioteca {
             font-weight: 600;
             color: #222;
           }
+        }
+      }
+
+      a.btn {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        color: white;
+        padding: 4px;
+        text-shadow: 0 0 4px black;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+          color: #ff0000;
+        }
+      }
+
+      &:hover {
+        a.btn {
+          z-index: 1;
+          opacity: 1;
         }
       }
     }
@@ -162,6 +196,10 @@ aside#biblioteca {
           font-size: 14px;
         }
       }
+    }
+
+    button {
+      margin-top: 8px;
     }
   }
   

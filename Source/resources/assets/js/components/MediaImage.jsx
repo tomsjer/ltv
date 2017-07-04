@@ -104,7 +104,7 @@ class MediaImagen extends React.Component {
               <p>{this.props.uploadPercentage} %</p>
             </div>
             <div className={ (this.state.imgPreviewSrc) ? 'img-container' : 'img-container hidden'}>
-              <img src={this.state.imgPreviewSrc} className="img-responsive"/>
+              <img src={this.state.imgPreviewSrc}/>
             </div>
           </div>
           <p> O buscar en carpeta...</p>

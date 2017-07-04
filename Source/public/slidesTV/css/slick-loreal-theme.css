@@ -2,7 +2,7 @@
 .slick-list .slick-track .slick-slide {
   width: 100%;
   position: relative;
-  background: #bbb; 
+  background: #bbb;
   background-size: cover;
   background-position: center; }
   .slick-list .slick-track .slick-slide > * {
@@ -21,13 +21,18 @@
     color: #fff;
     text-shadow: 0 0 4px #111; }
   .slick-list .slick-track .slick-slide h3 {
-    top: 20px; }
+    top: 1vh;
+    font-size: 4vh; }
   .slick-list .slick-track .slick-slide h4 {
-    top: 50px; }
+    top: 6vh;
+    font-size: 3vh; }
   .slick-list .slick-track .slick-slide p {
     bottom: 0;
     width: 100%;
     height: auto;
     background: rgba(0, 0, 0, 0.5);
     left: 0;
-    padding: 8px 20px 8px; }
+    padding: 8px 20px 8px;
+    font-size: 2vh; }
+  .slick-list .slick-track .slick-slide:focus, .slick-list .slick-track .slick-slide:active {
+    outline: none; }

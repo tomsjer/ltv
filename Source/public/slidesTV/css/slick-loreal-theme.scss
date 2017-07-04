@@ -4,9 +4,11 @@
       .slick-slide {
         
           width: 100%;
-          // padding-top: 56.25%;
           position: relative;
-          background: #bbb;
+          background: #bbb; 
+          background-size: cover;
+          background-position: center; 
+
           & > * {
             position: absolute;
           }
@@ -30,10 +32,12 @@
             text-shadow: 0 0 4px #111;
           }
           h3 {
-            top: 20px;
+            top: 1vh;
+            font-size: 4vh;
           }
           h4 {
-            top:50px;
+            top: 6vh;
+            font-size: 3vh;
           }
           p {
             bottom:0;
@@ -42,8 +46,12 @@
             background: rgba(0,0,0,.5);
             left: 0;
             padding: 8px 20px 8px;
+            font-size: 2vh;
           }
-        
+        &:focus,
+        &:active {
+          outline: none;
+        }
       }
     }
 }

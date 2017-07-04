@@ -21,9 +21,17 @@ class MediaModal extends React.Component {
     this.submitMedia = this.submitMedia.bind(this);
     this.uploadPercentage = this.uploadPercentage.bind(this);
     this.uploadCompleted = this.uploadCompleted.bind(this);
+    this.deleteMedia = this.deleteMedia.bind(this);
   }
   componentDidMount() {
     document.querySelector('#mediaModal').addEventListener('click', this.closeModal);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.mediaToDelete !== null) {
+      this.setState({
+        show: 'delete'
+      });
+    }
   }
   componentWillUnmount() {
     document.querySelector('#mediaModal').removeEventListener('click', this.closeModal);
@@ -85,7 +93,8 @@ class MediaModal extends React.Component {
     const response = JSON.parse(e.target.response);
     const media = response.media;
     media.options = JSON.parse(media.options);
-    if (media.media_types_id === '2') {
+    media.media_types_id = parseInt(media.media_types_id);
+    if (media.media_types_id === 2) {
       media.options.srcThumbnail = `https://i.ytimg.com/vi/${media.options.id_youtube}/default.jpg`;
       media.options.src = `https://i.ytimg.com/vi/${media.options.id_youtube}/sddefault.jpg`;
     }
@@ -99,22 +108,50 @@ class MediaModal extends React.Component {
       });
     }
   }
+  deleteMedia() {
+    ajax('DELETE', `${this.props.fullUrl}/api/media/destroy/${this.props.mediaToDelete}`, {
+      progressHandler: this.uploadPercentage,
+      onreadyStateChange: (e)=>{
+        if (e.target.readyState === 4 && e.target.status === 200) {
+          this.closeModal();
+          if(JSON.parse(e.target.response).msg && JSON.parse(e.target.response).msg.errorInfo.length){
+            this.props.showDeletionError();
+          } else {
+            this.props.removeMedia();
+          }
+        } else {
+          console.log(`Error: ${e}`);
+        }
+      },
+      errorHandler: this.errorHandler
+    }).send();
+  }
   render() {
     return (
       <div className={ (this.props.isVisible) ? 'mediaModal-container' : 'mediaModal-container hidden'}>
         <div id="mediaModal"/>
-        <div id="modalDialog">
-          <div id="modalHeader"> Subir Media <a href="#" onClick={ this.closeModal }>&times;</a></div>
+        <div id="modalDialog"  className={ this.state.show === 'imagen' ? 'pull-height' : '' }>
+          <div id="modalHeader"> { this.state.show === 'delete' ? 'Eliminar Media' : 'Subir Media' } <a href="#" onClick={ this.closeModal }>&times;</a></div>
           <div id="modalBody">
 
-            <select className="form-control"  onChange={ this.onMediaChange } value={ this.state.show }>
-              <option value="select">Seleccionar tipo</option>
-              <option value="imagen"> Imagen </option>
-              <option value="video"> Video </option>
-            </select>
-
+            { (this.state.show === 'select') && 
+              (<select className="form-control"  onChange={ this.onMediaChange } value={ this.state.show }>
+                <option value="select">Seleccionar tipo</option>
+                <option value="imagen"> Imagen </option>
+                <option value="video"> Video </option>
+              </select>)
+            }
             { this.state.show === 'imagen' && <MediaImagen isVisible={this.props.isVisible} submitMedia={this.submitMedia } uploadPercentage={ this.state.uploadPercentage}/> }
             { this.state.show === 'video' && <MediaVideo isVisible={this.props.isVisible} submitMedia={this.submitMedia} /> }
+            
+            { this.state.show === 'delete' && (
+              <div>
+                <p><b>¿Desea eliminar definitivamente este elemento?</b></p>
+                <p>Esta operación no se puede deshacer.</p>
+                <button type="button" onClick={ this.deleteMedia } className="btn btn-danger pull-right">Borrar</button>
+                <button type="button" onClick={ this.closeModal } className="btn btn-default">Cancelar</button>
+              </div>
+            )}
 
           </div>
         </div>
@@ -127,7 +164,10 @@ MediaModal.propTypes = {
   closeModal: PropTypes.func,
   isVisible: PropTypes.bool,
   submitMedia: PropTypes.func,
-  uploadPercentage: PropTypes.number
+  uploadPercentage: PropTypes.number,
+  mediaToDelete: PropTypes.number,
+  removeMedia: PropTypes.func,
+  showDeletionError: PropTypes.func
 };
 
 export { MediaModal };
